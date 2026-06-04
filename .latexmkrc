@@ -6,6 +6,7 @@ $pdf_mode = 1;
 $pdflatex = 'lualatex --synctex=1 -file-line-error --shell-escape --output-directory=build';
 $biber = 'biber';
 $bibtex_use = 2;
+$max_repeat = 10;
 $out_dir = 'build';
 $clean_ext .= ' bbl bcf blg aux log glo gls glg nlo nls acr acn alg pythontex-files-%R/* pythontex-files-%R';
 

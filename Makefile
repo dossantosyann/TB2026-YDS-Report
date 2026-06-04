@@ -2,7 +2,7 @@ BUILDDIR=build
 LATEXMK=latexmk
 INKSCAPE=NO_AT_BRIDGE=1 dbus-run-session inkscape
 FIGDIR=assets/figures
-DRAWIO=drawio-cli
+DRAWIO=bash .devcontainer/drawio-cli
 OUT=report
 
 SVGS=$(wildcard $(FIGDIR)/*.svg)
