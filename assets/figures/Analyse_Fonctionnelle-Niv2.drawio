@@ -174,7 +174,7 @@
         </mxCell>
         <mxCell id="InfD0HFL66ZjcEA0G4re-40" connectable="0" parent="InfD0HFL66ZjcEA0G4re-24" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="I2S" vertex="1">
           <mxGeometry relative="1" x="0.024" y="1" as="geometry">
-            <mxPoint y="-6" as="offset" />
+            <mxPoint y="30" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="InfD0HFL66ZjcEA0G4re-29" edge="1" parent="1" source="mWaRPkYXV2c9awh6F8o4-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0.423;entryY=1.018;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#006EAF;startArrow=classic;startFill=1;fillColor=#1ba1e2;" target="mWaRPkYXV2c9awh6F8o4-17">
@@ -182,7 +182,7 @@
         </mxCell>
         <mxCell id="InfD0HFL66ZjcEA0G4re-39" connectable="0" parent="InfD0HFL66ZjcEA0G4re-29" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="I2C" vertex="1">
           <mxGeometry relative="1" x="-0.3645" y="-2" as="geometry">
-            <mxPoint x="-2" y="-34" as="offset" />
+            <mxPoint x="-2" y="-134" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="InfD0HFL66ZjcEA0G4re-31" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="3.3V" vertex="1">
