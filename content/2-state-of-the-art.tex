@@ -1,22 +1,137 @@
 \chapter{État de l'art}
-
 \index{état de l'art}
-\index{méthode}
-L'état de l'art constitue une revue exhaustive de la littérature existante sur le sujet de votre travail. Il s'agit d'exposer les recherches antérieures menées dans ce domaine, en présentant les solutions déjà proposées, les technologies mises en œuvre, les méthodes employées, ainsi que les résultats obtenus. Cette section a pour objectif de positionner votre étude par rapport aux connaissances actuelles et de démontrer en quoi votre démarche apporte une contribution originale. Elle permet ainsi de mettre en lumière les limites des travaux existants et de justifier la pertinence de votre recherche.
+
+Avant de définir les fonctions attendues de l'appareil, il convient de situer
+le projet par rapport à ce qui existe déjà. Le lecteur audio portable est un
+objet ancien, dont le marché a connu une quasi-disparition avant de se
+maintenir dans des usages de niche. Cette section retrace cette évolution,
+puis examine les briques technologiques aujourd'hui disponibles pour réaliser
+un tel appareil. \\
+
 
 \section{Travaux existants}
 
-Dans cette section, vous pouvez exposer de manière structurée les travaux antérieurs relatifs à votre sujet. Il peut être pertinent d'organiser ces contributions selon différents critères : par thématique, par approche méthodologique, par auteur ou encore par chronologie.
+\subsection{Évolution du lecteur audio portable}
+Le lecteur audio portable s'est imposé dès la fin des années 1970 avec le
+baladeur à cassette, puis le disque compact portable, avant que la lecture de
+fichiers numériques compressés ne bouleverse l'usage au tournant des années
+2000. Les lecteurs MP3 à mémoire flash, popularisés notamment par l'iPod et
+les baladeurs de SanDisk, Sony ou Cowon, ont alors dominé le marché grand
+public \cite{wikipedia_portable_nodate}.
 
-Il est impératif de citer rigoureusement vos sources et de vous conformer aux normes de citation en vigueur. Chaque référence doit figurer dans la bibliographie afin de garantir la crédibilité de votre propos et de respecter les exigences éthiques liées à la recherche scientifique.
+Cette catégorie a ensuite été largement absorbée par le smartphone, qui réunit
+dans un seul appareil la lecture audio, la connectivité et le stockage. Le
+lecteur audio dédié, en tant que produit de masse, a ainsi pratiquement
+disparu : les acteurs historiques se sont retirés du segment, qui ne subsiste
+plus guère que sur le marché de l'occasion \cite{tom_smigla_20_2026}.  \\
+
+
+\subsection{Le marché actuel}
+Le lecteur audio dédié n'a toutefois pas totalement disparu. Il s'est
+recentré sur deux extrémités du marché, séparées par un large écart de prix et
+d'objectifs.
+
+À une extrémité subsiste un segment \emph{audiophile} dynamique, porté
+principalement par des marques telles qu'Astell\&Kern, FiiO, HiBy, Cayin,
+iBasso ou Shanling \cite{tom_smigla_20_2026}. Ces appareils, dits \emph{DAP}
+(\textit{Digital Audio Player}), visent une restitution sonore de très haute
+qualité : ils embarquent fréquemment plusieurs convertisseurs en parallèle,
+une amplification soignée et des sorties symétriques, pour des tarifs
+s'échelonnant de quelques centaines à plusieurs milliers de francs
+\cite{homecine_solutions_comparison_2026}. Beaucoup reposent désormais sur un système
+d'exploitation complet (Android) exécuté par un processeur applicatif, ce qui
+les rapproche d'un smartphone dépourvu de fonction téléphonique. \\
+
+À l'autre extrémité se maintiennent des lecteurs d'entrée de gamme,
+généralement de conception simple, à faible coût et à faible consommation,
+destinés à un usage quotidien sans prétention audiophile \cite{audiophile_on_10_2027}.  \\
+
+
+\subsection{Positionnement du projet}
+Le présent travail ne se situe dans aucune de ces deux catégories
+commerciales. Il ne cherche ni à rivaliser avec les performances des DAP
+audiophiles, ni à reproduire la polyvalence d'un smartphone. Son objectif est
+de concevoir, de bout en bout et à des fins formatrices, un appareil dédié,
+compact et fonctionnel, dont chaque choix matériel et logiciel est maîtrisé et
+justifié. La contribution recherchée n'est donc pas un produit inédit sur le
+marché, mais la démarche complète d'intégration, depuis le composant jusqu'au
+firmware.  \\
+
 
 \section{Technologies et méthodes existantes}
-
 \index{technologie}
-Cette section a pour vocation de présenter les technologies et les méthodes déjà développées pour traiter la problématique que vous abordez. Il est important d'examiner et d'analyser de manière critique ces approches : quelles sont leurs forces ? Leurs limites ? Quels résultats ont-elles permis d'obtenir ?
 
-Il ne s'agit pas de rédiger un cours magistral, mais plutôt de proposer une synthèse pertinente et ciblée des connaissances existantes, en rapport direct avec votre sujet. Il peut être particulièrement utile d'inclure des éléments visuels tels que des tableaux comparatifs, des graphiques ou des schémas, afin de faciliter la compréhension des comparaisons et des analyses.
+La réalisation d'un lecteur audio portable mobilise plusieurs briques
+technologiques aujourd'hui bien établies. Leur analyse permet de dégager les
+choix pertinents pour ce projet.  \\
 
-Évitez de vous contenter d'importer des illustrations trop complexes ou inadaptées, trouvées sur Internet. N'hésitez pas à créer vos propres figures pour qu'elles servent précisément votre propos et s'intègrent harmonieusement à votre raisonnement.
 
-Rappelez-vous que cette section doit progressivement amener le lecteur à comprendre les enjeux de votre travail. Vous devez poser, avec méthode, les bases de votre réflexion et conduire le lecteur à saisir les éléments essentiels qui éclaireront, tout au long de votre étude, la pertinence et la singularité de votre démarche.
+\subsection{Architecture de calcul}
+Deux approches coexistent. Les DAP haut de gamme s'appuient sur un processeur
+applicatif exécutant un système d'exploitation complet, ce qui apporte
+souplesse et accès au streaming, au prix d'une consommation et d'une
+complexité élevées \cite{homecine_solutions_comparison_2026}. À l'opposé, un microcontrôleur ou
+un SoC intégré suffit pour un lecteur dédié : il offre une consommation réduite
+et un comportement temps réel maîtrisé, au prix d'un développement logiciel
+plus proche du matériel. Cette seconde approche, retenue ici, correspond à un
+appareil à fonction unique.  \\
+
+
+\subsection{Chaîne audio}
+La restitution audio repose sur une chaîne désormais classique : décodage du
+flux compressé, conversion numérique-analogique, filtrage puis amplification.
+Le décodage MP3 est un procédé mature, disponible sous forme de bibliothèques
+logicielles éprouvées. La conversion fait appel à un convertisseur dédié
+(\textit{DAC}) communiquant en I\textsuperscript{2}S, suivi d'un étage
+d'amplification capable d'attaquer un casque. Les architectures les plus
+soignées privilégient des liaisons symétriques afin de réduire la sensibilité
+au bruit, principe que l'on retrouve à toutes les gammes de prix.  \\
+
+
+\subsection{Connectivité}
+Deux voies de sortie coexistent sur la quasi-totalité des appareils récents :
+la sortie filaire par jack, qui préserve la qualité du signal analogique, et la
+liaison sans fil Bluetooth (profil A2DP pour le flux audio, AVRCP pour le
+contrôle), plus pratique mais soumise aux contraintes de la compression et de
+la portée radio. La cohabitation d'une chaîne analogique sensible et d'un
+émetteur radio sur une même carte constitue l'une des difficultés récurrentes
+de ce type de conception.  \\
+
+
+\subsection{Énergie et stockage}
+L'alimentation repose sur un accumulateur lithium-ion rechargeable, associé à
+un circuit de charge et, dans les conceptions soignées, à une jauge de charge
+permettant d'estimer l'état de la batterie. La recharge s'effectue aujourd'hui
+majoritairement par USB-C. Le stockage de la musique fait appel soit à une
+mémoire interne, soit à une carte microSD exploitée via un système de fichiers
+standard.  \\
+
+
+\subsection{Synthèse comparative}
+Le tableau~\ref{tab:comparatif} résume les approches existantes et situe le
+présent projet par rapport à elles.
+
+\newcommand{\rh}{\rule[-1.1\baselineskip]{0pt}{2.6\baselineskip}}% hauteur ~2 lignes
+
+\begin{table}[h]
+    \centering
+    \setlength{\tabcolsep}{8pt}
+    \begin{tabular}{m{2.6cm} | m{3.4cm} | m{3.4cm} | m{3.4cm}}
+        \hline
+        \rh\textbf{Critère} & \textbf{DAP audiophile}         & \textbf{DAP entrée de gamme} & \textbf{Ce projet}             \\
+        \hline
+        \rh Calcul          & Processeur applicatif (Android) & Microcontrôleur / SoC        & SoC ESP32                      \\
+        \rh Objectif audio  & Très haute fidélité             & Basique                      & Qualité maîtrisée et justifiée \\
+        \rh Connectivité    & Jack + Bluetooth                & Jack + Bluetooth             & Jack + Bluetooth               \\
+        \rh Coût            & Élevé à très élevé              & Faible                       & Sans objet (prototype)         \\
+        \rh Finalité        & Produit commercial              & Produit commercial           & Démarche d'ingénierie complète \\
+        \hline
+    \end{tabular}
+    \caption{Positionnement du projet par rapport aux solutions existantes.}
+    \label{tab:comparatif}
+\end{table}
+
+Cette analyse met en évidence que la valeur du présent travail ne réside pas
+dans la nouveauté de la fonction, mais dans la maîtrise complète de sa
+réalisation. Les fonctions attendues de l'appareil, détaillées au chapitre
+suivant, découlent directement de ce positionnement.

@@ -1,31 +1,112 @@
 \chapter{Introduction}
 
-L'introduction est une section \emph{obligatoire} dans un rapport technique. Elle contient généralement au moins quatre paragraphes répondant aux questions suivantes: quel est le problème à résoudre ? Pourquoi y a-t-il un problème ? Quelle est la solution envisagée ? Pourquoi est-ce que la solution envisagée est meilleure que l'état de l'art ?
-
-En bref, on vous demande d'introduire votre travail, l'idée de départ et les objectifs attendus. Le lecteur qui découvrirait votre projet au travers de cette introduction devrait ainsi être capable d'en comprendre le cadre, l'idée générale et les aboutissants du projet.
-
 \section{Contexte}
+Ce travail de Bachelor, réalisé à la HEIG-VD, porte sur la conception
+complète d'un lecteur audio portable, depuis le schéma électronique et le
+routage de la carte jusqu'au firmware embarqué. Le sujet a été choisi
+librement : il ne répond pas à une commande industrielle, mais à la volonté
+de mener un projet d'ingénierie de bout en bout et d'aboutir à un appareil
+réel, fabriqué et fonctionnel.
 
-Cette section, bien que \emph{non obligatoire}, figure fréquemment en préambule de l'introduction afin de préciser le cadre formel dans lequel le projet s'inscrit. Elle permet de situer le sujet dans un contexte plus large que ne le suggère l'intitulé du projet. Souvent, ce dernier est réalisé dans un environnement industriel, en réponse à une problématique globale. La présentation du contexte contribue ainsi à clarifier les enjeux, les objectifs et les contraintes associés au projet.
+Le lecteur audio dédié a largement disparu du marché grand public, absorbé
+par le smartphone. Il subsiste néanmoins dans des usages où la séparation des
+fonctions garde un intérêt : autonomie consacrée à la seule lecture, absence
+de distractions, ou simple préférence pour un objet matériel dédié. C'est
+dans cette logique que s'inscrit l'appareil développé ici, conçu comme un
+objet autonome et compact plutôt que comme une alternative au téléphone. \\
+
 
 \section{Problématique}
+Concevoir un lecteur audio portable ne se résume pas à assembler des blocs
+fonctionnels connus. La difficulté tient à leur intégration simultanée dans
+un objet compact, autonome et fonctionnel, sous des contraintes qui
+s'opposent fréquemment.
 
-La problématique constitue le cœur de l'introduction et représente le point de départ de votre réflexion. Elle doit être clairement définie afin de présenter de manière explicite le problème que vous souhaitez résoudre. Une problématique bien formulée permet au lecteur de comprendre les enjeux du projet, le contexte dans lequel il s'inscrit et les raisons pour lesquelles cette question mérite d'être traitée.
+La qualité audio exige une chaîne analogique à faible bruit, alors que la
+connectivité sans fil introduit des émissions RF (Bluetooth) à proximité
+immédiate de cette chaîne sensible. La compacité recherchée s'oppose à
+l'autonomie visée, qui suppose une batterie de capacité suffisante et une
+gestion fine de l'énergie. Le routage d'une carte multicouche doit isoler les
+signaux audio analogiques des signaux numériques rapides et des plans
+d'alimentation. Enfin, le firmware doit orchestrer en parallèle des tâches aux
+exigences temporelles très différentes — le flux audio ne tolère aucune
+interruption, tandis que l'affichage et la lecture de la carte SD sont moins
+critiques.
 
-Il ne s'agit pas seulement d'exposer un sujet, mais d'identifier une difficulté spécifique, un manque ou un besoin auquel votre projet apporte une réponse. Vous devez également souligner la pertinence de votre démarche : pourquoi ce problème est-il important ? Quelle valeur ajoutée votre travail est-il susceptible d'apporter ? En clarifiant ces points, vous démontrerez la légitimité et l'intérêt de votre projet.
+Le problème central n'est donc pas le fonctionnement de chaque bloc pris
+isolément, mais la maîtrise des interfaces entre eux : c'est à ces frontières,
+entre l'analogique et le numérique, entre le matériel et le logiciel, que se
+concentrent l'essentiel des compromis et des difficultés du projet. \\
 
+
+\clearpage
 \section{Objectifs}
+Les objectifs sont répartis en deux niveaux : un ensemble minimal, qui définit
+un appareil complet et fonctionnel, et des objectifs supplémentaires, abordés
+si le calendrier le permet.
 
-Cette section a pour but d'énoncer précisément les objectifs que vous vous fixez pour répondre à la problématique identifiée. Il ne s'agit pas simplement de décrire des intentions générales, mais de formuler des objectifs \emph{clairs, précis et mesurables}.
+\subsection{Objectifs minimums}
+\begin{itemize}
+    \item Établir les spécifications techniques et l'analyse fonctionnelle du
+          produit.
+    \item Concevoir l'architecture matérielle, le schéma électrique et le
+          layout d'un PCB multicouche, puis le boîtier mécanique.
+    \item Commander les composants, assembler la carte et valider le montage.
+    \item Développer le firmware assurant :
+          \begin{itemize}
+              \item la lecture de fichiers \texttt{.MP3} et \texttt{.WAV} depuis une
+                    carte microSD ;
+              \item le réglage du volume ;
+              \item la sortie audio via jack 3,5\,mm et via Bluetooth ;
+              \item la gestion de la batterie (charge et mesure d'état) ;
+              \item un affichage minimal du titre lu et du niveau de batterie ;
+              \item une structure de menus navigable.
+          \end{itemize}
+    \item Viser une autonomie de l'ordre de 10\,heures et une recharge par
+          USB-C.
+    \item Rédiger le présent rapport. \\
+\end{itemize}
 
-Chaque objectif doit être en cohérence avec le contexte et les enjeux du projet. Il est également essentiel que ces objectifs soient atteignables dans le cadre du projet et qu'ils puissent être validés à son terme. Une bonne pratique consiste à utiliser des critères SMART (Spécifique, Mesurable, Atteignable, Réaliste, Temporellement défini) pour s'assurer que vos objectifs sont bien définis.
 
-Par exemple, au lieu de formuler un objectif vague comme « améliorer le système », préférez une formulation claire : « Réduire le temps de réponse du système de 20\% d'ici la fin du projet ».
+\subsection{Objectifs supplémentaires}
+\begin{itemize}
+    \item Mise à jour du firmware depuis la carte microSD.
+    \item Synchronisation de l'heure via Bluetooth.
+    \item Interface graphique affichant en permanence l'heure, l'état de la
+          batterie et la connectivité active.
+    \item Menus enrichis : navigation dans la bibliothèque musicale (tri par
+          artiste, album, titre), réglages généraux et Bluetooth, égaliseur.
+    \item Écran de statistiques (tension, courant et température, luminosité).  \\
+\end{itemize}
+
 
 \section{Méthodologie}
+La démarche suit un déroulement descendant, de la définition fonctionnelle
+vers la réalisation, afin que chaque décision technique découle d'un besoin
+clairement établi en amont.
 
-La section méthodologie décrit la démarche que vous avez adoptée pour atteindre les objectifs fixés et résoudre la problématique. Elle doit expliquer de manière structurée et argumentée les étapes suivies, les choix effectués, ainsi que les outils et méthodes utilisés.
+Le projet débute par une analyse fonctionnelle qui fixe ce que l'appareil doit
+faire, indépendamment de toute solution technique. Ces fonctions sont ensuite
+traduites en spécifications, qui guident le choix des composants et
+l'architecture matérielle. La conception matérielle précède le logiciel : le
+schéma électrique, puis le routage du PCB, sont établis avant que le firmware
+ne puisse être validé sur la cible. Ce séquencement impose d'anticiper, dès la
+conception de la carte, les contraintes que le logiciel rencontrera ensuite.
 
-Vous devez justifier chacune de vos décisions : pourquoi avez-vous opté pour une telle approche plutôt qu'une autre ? Quels sont les avantages de cette méthode par rapport aux alternatives disponibles ? Cette section permet également de présenter les critères de sélection des outils, les méthodes d'analyse utilisées, ainsi que le cadre expérimental mis en place.
+Le choix du microcontrôleur s'est porté sur l'ESP32, qui intègre nativement le
+Bluetooth et offre les périphériques nécessaires (I\textsuperscript{2}S, SPI,
+I\textsuperscript{2}C) ainsi que la mémoire requise pour le décodage audio et
+le rendu graphique. La conception matérielle est menée sous Altium Designer,
+avec une attention particulière portée à la séparation des domaines
+analogiques, numériques et d'alimentation sur un empilage à quatre couches.
 
-En clarifiant votre démarche méthodologique, vous montrez non seulement la rigueur de votre travail, mais vous facilitez aussi la compréhension et la reproductibilité de vos résultats.
+Le firmware repose sur l'environnement ESP-IDF et le système temps réel
+FreeRTOS. Il est organisé en couches, depuis l'abstraction du matériel
+jusqu'aux écrans de l'interface, afin de découpler les pilotes des services de
+plus haut niveau et de préserver la maintenabilité du code. Les traitements
+sont répartis en tâches concurrentes dont les priorités reflètent les
+exigences temporelles : la chaîne audio est prioritaire et protégée des autres
+traitements, tandis que l'interface et la maintenance s'exécutent à plus faible
+priorité. La validation s'effectue de façon incrémentale, bloc par bloc, puis
+par intégration progressive jusqu'à la lecture audio continue et la
+vérification de la liaison Bluetooth.
