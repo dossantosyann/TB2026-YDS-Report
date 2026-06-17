@@ -1,7 +1,147 @@
-\chapter{Analyse fonctionnelle}
+\chapter{Analyse et spécifications}
+\label{chap:analyse}
+Avant toute décision de conception, il convient de fixer le cadre auquel
+l'appareil devra répondre. Ce chapitre établit d'abord le cahier des charges,
+c'est-à-dire l'ensemble des exigences que le produit doit satisfaire, puis le
+traduit en spécifications techniques servant de référence vérifiable.
+Conformément à la démarche descendante annoncée en introduction, ces deux
+éléments précèdent l'analyse fonctionnelle, présentée ensuite, qui décompose le
+système en fonctions afin d'organiser la conception matérielle et logicielle. \\
 
-\section{Analyse fonctionnelle hardware}
+\section{Cahier des charges}
+Le sujet ayant été choisi librement, le cahier des charges ne découle pas d'une
+commande externe, il a été établi en début de projet et tient lieu de contrat
+que l'appareil doit honorer. Son caractère auto-imposé ne le rend pas moins
+contraignant, il délimite le périmètre du produit et sert de référence à
+l'ensemble des choix qui suivent.
 
-\fig[H, width=1\textwidth]{Analyse fonctionnelle - Niveau 1}{Analyse_Fonctionnelle-Niv1.drawio}
+L'appareil doit être un lecteur audio portable, autonome et compact, dédié à la
+seule lecture de musique. Cette vocation d'objet à fonction unique,
+transportable dans une poche et utilisable sans dépendre d'un autre appareil,
+oriente l'ensemble des exigences ci-dessous.  \\
 
-\fig[H, width=1\textwidth]{Analyse fonctionnelle - Niveau 2}{Analyse_Fonctionnelle-Niv2.drawio}
+\subsection{Exigences minimales}
+Sur le plan audio, le produit doit lire des fichiers aux formats \texttt{.MP3}
+et \texttt{.WAV} stockés sur une carte microSD, et restituer le son en stéréo
+selon deux voies au choix de l'utilisateur : une sortie filaire sur jack
+3,5\,mm et une sortie sans fil Bluetooth. Le volume d'écoute doit être réglable.
+
+Sur le plan énergétique, l'appareil doit fonctionner sur batterie lithium-ion
+avec une autonomie minimale de dix heures, et se recharger par un connecteur
+USB-C.
+
+Sur le plan de l'interface, un écran OLED graphique doit afficher au minimum le
+titre en cours de lecture et l'état de la batterie, et l'utilisateur doit
+pouvoir naviguer dans un système de menus à l'aide de commandes physiques.
+
+Enfin, ce même connecteur USB-C doit permettre la programmation du
+microcontrôleur, afin de n'exposer qu'une seule prise sur le boîtier.  \\
+
+\subsection{Objectifs supplémentaires}
+Au-delà de ce exigences minimales, les fonctions suivantes sont
+extensions souhaitables si le calendrier le permet :
+\begin{itemize}
+    \item mise à jour du firmware depuis la carte microSD, Bluetooth ou Wi-Fi.
+    \item synchronisation de l'heure via Bluetooth.
+    \item interface graphique avancée avec des animations, icônes et affichant en permanence l'heure, l'état de la
+          batterie et la connectivité active.
+    \item navigation dans la bibliothèque musicale, avec tri par artiste, album
+          et titre.
+    \item menus de réglages (général, Bluetooth, égaliseur).
+    \item écran de statistiques (tension, courant, température, luminosité).  \\
+\end{itemize}
+
+\section{Spécifications techniques}
+Là où le cahier des charges énonce les fonctions attendues, les spécifications
+techniques en fixent les exigences vérifiables. Imposées en début de projet,
+elles constituent la référence contre laquelle les performances de l'appareil
+seront contrôlées au chapitre consacré aux tests et à la validation. Le
+tableau~\ref{tab:specs} les récapitule.
+
+\begin{table}[h]
+    \centering
+    \caption{Spécifications techniques minimales}
+    \label{tab:specs}
+    \begin{tabular}{lll}
+        \hline
+        \textbf{Réf.} & \textbf{Spécification} & \textbf{Exigence}                 \\
+        \hline
+        SP1           & Restitution audio      & Stéréo, 24\,bits / 192\,kHz       \\
+        SP2           & Formats décodés        & \texttt{.MP3} et \texttt{.WAV}    \\
+        SP3           & Sortie filaire         & Jack 3.5\,mm                      \\
+        SP4           & Sortie sans fil        & Bluetooth A2DP                    \\
+        SP5           & Affichage              & OLED graphique                    \\
+        SP6           & Stockage               & Carte microSD                     \\
+        SP7           & Autonomie              & $\geq$ 10\,h sur batterie Li-ion  \\
+        SP8           & Alimentation externe   & Charge et programmation via USB-C \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\clearpage
+\section{Analyse fonctionnelle matérielle}
+L'analyse fonctionnelle traduit les exigences du cahier des charges en une
+décomposition du système, indépendamment du détail des composants. Elle est
+conduite à deux niveaux de granularité : le niveau~0 considère l'appareil comme
+une boîte noire et recense ses échanges avec l'environnement extérieur, le
+niveau~1 ouvre cette boîte et répartit les fonctions internes en blocs reliés
+par leurs flux d'énergie et de données. Cette décomposition sert ensuite de
+trame à la conception matérielle. \\
+
+\subsection{Niveau 0 : diagramme de contexte}
+Le niveau~0, présenté à la figure~\ref{fig:af-niv0}, situe l'appareil dans son
+environnement et identifie ses interfaces avec l'extérieur. L'appareil échange
+avec quatre éléments externes :
+\begin{itemize}
+    \item Le \textbf{port USB-C}, par lequel transitent l'énergie de recharge
+          et la programmation du microcontrôleur.
+    \item La \textbf{carte microSD}, support amovible contenant les fichiers
+          musicaux à lire.
+    \item Le \textbf{jack 3.5\,mm}, sortie audio filaire vers un casque ou des
+          écouteurs.
+    \item La liaison \textbf{Bluetooth}, sortie audio sans fil vers un appareil
+          d'écoute distant.
+\end{itemize}
+À l'exception de la liaison radio, qui rayonne directement par l'antenne,
+chacune de ces interfaces physiques traverse un étage de protection à la
+frontière du système. Cet étage, qui protège les broches exposées contre les
+décharges électrostatiques et les perturbations, constitue la première
+fonction rencontrée par tout signal entrant ou sortant. \\
+
+\fig[H, width=0.7\textwidth]{Analyse fonctionnelle matérielle - Niveau 0}{Analyse_Fonctionnelle-Niv1.drawio}
+\label{fig:af-niv0}
+
+\clearpage
+\subsection{Niveau 1 : décomposition interne}
+Le niveau~1, présenté à la figure~\ref{fig:af-niv1}, décompose le système en
+blocs fonctionnels et explicite les flux qui les relient. On distingue les flux
+d'énergie, issus de l'alimentation, et les flux de données,
+échangés autour du processeur.
+
+\paragraph{Énergie :} Le port USB-C fournit le 5\,V d'entrée, qui alimente le
+bloc \emph{Alimentation et batterie} après passage par l'étage de protection.
+Ce bloc assure la charge de l'accumulateur lithium-ion et la génération du
+3.3\,V régulé qui alimente l'ensemble de l'électronique, à commencer par le
+processeur.
+
+\paragraph{Traitement et données :} Le bloc \emph{Processeur et communication
+    sans-fil} occupe la position centrale : il orchestre l'ensemble des échanges.
+Il lit les fichiers musicaux sur la carte microSD via SPI, pilote
+l'affichage via un autre bus SPI, interroge les boutons via l'expanseur
+d'entrées-sorties via I\textsuperscript{2}C, et émet le flux audio sans
+fil par son antenne Bluetooth intégrée. La programmation s'effectue depuis le
+port USB-C par l'intermédiaire d'un pont USB-vers-UART.
+
+\paragraph{Chaîne audio filaire :} Pour la sortie filaire, le processeur
+transmet l'audio numérique au bloc \emph{Audio filaire} via
+I\textsuperscript{2}S pour les échantillons et via I\textsuperscript{2}C pour la
+configuration. Ce bloc convertit le fichier numérique en signal en analogique, l'amplifie, puis le
+restitue en stéréo sur le jack 3.5\,mm après passage par l'étage de protection.
+
+\fig[H, width=1\textwidth]{Analyse fonctionnelle matérielle - Niveau 1}{Analyse_Fonctionnelle-Niv2.drawio}
+\label{fig:af-niv1}
+
+Cette décomposition fonctionnelle découpe les sous-systèmes alimentation,
+traitement, interface utilisateur, stockage et audio, qui structureront le
+chapitre de conception matérielle, où chaque bloc est traduit en un choix de
+composants et un schéma.

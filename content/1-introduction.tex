@@ -41,43 +41,27 @@ concentrent l'essentiel des compromis et des difficultés du projet. \\
 
 \clearpage
 \section{Objectifs}
-Les objectifs sont répartis en deux niveaux : un ensemble minimal, qui définit
-un appareil complet et fonctionnel, et des objectifs supplémentaires, abordés
-si le calendrier le permet.
+Les objectifs présentés ici sont ceux du travail : les livrables à
+produire pour mener le projet à terme. Les exigences que doit satisfaire
+l'appareil lui-même, fonctions minimales et fonctions additionnelles, font
+l'objet du cahier des charges, détaillé au chapitre~\ref{chap:analyse}.
 
-\subsection{Objectifs minimums}
+L'objectif général est de concevoir, de bout en bout, un lecteur audio
+portable dédié, compact et fonctionnel. Il se décline en livrables successifs :
 \begin{itemize}
-    \item Établir les spécifications techniques et l'analyse fonctionnelle du
+    \item établir les spécifications techniques et l'analyse fonctionnelle du
           produit.
-    \item Concevoir l'architecture matérielle, le schéma électrique et le
-          layout d'un PCB multicouche, puis le boîtier mécanique.
-    \item Commander les composants, assembler la carte et valider le montage.
-    \item Développer le firmware assurant :
-          \begin{itemize}
-              \item la lecture de fichiers \texttt{.MP3} et \texttt{.WAV} depuis une
-                    carte microSD ;
-              \item le réglage du volume ;
-              \item la sortie audio via jack 3,5\,mm et via Bluetooth ;
-              \item la gestion de la batterie (charge et mesure d'état) ;
-              \item un affichage minimal du titre lu et du niveau de batterie ;
-              \item une structure de menus navigable.
-          \end{itemize}
-    \item Viser une autonomie de l'ordre de 10\,heures et une recharge par
-          USB-C.
-    \item Rédiger le présent rapport. \\
+    \item concevoir l'architecture matérielle, le schéma électrique puis le
+          layout d'un PCB multicouche.
+    \item modéliser le boîtier mécanique.
+    \item commander les composants, assembler la carte et valider le montage.
+    \item développer le firmware assurant les fonctions attendues.
+    \item rédiger le présent rapport.  \\
 \end{itemize}
 
-
-\subsection{Objectifs supplémentaires}
-\begin{itemize}
-    \item Mise à jour du firmware depuis la carte microSD.
-    \item Synchronisation de l'heure via Bluetooth.
-    \item Interface graphique affichant en permanence l'heure, l'état de la
-          batterie et la connectivité active.
-    \item Menus enrichis : navigation dans la bibliothèque musicale (tri par
-          artiste, album, titre), réglages généraux et Bluetooth, égaliseur.
-    \item Écran de statistiques (tension, courant et température, luminosité).  \\
-\end{itemize}
+Ces fonctions se répartissent en deux niveaux : des prérequis minimaux, qui suffisent à
+faire un appareil complet et utilisable, et des fonctions supplémentaires,
+ajoutées si le temps le permet. Le détail figure au cahier des charges.  \\
 
 
 \section{Méthodologie}
