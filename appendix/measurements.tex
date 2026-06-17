@@ -1,7 +1,8 @@
 %  --- Définitions de chapitres ---
 \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
-\newcommand{\protocolcols}{C{0.05\linewidth} L{0.26\linewidth} L{0.25\linewidth} C{0.13\linewidth} L{0.21\linewidth}}
+\newcolumntype{P}{C{0.05\linewidth} L{0.26\linewidth} L{0.25\linewidth} C{0.13\linewidth} L{0.21\linewidth}}
+\providecommand{\rh}{\rule[-1.1\baselineskip]{0pt}{2.6\baselineskip}}
 \newcommand{\phdr}{%
     \textbf{N\textsuperscript{o}} & \textbf{Point(s) à mesurer} & \textbf{Valeur attendue} &
     \textbf{Valeur mesurée} & \textbf{OK / NOK + remarques} \\}
@@ -41,7 +42,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Contrôles avant mise sous tension}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Inspection visuelle et contrôles à l'ohmmètre (carte hors tension).}
     \label{tab:proto-preflight}                                                                                                                                                        \\
     \toprule \phdr \midrule \endfirsthead
@@ -66,7 +67,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Mise sous tension et alimentations}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Alimentations et gestion d'énergie (sous tension, alimentation à courant limité).}
     \label{tab:proto-power}                                                                                                                                                                                 \\
     \toprule \phdr \midrule \endfirsthead
@@ -95,7 +96,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Démarrage, EN et strapping}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Reset, strapping et démarrage du module ESP32-WROVER-E.}
     \label{tab:proto-boot}                                                                                              \\
     \toprule \phdr \midrule \endfirsthead
@@ -112,7 +113,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{USB, pont UART et programmation}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Pont CP2102N, multiplexeur TC7USB40MU et flash.}
     \label{tab:proto-usb}                                                                                                                            \\
     \toprule \phdr \midrule \endfirsthead
@@ -130,7 +131,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Bus I\textsuperscript{2}C — détection des périphériques}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Scan I\textsuperscript{2}C (adresses à confirmer selon le câblage des broches d'adresse).}
     \label{tab:proto-i2c}                                                                                                           \\
     \toprule \phdr \midrule \endfirsthead
@@ -148,7 +149,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Expanseur GPIO FXL6408D}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Contrôle des sorties (mute DAC, shutdown ampli) et lecture des boutons.}
     \label{tab:proto-fxl}                                                                                                                    \\
     \toprule \phdr \midrule \endfirsthead
@@ -165,7 +166,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Jauge de carburant MAX17260}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Lecture des registres de la jauge (ModelGauge m5).}
     \label{tab:proto-gauge}                                                                                    \\
     \toprule \phdr \midrule \endfirsthead
@@ -183,7 +184,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Chargeur MAX77757 (registres)}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{État de charge et limites programmées.}
     \label{tab:proto-charger}                                                                                                                              \\
     \toprule \phdr \midrule \endfirsthead
@@ -200,7 +201,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Potentiomètre de volume (ADC)}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Lecture ADC du potentiomètre de volume.}
     \label{tab:proto-pot}                                                                                                               \\
     \toprule \phdr \midrule \endfirsthead
@@ -216,7 +217,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Affichage OLED SSD1333 (SPI2)}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Initialisation et rendu de l'écran.}
     \label{tab:proto-oled}                                                                                                                             \\
     \toprule \phdr \midrule \endfirsthead
@@ -233,7 +234,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Carte microSD (SPI3 + FATFS)}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Montage du système de fichiers et accès aux données.}
     \label{tab:proto-sd}                                                                                             \\
     \toprule \phdr \midrule \endfirsthead
@@ -250,7 +251,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Chaîne audio — signaux numériques (I\textsuperscript{2}S)}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Signaux d'horloge et de données I\textsuperscript{2}S (contenu à 44,1~kHz, 16~bits).}
     \label{tab:proto-i2s}                                                                                                                                                       \\
     \toprule \phdr \midrule \endfirsthead
@@ -267,7 +268,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Chaîne audio — analogique}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Sortie DAC, filtre RC, amplificateur et jack (signal de test 1~kHz, volume numérique documenté).}
     \label{tab:proto-analog}                                                                                                                                                          \\
     \toprule \phdr \midrule \endfirsthead
@@ -291,7 +292,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Audio Bluetooth (A2DP)}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Liaison A2DP et contrôle AVRCP.}
     \label{tab:proto-bt}                                                                                                   \\
     \toprule \phdr \midrule \endfirsthead
@@ -308,7 +309,7 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
 % =====================================================================
 \section{Tests fonctionnels et intégration}
 % =====================================================================
-\begin{longtable}{\protocolcols}
+\begin{longtable}{P}
     \caption{Essais bout en bout et tenue en fonctionnement.}
     \label{tab:proto-func}                                                                                                                                            \\
     \toprule \phdr \midrule \endfirsthead
