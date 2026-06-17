@@ -15,12 +15,12 @@
             <mxPoint x="3" y="-3" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="zYMX3MGjl0S8vz_TeQ27-15" edge="1" parent="1" source="mWaRPkYXV2c9awh6F8o4-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" target="mWaRPkYXV2c9awh6F8o4-29">
+        <mxCell id="zYMX3MGjl0S8vz_TeQ27-15" edge="1" parent="1" source="mWaRPkYXV2c9awh6F8o4-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" target="mWaRPkYXV2c9awh6F8o4-29">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="zYMX3MGjl0S8vz_TeQ27-17" connectable="0" parent="zYMX3MGjl0S8vz_TeQ27-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;div&gt;USB&lt;/div&gt;&lt;div&gt;Data&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.505" y="-2" as="geometry">
-            <mxPoint as="offset" />
+            <mxPoint x="5" y="-2" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="mWaRPkYXV2c9awh6F8o4-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Port USB-C" vertex="1">
@@ -55,7 +55,7 @@
         <mxCell id="mWaRPkYXV2c9awh6F8o4-16" edge="1" parent="1" source="mWaRPkYXV2c9awh6F8o4-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#000000;startArrow=classic;startFill=1;" target="mWaRPkYXV2c9awh6F8o4-31">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="InfD0HFL66ZjcEA0G4re-1" connectable="0" parent="mWaRPkYXV2c9awh6F8o4-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SPI 1" vertex="1">
+        <mxCell id="InfD0HFL66ZjcEA0G4re-1" connectable="0" parent="mWaRPkYXV2c9awh6F8o4-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SPI 3" vertex="1">
           <mxGeometry relative="1" x="0.3219" y="2" as="geometry">
             <mxPoint x="-45" y="3" as="offset" />
           </mxGeometry>
@@ -121,7 +121,7 @@
         <mxCell id="InfD0HFL66ZjcEA0G4re-42" edge="1" parent="1" source="mWaRPkYXV2c9awh6F8o4-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" target="mWaRPkYXV2c9awh6F8o4-23" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="InfD0HFL66ZjcEA0G4re-43" connectable="0" parent="InfD0HFL66ZjcEA0G4re-42" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SPI 1" vertex="1">
+        <mxCell id="InfD0HFL66ZjcEA0G4re-43" connectable="0" parent="InfD0HFL66ZjcEA0G4re-42" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="SPI 3" vertex="1">
           <mxGeometry relative="1" x="0.4232" y="1" as="geometry">
             <mxPoint x="-16" y="1" as="offset" />
           </mxGeometry>
@@ -186,7 +186,7 @@
         <mxCell id="1Toc3cIqXZPEAH0HjKzK-1" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontStyle=1;fontSize=16;" value="Système" vertex="1">
           <mxGeometry height="30" width="60" x="383" y="310" as="geometry" />
         </mxCell>
-        <mxCell id="zYMX3MGjl0S8vz_TeQ27-10" edge="1" parent="1" source="mWaRPkYXV2c9awh6F8o4-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.673;entryY=0.993;entryDx=0;entryDy=0;entryPerimeter=0;" target="mWaRPkYXV2c9awh6F8o4-9">
+        <mxCell id="zYMX3MGjl0S8vz_TeQ27-10" edge="1" parent="1" source="mWaRPkYXV2c9awh6F8o4-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.673;entryY=0.993;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;" target="mWaRPkYXV2c9awh6F8o4-9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="zYMX3MGjl0S8vz_TeQ27-12" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Bluetooth" vertex="1">
