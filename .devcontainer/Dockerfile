@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM --platform=linux/amd64 ubuntu:24.04
 LABEL maintainer="Yves Chevallier <yves.chevallier@heig-vd.ch>"
 
 ARG DEBIAN_FRONTEND=noninteractive
