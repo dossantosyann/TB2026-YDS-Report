@@ -1,98 +1,117 @@
 %  --- Définitions de chapitres ---
 \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
-\newcolumntype{P}{C{0.05\linewidth} L{0.26\linewidth} L{0.25\linewidth} C{0.13\linewidth} L{0.21\linewidth}}
-\providecommand{\rh}{\rule[-1.1\baselineskip]{0pt}{2.6\baselineskip}}
+\newcolumntype{P}{C{0.05\linewidth} L{0.25\linewidth} L{0.2\linewidth} C{0.25\linewidth} L{0.16\linewidth}}
+
+\providecommand{\rh}{}
 \newcommand{\phdr}{%
-    \textbf{N\textsuperscript{o}} & \textbf{Point(s) à mesurer} & \textbf{Valeur attendue} &
-    \textbf{Valeur mesurée} & \textbf{OK / NOK + remarques} \\}
+    \textbf{N\textsuperscript{o}} & \textbf{Points à mesurer} & \textbf{Valeur attendue} &
+    \textbf{Valeur mesurée} & \textbf{OK/NOK} \\}
+
+\newcounter{mesure}
+\newcommand{\ydnm}{\stepcounter{mesure}\arabic{mesure}}
 % ---------------------------------
 
 \chapter{Protocole de test et de validation matérielle}
 \label{chap:protocole-test}
 
 \setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{2.5}
 
-Cette annexe regroupe l'ensemble des mesures de mise en service (\textit{bring-up})
-de la carte YDSTB2026. Les essais sont ordonnés de façon à valider progressivement
-le matériel : contrôles hors tension, puis alimentations, puis communication et
-programmation, puis périphériques numériques, et enfin la chaîne audio et les essais
-fonctionnels. Cet ordre n'est pas arbitraire : on ne sollicite un étage que lorsque
-son alimentation a été validée, afin de ne pas endommager un composant sur un rail
-mal réglé ou court-circuité.
+Ce protocole rassemble les mesures de mise en service de la
+carte électronique réalisée. Les essais suivent une progression destinée à valider
+le matériel par étapes successives : contrôles hors tension, alimentations,
+communication et programmation, périphériques numériques, puis chaîne audio et
+essais fonctionnels. Cet ordre répond à une exigence de sécurité : un étage
+n'est sollicité qu'une fois son alimentation validée, afin de ne pas endommager
+un composant sur un rail mal réglé ou court-circuité.
 
-\paragraph{Précautions.}
-La première mise sous tension se fait de préférence sur une alimentation de laboratoire
-à \textbf{courant limité} (limite basse, p.~ex. 100--200~mA), afin qu'un court-circuit
-non détecté à l'ohmmètre se traduise par une limitation de courant et non par une
-destruction. L'\textbf{offset DC en sortie de jack} (mesure n\textsuperscript{o}~71)
-est vérifié \emph{avant} de connecter un casque de valeur. Les niveaux audio sont
-montés progressivement, en partant d'un volume numérique bas.
+\paragraph{Précautions :}
+La première mise sous tension s'effectue sur une alimentation de laboratoire à
+courant limité, entre 200 et 300 mA, un
+court-circuit échappé au contrôle à l'ohmmètre se traduit alors par une
+limitation de courant plutôt que par une destruction. L'offset continu
+en sortie de jack est vérifié avant le
+branchement d'un casque, et les niveaux audio sont montés progressivement
+depuis un volume numérique bas.
 
-\paragraph{Matériel recommandé.}
-Multimètre, alimentation de laboratoire à courant limité, oscilloscope, générateur de
-signal ou fichier MP3 de test (1~kHz), charge audio (casque de test ou résistances),
-et, en option, un analyseur audio pour le THD+N et le SNR.
+\paragraph{Matériel : }
+Multimètre, alimentation de laboratoire à courant limité, oscilloscope, fichier
+MP3 de test à 1~kHz, charge audio (casque de test ou résistances) et un analyseur
+audio pour la mesure du THD+N et du SNR.
 
-\paragraph{Lecture des tableaux.}
-Pour les contrôles visuels, la « valeur attendue » est l'état conforme recherché.
-La colonne « Valeur mesurée » est laissée vide pour le relevé ; la dernière colonne
-sert au verdict (OK/NOK) et aux remarques éventuelles.
+\paragraph{Lecture des tableaux : }
+Pour les contrôles visuels, la valeur attendue désigne l'état conforme
+recherché. La dernière colonne consigne le verdict (OK/NOK) et les remarques éventuelles.
+
+\clearpage
+
+
 
 % =====================================================================
 \section{Contrôles avant mise sous tension}
 % =====================================================================
+
+Contrôles au ohmmètre, carte hors tension et \textbf{batterie déconnectée}, précautions ESD.
+Pour chaque mesure rail–masse, laisser la lecture se stabiliser (charge des condensateurs de découplage)
+avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
+
 \begin{longtable}{P}
     \caption{Inspection visuelle et contrôles à l'ohmmètre (carte hors tension).}
-    \label{tab:proto-preflight}                                                                                                                                                        \\
+    \label{tab:proto-preflight}                                                                                                    \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                                              \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                          \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                                             \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                         \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 1  & Inspection visuelle générale (soudures, ponts, composants manquants ou décalés)                    & Aucun pont ni manque, soudures conformes                        &  & \\
-    \rh 2  & Polarité des composants polarisés (TVS/diodes, condensateurs, connecteur batterie, U1, DAC, ampli) & Repères pin 1 / cathodes corrects                               &  & \\
-    \rh 3  & Connecteur USB-C (alignement, absence de pont entre pads)                                          & Conforme                                                        &  & \\
-    \rh 4  & Continuité du plan de masse entre points de test GND                                               & $\approx$ 0~$\Omega$                                            &  & \\
-    \rh 5  & Court-circuit VBUS $\rightarrow$ GND                                                               & Pas de court (R non nulle, montée par charge des condensateurs) &  & \\
-    \rh 6  & Court-circuit VSYS (sortie chargeur) $\rightarrow$ GND                                             & Pas de court                                                    &  & \\
-    \rh 7  & Court-circuit VBAT $\rightarrow$ GND                                                               & Pas de court (si batterie connectée, on lit VBAT)               &  & \\
-    \rh 8  & Court-circuit 3V3 (sortie TPS62A01) $\rightarrow$ GND                                              & Pas de court                                                    &  & \\
-    \rh 9  & Court-circuit AVDD / CPVDD / DVDD du PCM5242 $\rightarrow$ GND                                     & Pas de court                                                    &  & \\
-    \rh 10 & Court-circuit PVDD du MAX97220 $\rightarrow$ GND                                                   & Pas de court                                                    &  & \\
-    \rh 11 & Isolement entre rails (VBUS / VSYS / 3V3 / VBAT entre eux)                                         & Pas de court inter-rails                                        &  & \\
-    \rh 12 & Orientation du connecteur batterie (pas d'inversion +/$-$)                                         & Correcte                                                        &  & \\
+    \rh \ydnm & Inspection visuelle (soudures, ponts, composants) & Aucun pont de soudure, aucun composant manquant ni décalé &  & \\ \hline
+    \rh \ydnm & Polarité des composants                           & Repère pin 1 / cathode conforme                           &  & \\ \hline
+    \rh \ydnm & Connecteur USB-C                                  & Aucun pont entre broches adjacentes                       &  & \\ \hline
+    \rh \ydnm & TP GND (continuité entre points)                  & $R < 1~\Omega$ entre tous les points GND                  &  & \\ \hline
+    \rh \ydnm & TP VBUS $\rightarrow$ GND                         & $R > 5~\Omega$                                            &  & \\ \hline
+    \rh \ydnm & TP VSys $\rightarrow$ GND                         & $R > 5~\Omega$                                            &  & \\ \hline
+    \rh \ydnm & TP VBatP $\rightarrow$ GND                        & $R > 5~\Omega$                                            &  & \\ \hline
+    \rh \ydnm & TP +3.3V $\rightarrow$ GND                        & $R > 5~\Omega$                                            &  & \\ \hline
+    \rh \ydnm & AVDD / CPVDD / DVDD du PCM5242 $\rightarrow$ GND  & $R > 5~\Omega$ sur chaque pin                             &  & \\ \hline
+    \rh \ydnm & PVDD du MAX97220 $\rightarrow$ GND                & $R > 5~\Omega$                                            &  & \\ \hline
+    \rh \ydnm & TP VBUS / VSys / +3.3V / VBatP (isolement mutuel) & $R > 5~\Omega$ entre chaque paire de rails                &  & \\ \hline
+    \rh \ydnm & Connecteur batterie                               & Pins +/$-$ conforme au schéma                             &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Mise sous tension et alimentations}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Alimentations et gestion d'énergie (sous tension, alimentation à courant limité).}
-    \label{tab:proto-power}                                                                                                                                                                                 \\
+    \label{tab:proto-power}                                                                                                        \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                                                                   \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                          \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                                                                  \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                         \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 13 & Courant d'appel à la 1\textsuperscript{re} mise sous tension (alim. limitée) & Pas de surintensité ; consommation au repos faible (à documenter)                                          &  & \\
-    \rh 14 & VBUS au connecteur USB-C                                                     & 5,0~V (4,75--5,25~V)                                                                                       &  & \\
-    \rh 15 & Entrée chargeur MAX77757 (CHGIN)                                             & $\approx$ VBUS (5~V), alimentation détectée valide                                                         &  & \\
-    \rh 16 & Sortie système du chargeur (SYS / VSYS)                                      & Tension présente, cohérente avec le mode (à confirmer selon config.)                                       &  & \\
-    \rh 17 & Tension batterie VBAT (cellule Li-ion)                                       & 3,0--4,2~V selon l'état de charge                                                                          &  & \\
-    \rh 18 & Courant de charge (batterie partiellement déchargée)                         & Conforme à I\textsubscript{CHG} programmé (à confirmer registre MAX77757)                                  &  & \\
-    \rh 19 & Tension de fin de charge (CV)                                                & 4,20~V ($\pm$50~mV) selon config.                                                                          &  & \\
-    \rh 20 & Sortie buck TPS62A01 (rail 3V3)                                              & 3,30~V ($\pm$3~\%, soit 3,20--3,40~V)                                                                      &  & \\
-    \rh 21 & Ondulation sur 3V3 (oscilloscope AC, en charge)                              & Faible (qq dizaines de mV cc max, à documenter)                                                            &  & \\
-    \rh 22 & PCM5242 — AVDD                                                               & 3,3~V ($\pm$5~\%)                                                                                          &  & \\
-    \rh 23 & PCM5242 — CPVDD (alim. charge pump)                                          & 3,3~V                                                                                                      &  & \\
-    \rh 24 & PCM5242 — VNEG (rail négatif charge pump)                                    & $\approx$ $-$3,3~V (charge pump active)                                                                    &  & \\
-    \rh 25 & PCM5242 — DVDD / sortie LDO interne                                          & Selon config. ($\approx$ 1,8~V si LDO interne, à confirmer datasheet)                                      &  & \\
-    \rh 26 & MAX97220 — PVDD                                                              & 3,3~V                                                                                                      &  & \\
-    \rh 27 & Superviseur XC6120N — sortie au repos (VBAT nominal)                         & Inactive (pas de mise en défaut)                                                                           &  & \\
-    \rh 28 & Seuil de détection sous-tension XC6120N (abaisser VBAT via alim. labo)       & Bascule au seuil V\textsubscript{DF} de la référence ($\approx$ 3,0~V typ., selon suffixe) ; coupe/signale &  & \\
+    \rh \ydnm & Courant d'appel à la mise sous tension (alim. limitée) & Pas de surintensité, consommation au repos faible    &  & \\ \hline
+    \rh \ydnm & TP VBUS                                                & 4,75--5,25~V                                         &  & \\ \hline
+    \rh \ydnm & TP VBatP                                               & 3,0--4,2~V selon l'état de charge                    &  & \\ \hline
+    \rh \ydnm & TP VSys, sans batterie, USB débranché                  & $\approx$ 0 V                                        &  & \\ \hline
+    \rh \ydnm & TP VSys, sans batterie, USB branché                    & $\approx$ VBUS                                       &  & \\ \hline
+    \rh \ydnm & TP VSys, avec batterie, USB débranché                  & $\approx$ VBAT                                       &  & \\ \hline
+    \rh \ydnm & TP VSys, avec batterie, USB branché                    & $\approx$ VBUS                                       &  & \\ \hline
+    \rh \ydnm & Courant de charge (sonde sur batterie)                 & Conforme à I\textsubscript{FAST} fixé par résistance &  & \\ \hline
+    \rh \ydnm & TP VBatP (fin de charge)                               & 4,20~V $\pm$50~mV                                    &  & \\ \hline
+    \rh \ydnm & TP +3.3V (sortie buck TPS62A01)                        & 3,30~V                                               &  & \\ \hline
+    \rh \ydnm & PCM5242 — AVDD (pin)                                   & 3,3~V                                                &  & \\ \hline
+    \rh \ydnm & PCM5242 — CPVDD (pin)                                  & 3,3~V                                                &  & \\ \hline
+    \rh \ydnm & PCM5242 — VNEG (pin)                                   & $-$3,3~V                                             &  & \\ \hline
+    \rh \ydnm & PCM5242 — DVDD (pin)                                   & 3,3~V                                                &  & \\ \hline
+    \rh \ydnm & PCM5242 — LDOO (pin, LDO interne)                      & 1,8~V                                                &  & \\ \hline
+    \rh \ydnm & MAX97220 — PVDD (pin)                                  & 3,3~V                                                &  & \\ \hline
+    \rh \ydnm & TP Supervisor                                          & $\approx$ VSys                                       &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Démarrage, EN et strapping}
 % =====================================================================
@@ -104,224 +123,290 @@ sert au verdict (OK/NOK) et aux remarques éventuelles.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                              \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 29 & Broche EN après mise sous tension        & 3,3~V (relâchée après le RC)                               &  & \\
-    \rh 30 & Broche GPIO0 au repos (mode boot normal) & Niveau haut (3,3~V)                                        &  & \\
-    \rh 31 & Détection PSRAM au boot (log ESP-IDF)    & SPIRAM détectée, taille attendue (8~Mo)                    &  & \\
-    \rh 32 & Log de boot lisible sur UART             & Boot ESP-IDF normal, pas de boucle de reset ni de brownout &  & \\
+    \rh \ydnm & TP fEN après mise sous tension        & 3,3~V                                                      &  & \\ \hline
+    \rh \ydnm & TP fIO0  au repos                     & 3,3~V                                                      &  & \\ \hline
+    \rh \ydnm & Détection PSRAM au boot (log ESP-IDF) & SPIRAM détectée 16 Mo                                      &  & \\ \hline
+    \rh \ydnm & TP TXD (log de boot UART)             & Boot ESP-IDF normal, pas de boucle de reset ni de brownout &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{USB, pont UART et programmation}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Pont CP2102N, multiplexeur TC7USB40MU et flash.}
-    \label{tab:proto-usb}                                                                                                                            \\
+    \label{tab:proto-usb}                                                                            \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                            \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                            \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                           \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                           \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 33 & Énumération du CP2102N sur l'hôte                              & Port COM/tty détecté (Silicon Labs CP210x)                        &  & \\
-    \rh 34 & Routage du mux TC7USB40MU (CP2102N $\leftrightarrow$ chargeur) & Commute selon la sélection ; D+/D$-$ vers CP2102N en mode debug   &  & \\
-    \rh 35 & Auto-flash (esptool pilotant DTR/RTS)                          & Entrée en mode bootloader sans appui manuel ; EN et GPIO0 pilotés &  & \\
-    \rh 36 & Connexion esptool (chip\_id / MAC)                             & Identifie ESP32, lit la MAC sans erreur                           &  & \\
-    \rh 37 & Flash d'un firmware de test puis boot                          & Flash OK, redémarrage et exécution                                &  & \\
+    \rh \ydnm & Connecter USB à PC                    & Port COM détecté (Silicon Labs CP210x)  &  & \\ \hline
+    \rh \ydnm & TP USBDIR, MCU non programmé          & 0 V (USB vers CP2102N)                  &  & \\ \hline
+    \rh \ydnm & TP USBDIR, MCU programmé              & 3.3 V (USB vers MAX77757)               &  & \\ \hline
+    \rh \ydnm & Connexion esptool                     & Identifie ESP32, lit la MAC sans erreur &  & \\ \hline
+    \rh \ydnm & Flash d'un firmware de test puis boot & Flash OK, redémarrage et exécution      &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Bus I\textsuperscript{2}C — détection des périphériques}
 % =====================================================================
 \begin{longtable}{P}
-    \caption{Scan I\textsuperscript{2}C (adresses à confirmer selon le câblage des broches d'adresse).}
-    \label{tab:proto-i2c}                                                                                                           \\
+    \caption{Détection des périphériques sur le bus I\textsuperscript{2}C.}
+    \label{tab:proto-i2c}                                                                                             \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                           \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                             \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                          \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                            \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 38 & Détection FXL6408D                   & ACK à l'adresse attendue ($\approx$ 0x43, selon broche ADDR — à confirmer) &  & \\
-    \rh 39 & Détection PCM5242                    & ACK (0x4C par défaut ; 0x4C--0x4F selon broches ADR)                       &  & \\
-    \rh 40 & Détection MAX17260                   & ACK à 0x36                                                                 &  & \\
-    \rh 41 & Détection MAX77757                   & ACK à l'adresse attendue (à confirmer datasheet)                           &  & \\
-    \rh 42 & Absence d'adresse parasite / conflit & Seules les 4 adresses attendues répondent                                  &  & \\
+    \rh \ydnm & Scan I²C : PI4IOE5V9554 (bus TP SDA / SCL)           & ACK à 0x20 (A2/A1/A0 au GND)              &  & \\ \hline
+    \rh \ydnm & Scan I²C : PCM5242                                   & ACK à 0x4C (ADR1/ADR2 au GND)             &  & \\ \hline
+    \rh \ydnm & Scan I²C : MAX17260                                  & ACK à 0x36 (7~bits ; 0x6C en 8~bits)      &  & \\ \hline
+    \rh \ydnm & MAX77757 absent du bus (chargeur autonome, sans I²C) & Aucun ACK attendu pour le chargeur        &  & \\ \hline
+    \rh \ydnm & Absence d'adresse parasite / conflit                 & Seules les 3 adresses ci-dessus répondent &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
-\section{Expanseur GPIO FXL6408D}
+\section{Expanseur GPIO PI4IOE5V9554}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Contrôle des sorties (mute DAC, shutdown ampli) et lecture des boutons.}
-    \label{tab:proto-fxl}                                                                                                                    \\
+    \label{tab:proto-expander}                                                                                                           \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                    \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                   \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                               \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 43 & Sortie « mute DAC » $\rightarrow$ broche XSMT du PCM5242        & Niveau conforme à la commande (mute = actif)             &  & \\
-    \rh 44 & Sortie « shutdown ampli » $\rightarrow$ broche SHDN du MAX97220 & Niveau conforme (shutdown = ampli coupé)                 &  & \\
-    \rh 45 & Lecture des boutons (chacun : repos puis appui)                 & Le niveau logique change à l'appui, sur tous les boutons &  & \\
-    \rh 46 & Interruption INT du FXL6408D vers l'ESP32                       & INT s'active au changement d'entrée ; ISR déclenchée     &  & \\
+    \rh \ydnm & TP DacMute (sortie Output 01h $\rightarrow$ XSMT du PCM5242) & Niveau conforme à la commande (mute = actif bas)     &  & \\ \hline
+    \rh \ydnm & TP AmpSHDN (Output 01h $\rightarrow$ SHDN du MAX97220)       & Niveau conforme (shutdown = ampli coupé)             &  & \\ \hline
+    \rh \ydnm & TP bU / bD / bL / bR / bA / bB (Input 00h, repos puis appui) & Niveau logique change à l'appui sur tous les boutons &  & \\ \hline
+    \rh \ydnm & TP ExpINT (open-drain, actif bas) $\rightarrow$ ESP32        & INT s'active au changement d'entrée ; ISR déclenchée &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Jauge de carburant MAX17260}
 % =====================================================================
 \begin{longtable}{P}
-    \caption{Lecture des registres de la jauge (ModelGauge m5).}
-    \label{tab:proto-gauge}                                                                                    \\
+    \caption{Lecture des registres de la jauge (ModelGauge m5) et alerte batterie.}
+    \label{tab:proto-gauge}                                                                                                          \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                      \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                            \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                     \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                           \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 47 & VCell (09h) vs VBAT mesuré au multimètre & Écart $<$ $\pm$20~mV                              &  & \\
-    \rh 48 & RepSOC (06h)                             & 0--100~\%, plausible vis-à-vis de la tension      &  & \\
-    \rh 49 & Current (0Ah)                            & Signe et amplitude cohérents (charge vs décharge) &  & \\
-    \rh 50 & Temp (08h)                               & Température plausible (proche de l'ambiante)      &  & \\
-    \rh 51 & Suivi du SOC pendant charge/décharge     & Le SOC évolue dans le bon sens                    &  & \\
+    \rh \ydnm & Reg VCell (09h) vs TP VBatP                           & Écart $<$ $\pm$20~mV                                    &  & \\ \hline
+    \rh \ydnm & Reg RepSOC (06h)                                      & 0--100~\%, plausible vis-à-vis de la tension            &  & \\ \hline
+    \rh \ydnm & Reg Current (0Ah)                                     & Signe et amplitude cohérents (charge vs décharge)       &  & \\ \hline
+    \rh \ydnm & Reg Temp (08h)                                        & Température plausible (proche de l'ambiante)            &  & \\ \hline
+    \rh \ydnm & Suivi du SOC (charge / décharge)                      & Le SOC évolue dans le bon sens                          &  & \\ \hline
+    \rh \ydnm & TP BatAlrt (broche ALRT) au passage sous le seuil bas & La broche s'active au franchissement du seuil programmé &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
-\section{Chargeur MAX77757 (registres)}
+\section{Chargeur MAX77757 (broches d'état)}
 % =====================================================================
 \begin{longtable}{P}
-    \caption{État de charge et limites programmées.}
-    \label{tab:proto-charger}                                                                                                                              \\
+    \caption{État de charge et limites (chargeur autonome, lecture sur broches).}
+    \label{tab:proto-charger}                                                                                                                               \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                  \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                   \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                 \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                  \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 52 & Détection présence CHGIN (registre d'état)                 & « Input valid » quand l'USB est branché                                     &  & \\
-    \rh 53 & État de charge (off / CC / CV / done)                      & Cohérent avec la réalité (la complétion vient du chargeur, pas de la jauge) &  & \\
-    \rh 54 & Limite de courant d'entrée et courant de charge programmés & Conformes aux valeurs écrites                                               &  & \\
-    \rh 55 & Absence de défaut en fonctionnement normal                 & Aucun flag (thermique, timer, etc.)                                         &  & \\
+    \rh \ydnm & TP INOKB (entrée valide) à l'insertion USB                 & Niveau « input OK » quand VBUS valide (4,5--13,7~V)                       &  & \\ \hline
+    \rh \ydnm & Broche STAT (état de charge)                               & « En charge » puis « terminé », cohérent avec la réalité                  &  & \\ \hline
+    \rh \ydnm & Courant de charge (sonde sur batterie, TP VBatP)           & Conforme à I\textsubscript{FAST} fixé par résistance ($\leq$ 3,15~A)      &  & \\ \hline
+    \rh \ydnm & Détection CC / BC1.2, limite d'entrée (AICL) ; coupure THM & Limite d'entrée cohérente avec la source ; charge stoppée si THM tiré bas &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Potentiomètre de volume (ADC)}
 % =====================================================================
 \begin{longtable}{P}
-    \caption{Lecture ADC du potentiomètre de volume.}
-    \label{tab:proto-pot}                                                                                                               \\
+    \caption{Lecture du potentiomètre de volume.}
+    \label{tab:proto-pot}                                                                                       \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                               \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                       \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                              \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                      \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 56 & Lecture ADC, potentiomètre au minimum & Valeur brute proche de 0                                                      &  & \\
-    \rh 57 & Lecture ADC, potentiomètre au maximum & Proche de la pleine échelle ($\approx$ 4095, 12~bits)                         &  & \\
-    \rh 58 & Balayage sur toute la course          & Monotone, sans saut ni zone morte (tenir compte de la non-linéarité de l'ADC) &  & \\
+    \rh \ydnm & TP Vol (potentiomètre au minimum)     & $\approx$ 147~mV                                   &  & \\ \hline
+    \rh \ydnm & TP Vol (potentiomètre au maximum)     & $\approx$ 2518~mV                                  &  & \\ \hline
+    \rh \ydnm & TP Vol (balayage sur toute la course) & Monotone de 147 à 2518~mV, sans saut ni zone morte &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
-\section{Affichage OLED SSD1333 (SPI2)}
+\section{Affichage OLED SSD1333 (SPI)}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Initialisation et rendu de l'écran.}
-    \label{tab:proto-oled}                                                                                                                             \\
+    \label{tab:proto-oled}                                                                                                                                  \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                              \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                   \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                             \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                  \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 59 & Initialisation du SSD1333 (reset, séquence d'init) & Init sans erreur, écran allumé                                                  &  & \\
-    \rh 60 & Mire de test (couleurs RGB, dégradé, damier)       & Affichage correct en 176$\times$176, couleurs justes, pas de pixel/colonne mort &  & \\
-    \rh 61 & Orientation et origine des coordonnées             & Conformes au rendu attendu du framebuffer                                       &  & \\
-    \rh 62 & Taux de rafraîchissement du framebuffer custom     & Fluide, pas de \textit{tearing} notable (à documenter)                          &  & \\
+    \rh \ydnm & TP DispRST + bus TP SPI.SCK / MOSI / CS / D/C (init) & Init sans erreur, écran allumé                                                  &  & \\ \hline
+    \rh \ydnm & Mire de test (RGB, dégradé, damier)                  & Affichage correct en 176$\times$176, couleurs justes, pas de pixel/colonne mort &  & \\ \hline
+    \rh \ydnm & Orientation et origine des coordonnées               & Conformes au rendu attendu du framebuffer                                       &  & \\ \hline
+    \rh \ydnm & TP SPI.CS (période de trame, oscillo)                & Rafraîchissement régulier, pas de \textit{tearing} notable                      &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
-\section{Carte microSD (SPI3 + FATFS)}
+\section{Carte microSD (SPI + FATFS)}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Montage du système de fichiers et accès aux données.}
-    \label{tab:proto-sd}                                                                                             \\
+    \label{tab:proto-sd}                                                                                                \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                            \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                               \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                           \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                              \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 63 & Détection et montage FATFS                        & Montage réussi, capacité lue cohérente         &  & \\
-    \rh 64 & Test écriture puis relecture d'un fichier         & Données relues identiques (comparaison/CRC OK) &  & \\
-    \rh 65 & Lecture d'un fichier MP3 réel                     & Lecture des octets sans erreur                 &  & \\
-    \rh 66 & Détection insertion/retrait (si broche CD câblée) & État cohérent                                  &  & \\
+    \rh \ydnm & Bus TP SD.SCLK / MOSI / MISO / CS (montage FATFS) & Montage réussi, capacité lue cohérente         &  & \\ \hline
+    \rh \ydnm & Écriture puis relecture d'un fichier              & Données relues identiques (comparaison/CRC OK) &  & \\ \hline
+    \rh \ydnm & Lecture d'un fichier MP3 réel                     & Lecture des octets sans erreur                 &  & \\ \hline
+    \rh \ydnm & TP SD.Detect (insertion / retrait carte)          & État cohérent                                  &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Chaîne audio — signaux numériques (I\textsuperscript{2}S)}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Signaux d'horloge et de données I\textsuperscript{2}S (contenu à 44,1~kHz, 16~bits).}
-    \label{tab:proto-i2s}                                                                                                                                                       \\
+    \label{tab:proto-i2s}                                                                                                                                                    \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                                       \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                                    \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                                      \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                                   \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 67 & Horloge BCK (oscilloscope) & Présente, $f =$ n\textsubscript{bits} $\times$ F\textsubscript{s} (p.~ex. 64 $\times$ 44,1~kHz $\approx$ 2,82~MHz selon config.) &  & \\
-    \rh 68 & Horloge LRCK / WS          & $=$ F\textsubscript{s} (44,1~kHz)                                                                                                &  & \\
-    \rh 69 & Données SDIN / DOUT        & Activité synchronisée avec LRCK                                                                                                  &  & \\
-    \rh 70 & MCLK (si générée)          & Présente (p.~ex. 256 $\times$ F\textsubscript{s} $\approx$ 11,29~MHz selon config.)                                              &  & \\
+    \rh \ydnm & TP I2S.BCK (oscilloscope)          & Présente, $f =$ n\textsubscript{bits} $\times$ F\textsubscript{s} (p.~ex. 64 $\times$ 44,1~kHz $\approx$ 2,82~MHz) &  & \\ \hline
+    \rh \ydnm & TP I2S.LRCK / WS                   & $=$ F\textsubscript{s} (44,1~kHz)                                                                                  &  & \\ \hline
+    \rh \ydnm & TP I2S.SD (données)                & Activité synchronisée avec LRCK                                                                                    &  & \\ \hline
+    \rh \ydnm & MCLK (si générée, pas de TP dédié) & Présente (p.~ex. 256 $\times$ F\textsubscript{s} $\approx$ 11,29~MHz)                                              &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Chaîne audio — analogique}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Sortie DAC, filtre RC, amplificateur et jack (signal de test 1~kHz, volume numérique documenté).}
-    \label{tab:proto-analog}                                                                                                                                                          \\
+    \label{tab:proto-analog}                                                                                                                                                     \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                                             \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                                        \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                                            \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                                       \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 71 & Offset DC en sortie de jack (sans signal, ampli actif)  & $\approx$ 0~V (DirectDrive), qq mV max — \textbf{à vérifier avant de brancher un casque}                  &  & \\
-    \rh 72 & Sortie différentielle PCM5242 (OUTL+/$-$, 1~kHz 0~dBFS) & Pleine échelle $\approx$ 4,2~V\textsubscript{rms} ; atténuer via le volume num. pour le test              &  & \\
-    \rh 73 & Sortie après filtre RC (entrée ampli)                   & $\approx$ $-$6~dB vs sortie DAC (gain réseau 0,5), soit $\approx$ 2,1~V\textsubscript{rms} pleine échelle &  & \\
-    \rh 74 & Sortie au jack (MAX97220, charge haute impédance)       & Plafond $\approx$ 2,15~V\textsubscript{rms} ; signal 1~kHz propre, non écrêté au volume nominal           &  & \\
-    \rh 75 & Bruit de fond / souffle (sans signal, gain nominal)     & Faible, pas de sifflement ni bourdonnement audible                                                        &  & \\
-    \rh 76 & Séparation des canaux : tonalité L seule                & Signal sur le canal gauche, droit silencieux (valide le mapping INL/INR)                                  &  & \\
-    \rh 77 & Séparation des canaux : tonalité R seule                & Inverse du précédent                                                                                      &  & \\
-    \rh 78 & THD+N à 1~kHz, niveau nominal (analyseur audio)         & Faible ($<$ 0,01~\% visé, à documenter)                                                                   &  & \\
-    \rh 79 & SNR / plancher de bruit (analyseur audio)               & Élevé ($>$ 90--100~dB, à documenter)                                                                      &  & \\
-    \rh 80 & Volume numérique PCM5242 (registres 61/62)              & Variation conforme (0,5~dB/pas), mute en butée                                                            &  & \\
-    \rh 81 & Mapping potentiomètre $\rightarrow$ volume              & Cohérent et monotone du min au max                                                                        &  & \\
+    \rh \ydnm & TP JackL / JackR (offset DC, sans signal, ampli actif) & $\approx$ 0~V (DirectDrive), qq mV max — \textbf{à vérifier avant de brancher un casque}           &  & \\ \hline
+    \rh \ydnm & TP OUTLP/OUTLN/OUTRP/OUTRN du DAC (1~kHz, 0~dBFS)      & Pleine échelle $\approx$ 4,2~V\textsubscript{rms} ; atténuer via le volume num. pour le test       &  & \\ \hline
+    \rh \ydnm & TP INL$\pm$ / INR$\pm$ (entrée ampli, après filtre RC) & $\approx$ $-$6~dB vs sortie DAC (gain 0,5), soit $\approx$ 2,1~V\textsubscript{rms} pleine échelle &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR (charge haute impédance)              & Plafond $\approx$ 2,15~V\textsubscript{rms} ; signal 1~kHz propre, non écrêté                      &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR (souffle, sans signal, gain nominal)  & Faible, pas de sifflement ni bourdonnement audible                                                 &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : tonalité L seule                    & Signal sur le canal gauche, droit silencieux (valide le mapping INL/INR)                           &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : tonalité R seule                    & Inverse du précédent                                                                               &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : THD+N à 1~kHz                       & Faible ; réf. DAC $-$94~dB ($\approx$ 0,002~\%), système à relever                                 &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : SNR / dynamique                     & Élevé ; réf. DAC 114~dB, limité par l'ampli et le layout                                           &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : volume numérique PCM5242 (61/62)    & Variation conforme (0,5~dB/pas), mute en butée                                                     &  & \\ \hline
+    \rh \ydnm & TP Vol $\rightarrow$ niveau au TP JackL / JackR        & Cohérent et monotone du min au max                                                                 &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Audio Bluetooth (A2DP)}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Liaison A2DP et contrôle AVRCP.}
-    \label{tab:proto-bt}                                                                                                   \\
+    \label{tab:proto-bt}                                                                                                      \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                  \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                     \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                 \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                    \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 82 & Appairage avec un appareil source                       & Appairage réussi (codec SBC)                   &  & \\
-    \rh 83 & Lecture en streaming                                    & Son présent au jack, sans coupure              &  & \\
-    \rh 84 & Volume AVRCP (absolute volume)                          & Le réglage distant modifie le niveau de sortie &  & \\
-    \rh 85 & Bascule filaire $\leftrightarrow$ Bluetooth (AudioSink) & Commutation propre, sans blocage ni glitch     &  & \\
+    \rh \ydnm & Appairage A2DP (codec SBC)                              & Appairage réussi                               &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : lecture en streaming                 & Son présent, sans coupure                      &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : volume AVRCP (absolute volume)       & Le réglage distant modifie le niveau de sortie &  & \\ \hline
+    \rh \ydnm & Bascule filaire $\leftrightarrow$ Bluetooth (AudioSink) & Commutation propre, sans blocage ni glitch     &  & \\ \hline
 \end{longtable}
 
+
+\clearpage
 % =====================================================================
 \section{Tests fonctionnels et intégration}
 % =====================================================================
 \begin{longtable}{P}
     \caption{Essais bout en bout et tenue en fonctionnement.}
-    \label{tab:proto-func}                                                                                                                                            \\
+    \label{tab:proto-func}                                                                                                                            \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                             \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                             \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                            \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                            \\ \endfoot
     \bottomrule \endlastfoot
-    \rh 86 & Lecture MP3 complète depuis microSD (bout en bout)                           & Décodage libhelix, audio continu, buffer jamais en sous-alimentation &  & \\
-    \rh 87 & Navigation UI complète (boutons $\rightarrow$ écrans, push/pop)              & Réactive, pas de blocage de tâche                                    &  & \\
-    \rh 88 & Autonomie sur batterie (durée à un volume donné)                             & À documenter ; cohérente avec la capacité de la cellule              &  & \\
-    \rh 89 & Charge pendant la lecture (USB + lecture simultanés)                         & Fonctionne, la charge progresse, pas d'instabilité                   &  & \\
-    \rh 90 & Comportement à la décharge profonde (VBAT bas)                               & Le XC6120N protège avant une tension dangereuse                      &  & \\
-    \rh 91 & Thermique sous charge prolongée (TPS62A01, MAX77757, MAX97220, module ESP32) & Échauffement raisonnable, aucun point chaud anormal                  &  & \\
-    \rh 92 & Stabilité longue durée (lecture prolongée)                                   & Stable : pas de reset, de brownout ni de fuite mémoire               &  & \\
+    \rh \ydnm & Lecture MP3 complète depuis microSD (bout en bout)      & Décodage libhelix, audio continu, buffer jamais en sous-alimentation   &  & \\ \hline
+    \rh \ydnm & Navigation UI complète (boutons $\rightarrow$ écrans)   & Réactive, pas de blocage de tâche                                      &  & \\ \hline
+    \rh \ydnm & Autonomie sur batterie (sonde de courant, volume donné) & À documenter ; cohérente avec la capacité de la cellule                &  & \\ \hline
+    \rh \ydnm & Charge pendant la lecture (USB + lecture simultanés)    & Fonctionne, la charge progresse, pas d'instabilité                     &  & \\ \hline
+    \rh \ydnm & TP Supervisor (VIN) : décharge profonde (VBAT bas)      & Le XC6120N protège avant une tension dangereuse                        &  & \\ \hline
+    \rh \ydnm & Échauffement sous charge prolongée (caméra thermique)   & TPS62A01, MAX77757, MAX97220, module ESP32 : aucun point chaud anormal &  & \\ \hline
+\end{longtable}
+
+
+\clearpage
+% =====================================================================
+\section{Caractérisation audio à l'analyseur (Audio Precision)}
+% =====================================================================
+Ces mesures caractérisent la chaîne audio complète (PCM5242 $\rightarrow$ filtre RC
+$\rightarrow$ MAX97220 $\rightarrow$ jack) à l'analyseur Audio Precision. Le signal
+de test est généré par le lecteur lui-même via dichiers WAV de test sur la carte microSD
+et relevé à l'entrée de l'AP.
+
+Sauf indication contraire : tonalité 1~kHz, sortie à vide (sans résistance
+de charge, entrée haute impédance de l'analyseur), volume numérique documenté.
+Les mesures « sous charge » utilisent une résistance externe de 16 ou 32~$\Omega$
+placée en parallèle de l'entrée de l'analyseur.
+
+Les valeurs
+« réf. DAC » sont les limites théoriques de la datasheet du PCM5242. Les chiffres
+au niveau système sont à relever.
+
+\begin{longtable}{P}
+    \caption{Mesures audio à l'Audio Precision.}
+    \label{tab:proto-ap}                                                                                                                                   \\
+    \toprule \phdr \midrule \endfirsthead
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                  \\
+    \toprule \phdr \midrule \endhead
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                 \\ \endfoot
+    \bottomrule \endlastfoot
+    \rh \ydnm & TP JackL / JackR : niveau max                                       & $\approx$ 2,1~V\textsubscript{rms}                              &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : réponse en fréquence 20~Hz--20~kHz               & Plate $\pm$0,5~dB                                               &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : THD+N à 1~kHz                                    & réf. DAC $-$94~dB ($\approx$ 0,002~\%)                          &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : THD+N vs fréquence (20~Hz--20~kHz)               & Faible et plat sur la bande                                     &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : THD+N vs niveau (balayage, 1~kHz)                & Courbe en U. Relever valeur minimale                            &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : SNR pondéré A                                    & réf. DAC 114~dB                                                 &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : bruit résiduel pondéré A                         & quelques dizaines de $\mu$V                                     &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : diaphonie (1~kHz et 10~kHz)                      & ($>$ 80~dB à 1~kHz typ.                                         &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : balance L/R (registre volume identique)          & Écart $<$ 0,5~dB                                                &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : impédance de sortie à vide vs 32~$\Omega$)       & $Z_\mathrm{out} = R_L\,(V_\mathrm{vide}/V_\mathrm{charge} - 1)$ &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : réponse en fréquence sous charge 32~$\Omega$     & Variation faible                                                &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : niveau avant écrêtage (16~$\Omega$, 32~$\Omega$) & À relever                                                       &  & \\ \hline
+    \rh \ydnm & TP JackL / JackR : offset DC                                        & $\approx$ 0~V                                                   &  & \\ \hline
 \end{longtable}
