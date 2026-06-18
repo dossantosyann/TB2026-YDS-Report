@@ -175,16 +175,16 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
 % =====================================================================
 \begin{longtable}{P}
     \caption{Contrôle des sorties (mute DAC, shutdown ampli) et lecture des boutons.}
-    \label{tab:proto-expander}                                                                                                        \\
+    \label{tab:proto-expander}                                                                                                                                       \\
     \toprule \phdr \midrule \endfirsthead
-    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                             \\
+    \multicolumn{5}{l}{\footnotesize\itshape Tableau \thetable{} — suite}                                                                                            \\
     \toprule \phdr \midrule \endhead
-    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                            \\ \endfoot
+    \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                           \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP DacMute : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ $\approx$ 0~V (DAC mute)    \newline 1 $\rightarrow$ $\approx$ 3,3~V (DAC actif) &  & \\ \hline
-    \rh \ydnm & TP AmpSHDN : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ $\approx$ 0~V (ampli coupé) \newline 1 $\rightarrow$ $\approx$ 3,3~V (ampli actif) &  & \\ \hline
-    \rh \ydnm & TP bU / bD / bL / bR / bA / bB : relire l'entrée, repos puis appui & Repos $\approx$ 3,3~V                       \newline appui $\approx$ 0~V &  & \\ \hline
-    \rh \ydnm & TP ExpINT au changement d'un bouton                                & Passe à $\approx$ 0~V : ISR déclenchée      &  & \\ \hline
+    \rh \ydnm & TP DacMute : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ $\approx$ 0~V   \newline   1 $\rightarrow$ $\approx$ 3,3~V &  & \\ \hline
+    \rh \ydnm & TP AmpSHDN : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ $\approx$ 0~V   \newline   1 $\rightarrow$ $\approx$ 3,3~V &  & \\ \hline
+    \rh \ydnm & TP bU / bD / bL / bR / bA / bB : relire l'entrée, repos puis appui & Repos $\approx$ 3,3~V           \newline   appui $\approx$ 0~V             &  & \\ \hline
+    \rh \ydnm & TP ExpINT au changement d'un bouton                                & Passe à $\approx$ 0~V : ISR déclenchée                                     &  & \\ \hline
 \end{longtable}
 
 
