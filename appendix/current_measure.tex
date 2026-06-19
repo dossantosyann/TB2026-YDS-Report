@@ -1,0 +1,79 @@
+\chapter{Mesure de consommation de l'ESP32}
+\label{annexe:conso_esp32}
+
+La datasheet de l'ESP32-WROVER-E\,\cite{ESP32_WROVER-E_Datasheet} ne spécifie pas la consommation du module lors d'une diffusion audio par Bluetooth. Cette information étant nécessaire pour estimer la consommation du microcontrôleur dans les conditions d'utilisation du projet, une mesure empirique a été réalisée. Cette annexe en détaille le protocole et les résultats.
+
+\section{Justification de la mesure}
+
+La datasheet ne fournit que les courants en mode Wi-Fi (Table~16), avec un pic de 350\,mA en 802.11b TX à 19,5\,dBm et de 233\,mA en 802.11n TX. Le cas d'utilisation visé, lecture d'un fichier audio depuis une carte microSD, décodage logiciel et diffusion par Bluetooth Classic (profil A2DP), n'est pas couvert par ces spécifications. Une mesure empirique est donc nécessaire pour disposer d'un ordre de grandeur représentatif.
+
+\section{Banc de mesure}
+
+Le banc repose sur un ESP32-DevKitC monté sur breadboard et relié par SPI à un module de carte microSD. L'alimentation et la mesure sont assurées par le \textit{Power Profiler Kit~II} (PPK~II) de Nordic Semiconductor, configuré en mode \textit{Source Meter} : il délivre 3,3\,V au DevKit et mesure simultanément le courant consommé avec une résolution temporelle de l'ordre de la microseconde. Une enceinte Bluetooth sert de récepteur A2DP. Le firmware de test établit la connexion Bluetooth, lit un fichier \texttt{.WAV} depuis la carte microSD et transmet le flux audio à l'enceinte.
+
+\section{Résultats}
+
+La figure~\ref{fig:conso_vue} présente la capture complète. Le passage en transmission Bluetooth est nettement identifiable par l'élévation du courant moyen et l'apparition de pics réguliers.
+
+\fig[H, width=1\textwidth]{Mesure de courant -- ESP32-DevKitC -- vue d'ensemble de la mesure}{MesureCourantDevkit_30s.jpg}
+\label{fig:conso_vue}
+
+Deux régimes se distinguent, présentés à la figure~\ref{fig:conso_regimes}. Sans transmission active (lecture de la carte microSD et attente de connexion), le courant moyen est de 103,72\,mA avec un pic à 208,96\,mA. Avec transmission A2DP active, le courant moyen atteint 136,60\,mA et le pic 320,93\,mA. C'est ce second régime, le plus énergivore, qui est pertinent pour le dimensionnement.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{\assetsdir/MesureCourantDevkit_NoStreaming.jpg}
+        \caption{Sans transmission Bluetooth}
+        \label{fig:regime_nostreaming}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{\assetsdir/MesureCourantDevkit_Streaming.jpg}
+        \caption{Avec transmission Bluetooth}
+        \label{fig:regime_streaming}
+    \end{subfigure}
+    \caption{Mesure de courant -- ESP32-DevKitC -- comparaison des deux régimes}
+    \label{fig:conso_regimes}
+\end{figure}
+
+L'examen rapproché du régime de transmission, figure~\ref{fig:conso_zoom}, révèle deux composantes. Un courant de base de l'ordre de 170 à 180\,mA correspond au fonctionnement continu du processeur (décodage audio, gestion du SPI de la carte microSD, pile Bluetooth). Des pics de transmission radio atteignant environ 300\,mA se superposent sur des durées très courtes, de l'ordre de 120\,$\mu$s, correspondant aux salves d'émission du Bluetooth Classic.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{\assetsdir/MesureCourantDevkit_Streaming_Zoom_Constant.jpg}
+        \caption{Régime de base}
+        \label{fig:zoom_constant}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{\assetsdir/MesureCourantDevkit_Streaming_Zoom_Peak.jpg}
+        \caption{Pics d'émission radio}
+        \label{fig:zoom_peak}
+    \end{subfigure}
+    \caption{Mesure de courant -- ESP32-DevKitC -- détail du régime de transmission}
+    \label{fig:conso_zoom}
+\end{figure}
+
+Le pic mesuré de 320,93\,mA reste inférieur au pic Wi-Fi de 350\,mA spécifié en 802.11b (Table~16), ce qui est cohérent : la puissance d'émission du Bluetooth Classic est généralement inférieure à celle du Wi-Fi. Le tableau~\ref{tab:mesure_esp32} récapitule les valeurs retenues.
+
+\begin{table}[H]
+    \centering
+    \caption{Récapitulatif de la consommation mesurée du DevKit ESP32}
+    \label{tab:mesure_esp32}
+    \begin{tabular}{l c c}
+        \hline
+        \textbf{Paramètre}                 & \textbf{Valeur} & \textbf{Source}     \\
+        \hline
+        Courant moyen (transmission BT)    & 136,60\,mA      & Mesuré (PPK~II)     \\
+        Courant pic (transmission BT)      & 320,93\,mA      & Mesuré (PPK~II)     \\
+        Courant pic (Wi-Fi TX 802.11b)     & 350\,mA         & Datasheet, Table~16 \\
+        Courant min. d'alimentation requis & 500\,mA         & Datasheet, Table~14 \\
+        \hline
+    \end{tabular}
+\end{table}
