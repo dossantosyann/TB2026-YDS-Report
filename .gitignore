@@ -296,3 +296,6 @@ dist/
 
 # Mac stuff
 *.DS_Store
+
+# Divers
+CLAUDE.md
