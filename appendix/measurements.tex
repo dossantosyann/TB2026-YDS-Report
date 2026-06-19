@@ -3,7 +3,6 @@
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}m{#1}}
 \newcolumntype{P}{C{0.05\linewidth} L{0.25\linewidth} L{0.25\linewidth} C{0.25\linewidth} L{0.11\linewidth}}
 
-\providecommand{\rh}{}
 \newcommand{\phdr}{%
     \textbf{N\textsuperscript{o}} & \textbf{Points à mesurer} & \textbf{Valeur attendue} &
     \textbf{Valeur mesurée} & \textbf{OK/NOK} \\}
@@ -64,18 +63,18 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                         \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Inspection visuelle (soudures, ponts, composants) & Aucun pont de soudure, aucun composant manquant ni décalé &  & \\ \hline
-    \rh \ydnm & Polarité des composants                           & Repère pin 1 / cathode conforme                           &  & \\ \hline
-    \rh \ydnm & Connecteur USB-C                                  & Aucun pont entre broches adjacentes                       &  & \\ \hline
-    \rh \ydnm & TP GND (continuité entre points)                  & $R < 1~\Omega$ entre tous les points GND                  &  & \\ \hline
-    \rh \ydnm & TP VBUS $\rightarrow$ GND                         & $R > 5~\Omega$                                            &  & \\ \hline
-    \rh \ydnm & TP VSys $\rightarrow$ GND                         & $R > 5~\Omega$                                            &  & \\ \hline
-    \rh \ydnm & TP VBatP $\rightarrow$ GND                        & $R > 5~\Omega$                                            &  & \\ \hline
-    \rh \ydnm & TP +3.3V $\rightarrow$ GND                        & $R > 5~\Omega$                                            &  & \\ \hline
-    \rh \ydnm & AVDD / CPVDD / DVDD $\rightarrow$ GND (PCM5242)   & $R > 5~\Omega$ sur chaque pin                             &  & \\ \hline
-    \rh \ydnm & PVDD $\rightarrow$ GND (MAX97220)                 & $R > 5~\Omega$                                            &  & \\ \hline
-    \rh \ydnm & TP VBUS / VSys / +3.3V / VBatP (isolement mutuel) & $R > 5~\Omega$ entre chaque paire de rails                &  & \\ \hline
-    \rh \ydnm & Connecteur batterie                               & Pins +/$-$ conforme au schéma                             &  & \\ \hline
+    \ydnm & Inspection visuelle (soudures, ponts, composants) & Aucun pont de soudure, aucun composant manquant ni décalé &  & \\ \hline
+    \ydnm & Polarité des composants                           & Repère pin 1 / cathode conforme                           &  & \\ \hline
+    \ydnm & Connecteur USB-C                                  & Aucun pont entre broches adjacentes                       &  & \\ \hline
+    \ydnm & TP GND (continuité entre points)                  & $R < 1~\Omega$ entre tous les points GND                  &  & \\ \hline
+    \ydnm & TP VBUS $\rightarrow$ GND                         & $R > 5~\Omega$                                            &  & \\ \hline
+    \ydnm & TP VSys $\rightarrow$ GND                         & $R > 5~\Omega$                                            &  & \\ \hline
+    \ydnm & TP VBatP $\rightarrow$ GND                        & $R > 5~\Omega$                                            &  & \\ \hline
+    \ydnm & TP +3.3V $\rightarrow$ GND                        & $R > 5~\Omega$                                            &  & \\ \hline
+    \ydnm & AVDD / CPVDD / DVDD $\rightarrow$ GND (PCM5242)   & $R > 5~\Omega$ sur chaque pin                             &  & \\ \hline
+    \ydnm & PVDD $\rightarrow$ GND (MAX97220)                 & $R > 5~\Omega$                                            &  & \\ \hline
+    \ydnm & TP VBUS / VSys / +3.3V / VBatP (isolement mutuel) & $R > 5~\Omega$ entre chaque paire de rails                &  & \\ \hline
+    \ydnm & Connecteur batterie                               & Pins +/$-$ conforme au schéma                             &  & \\ \hline
 \end{longtable}
 
 
@@ -91,23 +90,23 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                         \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Courant d'appel à la mise sous tension (alim. limitée) & Pas de surintensité, consommation au repos faible    &  & \\ \hline
-    \rh \ydnm & TP VBUS                                                & 4,75--5,25~V                                         &  & \\ \hline
-    \rh \ydnm & TP VBatP                                               & 3,0--4,2~V selon l'état de charge                    &  & \\ \hline
-    \rh \ydnm & TP VSys, sans batterie, USB débranché                  & $\approx$ 0 V                                        &  & \\ \hline
-    \rh \ydnm & TP VSys, sans batterie, USB branché                    & $\approx$ VBUS                                       &  & \\ \hline
-    \rh \ydnm & TP VSys, avec batterie, USB débranché                  & $\approx$ VBAT                                       &  & \\ \hline
-    \rh \ydnm & TP VSys, avec batterie, USB branché                    & $\approx$ VBUS                                       &  & \\ \hline
-    \rh \ydnm & Courant de charge (sonde sur batterie)                 & Conforme à I\textsubscript{FAST} fixé par résistance &  & \\ \hline
-    \rh \ydnm & TP VBatP (fin de charge)                               & 4,20~V $\pm$50~mV                                    &  & \\ \hline
-    \rh \ydnm & TP +3.3V (sortie buck TPS62A01)                        & 3,30~V                                               &  & \\ \hline
-    \rh \ydnm & PCM5242 — AVDD (pin)                                   & 3,3~V                                                &  & \\ \hline
-    \rh \ydnm & PCM5242 — CPVDD (pin)                                  & 3,3~V                                                &  & \\ \hline
-    \rh \ydnm & PCM5242 — VNEG (pin)                                   & $-$3,3~V                                             &  & \\ \hline
-    \rh \ydnm & PCM5242 — DVDD (pin)                                   & 3,3~V                                                &  & \\ \hline
-    \rh \ydnm & PCM5242 — LDOO (pin, LDO interne)                      & 1,8~V                                                &  & \\ \hline
-    \rh \ydnm & MAX97220 — PVDD (pin)                                  & 3,3~V                                                &  & \\ \hline
-    \rh \ydnm & TP Supervisor                                          & $\approx$ VSys                                       &  & \\ \hline
+    \ydnm & Courant d'appel à la mise sous tension (alim. limitée) & Pas de surintensité, consommation au repos faible    &  & \\ \hline
+    \ydnm & TP VBUS                                                & 4,75--5,25~V                                         &  & \\ \hline
+    \ydnm & TP VBatP                                               & 3,0--4,2~V selon l'état de charge                    &  & \\ \hline
+    \ydnm & TP VSys, sans batterie, USB débranché                  & $\approx$ 0 V                                        &  & \\ \hline
+    \ydnm & TP VSys, sans batterie, USB branché                    & $\approx$ VBUS                                       &  & \\ \hline
+    \ydnm & TP VSys, avec batterie, USB débranché                  & $\approx$ VBAT                                       &  & \\ \hline
+    \ydnm & TP VSys, avec batterie, USB branché                    & $\approx$ VBUS                                       &  & \\ \hline
+    \ydnm & Courant de charge (sonde sur batterie)                 & Conforme à I\textsubscript{FAST} fixé par résistance &  & \\ \hline
+    \ydnm & TP VBatP (fin de charge)                               & 4,20~V $\pm$50~mV                                    &  & \\ \hline
+    \ydnm & TP +3.3V (sortie buck TPS62A01)                        & 3,30~V                                               &  & \\ \hline
+    \ydnm & PCM5242 — AVDD (pin)                                   & 3,3~V                                                &  & \\ \hline
+    \ydnm & PCM5242 — CPVDD (pin)                                  & 3,3~V                                                &  & \\ \hline
+    \ydnm & PCM5242 — VNEG (pin)                                   & $-$3,3~V                                             &  & \\ \hline
+    \ydnm & PCM5242 — DVDD (pin)                                   & 3,3~V                                                &  & \\ \hline
+    \ydnm & PCM5242 — LDOO (pin, LDO interne)                      & 1,8~V                                                &  & \\ \hline
+    \ydnm & MAX97220 — PVDD (pin)                                  & 3,3~V                                                &  & \\ \hline
+    \ydnm & TP Supervisor                                          & $\approx$ VSys                                       &  & \\ \hline
 \end{longtable}
 
 
@@ -123,10 +122,10 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                              \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP fEN après mise sous tension        & 3,3~V                                                      &  & \\ \hline
-    \rh \ydnm & TP fIO0  au repos                     & 3,3~V                                                      &  & \\ \hline
-    \rh \ydnm & Détection PSRAM au boot (log ESP-IDF) & SPIRAM détectée 16 Mo                                      &  & \\ \hline
-    \rh \ydnm & TP TXD (log de boot UART)             & Boot ESP-IDF normal, pas de boucle de reset ni de brownout &  & \\ \hline
+    \ydnm & TP fEN après mise sous tension        & 3,3~V                                                      &  & \\ \hline
+    \ydnm & TP fIO0  au repos                     & 3,3~V                                                      &  & \\ \hline
+    \ydnm & Détection PSRAM au boot (log ESP-IDF) & SPIRAM détectée 16 Mo                                      &  & \\ \hline
+    \ydnm & TP TXD (log de boot UART)             & Boot ESP-IDF normal, pas de boucle de reset ni de brownout &  & \\ \hline
 \end{longtable}
 
 
@@ -142,11 +141,11 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                           \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Connecter USB à PC                    & Port COM détecté (Silicon Labs CP2102N) &  & \\ \hline
-    \rh \ydnm & TP USBDIR, MCU non programmé          & 0 V (USB vers CP2102N)                  &  & \\ \hline
-    \rh \ydnm & TP USBDIR, MCU programmé              & 3.3 V (USB vers MAX77757)               &  & \\ \hline
-    \rh \ydnm & Connexion esptool                     & Identifie ESP32, lit la MAC sans erreur &  & \\ \hline
-    \rh \ydnm & Flash d'un firmware de test puis boot & Flash OK, redémarrage et exécution      &  & \\ \hline
+    \ydnm & Connecter USB à PC                    & Port COM détecté (Silicon Labs CP2102N) &  & \\ \hline
+    \ydnm & TP USBDIR, MCU non programmé          & 0 V (USB vers CP2102N)                  &  & \\ \hline
+    \ydnm & TP USBDIR, MCU programmé              & 3.3 V (USB vers MAX77757)               &  & \\ \hline
+    \ydnm & Connexion esptool                     & Identifie ESP32, lit la MAC sans erreur &  & \\ \hline
+    \ydnm & Flash d'un firmware de test puis boot & Flash OK, redémarrage et exécution      &  & \\ \hline
 \end{longtable}
 
 
@@ -162,10 +161,10 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                            \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Scan I²C : PI4IOE5V9554              & ACK à 0x20                                &  & \\ \hline
-    \rh \ydnm & Scan I²C : PCM5242                   & ACK à 0x4C                                &  & \\ \hline
-    \rh \ydnm & Scan I²C : MAX17260                  & ACK à 0x36 (7~bits ; 0x6C en 8~bits)      &  & \\ \hline
-    \rh \ydnm & Absence d'adresse parasite / conflit & Seules les 3 adresses ci-dessus répondent &  & \\ \hline
+    \ydnm & Scan I²C : PI4IOE5V9554              & ACK à 0x20                                &  & \\ \hline
+    \ydnm & Scan I²C : PCM5242                   & ACK à 0x4C                                &  & \\ \hline
+    \ydnm & Scan I²C : MAX17260                  & ACK à 0x36 (7~bits ; 0x6C en 8~bits)      &  & \\ \hline
+    \ydnm & Absence d'adresse parasite / conflit & Seules les 3 adresses ci-dessus répondent &  & \\ \hline
 \end{longtable}
 
 
@@ -181,10 +180,10 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                           \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP DacMute : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ = 0~V   \newline   1 $\rightarrow$ = 3,3~V &  & \\ \hline
-    \rh \ydnm & TP AmpSHDN : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ = 0~V   \newline   1 $\rightarrow$ = 3,3~V &  & \\ \hline
-    \rh \ydnm & TP bU / bD / bL / bR / bA / bB : relire l'entrée, repos puis appui & Repos = 3,3~V           \newline   appui = 0~V             &  & \\ \hline
-    \rh \ydnm & TP ExpINT au changement d'un bouton                                & Passe à = 0~V : ISR déclenchée                             &  & \\ \hline
+    \ydnm & TP DacMute : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ = 0~V   \newline   1 $\rightarrow$ = 3,3~V &  & \\ \hline
+    \ydnm & TP AmpSHDN : commander 0 puis 1 par firmware                       & 0 $\rightarrow$ = 0~V   \newline   1 $\rightarrow$ = 3,3~V &  & \\ \hline
+    \ydnm & TP bU / bD / bL / bR / bA / bB : relire l'entrée, repos puis appui & Repos = 3,3~V           \newline   appui = 0~V             &  & \\ \hline
+    \ydnm & TP ExpINT au changement d'un bouton                                & Passe à = 0~V : ISR déclenchée                             &  & \\ \hline
 \end{longtable}
 
 
@@ -200,10 +199,10 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                      \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Reg VCell (09h) vs TP VBatP & Écart $<$ $\pm$20~mV                         &  & \\ \hline
-    \rh \ydnm & Reg RepSOC (06h)            & 0--100~\%, plausible vis-à-vis de la tension &  & \\ \hline
-    \rh \ydnm & Reg Current (0Ah)           & Signe et amplitude cohérents                 &  & \\ \hline
-    \rh \ydnm & Reg Temp (08h)              & 20°C à 30°C                                  &  & \\ \hline
+    \ydnm & Reg VCell (09h) vs TP VBatP & Écart $<$ $\pm$20~mV                         &  & \\ \hline
+    \ydnm & Reg RepSOC (06h)            & 0--100~\%, plausible vis-à-vis de la tension &  & \\ \hline
+    \ydnm & Reg Current (0Ah)           & Signe et amplitude cohérents                 &  & \\ \hline
+    \ydnm & Reg Temp (08h)              & 20°C à 30°C                                  &  & \\ \hline
 \end{longtable}
 
 
@@ -219,9 +218,9 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                               \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP INOKB à l'insertion USB                   & +3.3 V                                                               &  & \\ \hline
-    \rh \ydnm & Courant de charge                            & Conforme à I\textsubscript{FAST} fixé par résistance ($\leq$ 3,15~A) &  & \\ \hline
-    \rh \ydnm & Détection CC / BC1.2, limite d'entrée (AICL) & Limite d'entrée cohérente avec la source                             &  & \\ \hline
+    \ydnm & TP INOKB à l'insertion USB                   & +3.3 V                                                               &  & \\ \hline
+    \ydnm & Courant de charge                            & Conforme à I\textsubscript{FAST} fixé par résistance ($\leq$ 3,15~A) &  & \\ \hline
+    \ydnm & Détection CC / BC1.2, limite d'entrée (AICL) & Limite d'entrée cohérente avec la source                             &  & \\ \hline
 \end{longtable}
 
 
@@ -237,9 +236,9 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                      \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP Vol (potentiomètre au minimum)     & $\approx$ 147~mV                                   &  & \\ \hline
-    \rh \ydnm & TP Vol (potentiomètre au maximum)     & $\approx$ 2518~mV                                  &  & \\ \hline
-    \rh \ydnm & TP Vol (balayage sur toute la course) & Monotone de 147 à 2518~mV, sans saut ni zone morte &  & \\ \hline
+    \ydnm & TP Vol (potentiomètre au minimum)     & $\approx$ 147~mV                                   &  & \\ \hline
+    \ydnm & TP Vol (potentiomètre au maximum)     & $\approx$ 2518~mV                                  &  & \\ \hline
+    \ydnm & TP Vol (balayage sur toute la course) & Monotone de 147 à 2518~mV, sans saut ni zone morte &  & \\ \hline
 \end{longtable}
 
 
@@ -255,8 +254,8 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                      \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Affichage de test (RGB, dégradé, damier) & Affichage correct en 176$\times$176, couleurs justes, pas de pixel/colonne mort &  & \\ \hline
-    \rh \ydnm & Orientation et origine des coordonnées   & Conformes au rendu attendu du framebuffer                                       &  & \\ \hline
+    \ydnm & Affichage de test (RGB, dégradé, damier) & Affichage correct en 176$\times$176, couleurs justes, pas de pixel/colonne mort &  & \\ \hline
+    \ydnm & Orientation et origine des coordonnées   & Conformes au rendu attendu du framebuffer                                       &  & \\ \hline
 \end{longtable}
 
 
@@ -272,10 +271,10 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                         \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Logs terminal ESP-IDF                & Montage réussi, capacité lue correcte                                  &  & \\ \hline
-    \rh \ydnm & Écriture puis relecture d'un fichier & Données relues identiques                                              &  & \\ \hline
-    \rh \ydnm & Lecture d'un fichier MP3 réel        & Lecture des octets sans erreur                                         &  & \\ \hline
-    \rh \ydnm & TP SD.Detect                         & SD insérée $\rightarrow$ 0 V  \newline  SD retirée $\rightarrow$ 3.3 V &  & \\ \hline
+    \ydnm & Logs terminal ESP-IDF                & Montage réussi, capacité lue correcte                                  &  & \\ \hline
+    \ydnm & Écriture puis relecture d'un fichier & Données relues identiques                                              &  & \\ \hline
+    \ydnm & Lecture d'un fichier MP3 réel        & Lecture des octets sans erreur                                         &  & \\ \hline
+    \ydnm & TP SD.Detect                         & SD insérée $\rightarrow$ 0 V  \newline  SD retirée $\rightarrow$ 3.3 V &  & \\ \hline
 \end{longtable}
 
 
@@ -291,9 +290,9 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                  \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP I2S.BCK (oscilloscope) & $f =$ n\textsubscript{bits} $\times$ F\textsubscript{s} (p.~ex. : 64 $\times$ 44,1~kHz $\approx$ 2,82~MHz) &  & \\ \hline
-    \rh \ydnm & TP I2S.LRCK / WS          & $=$ F\textsubscript{s} (44,1~kHz)                                                                          &  & \\ \hline
-    \rh \ydnm & TP I2S.SD (données)       & Activité synchronisée avec LRCK                                                                            &  & \\ \hline
+    \ydnm & TP I2S.BCK (oscilloscope) & $f =$ n\textsubscript{bits} $\times$ F\textsubscript{s} (p.~ex. : 64 $\times$ 44,1~kHz $\approx$ 2,82~MHz) &  & \\ \hline
+    \ydnm & TP I2S.LRCK / WS          & $=$ F\textsubscript{s} (44,1~kHz)                                                                          &  & \\ \hline
+    \ydnm & TP I2S.SD (données)       & Activité synchronisée avec LRCK                                                                            &  & \\ \hline
 \end{longtable}
 
 
@@ -309,14 +308,14 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                                                        \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP JackL / JackR : offset DC (sans signal, ampli actif)              & $<$ 350 $\mu$V                                                                                        &  & \\ \hline
-    \rh \ydnm & TP OUTL$\pm$ / OUTR$\pm$ : sortie DAC (1~kHz, niveau num. documenté) & Différentiel présent \newline 1~kHz propre \newline Pleine échelle $\approx$ 4,2~V\textsubscript{rms} &  & \\ \hline
-    \rh \ydnm & TP INL$\pm$ / INR$\pm$ : entrée ampli                                & $\approx$ $-$6~dB vs sortie DAC (gain 0.5)                                                            &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : sortie ampli                                      & Signal propre, non écrêté \newline Plafond $\approx$ 2,15~V\textsubscript{rms}                        &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : tonalité L seule                                  & Signal sur le canal gauche, droit silencieux (valide le mapping INL/INR)                              &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : tonalité R seule                                  & Inverse du précédent                                                                                  &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : volume numérique PCM5242                          & Pas de 0,5~dB respecté                                                                                &  & \\ \hline
-    \rh \ydnm & TP Vol $\rightarrow$ niveau au TP JackL / JackR                      & Niveau monotone et croissant de 147 à 2518~mV                                                         &  & \\ \hline
+    \ydnm & TP JackL / JackR : offset DC (sans signal, ampli actif)              & $<$ 350 $\mu$V                                                                                        &  & \\ \hline
+    \ydnm & TP OUTL$\pm$ / OUTR$\pm$ : sortie DAC (1~kHz, niveau num. documenté) & Différentiel présent \newline 1~kHz propre \newline Pleine échelle $\approx$ 4,2~V\textsubscript{rms} &  & \\ \hline
+    \ydnm & TP INL$\pm$ / INR$\pm$ : entrée ampli                                & $\approx$ $-$6~dB vs sortie DAC (gain 0.5)                                                            &  & \\ \hline
+    \ydnm & TP JackL / JackR : sortie ampli                                      & Signal propre, non écrêté \newline Plafond $\approx$ 2,15~V\textsubscript{rms}                        &  & \\ \hline
+    \ydnm & TP JackL / JackR : tonalité L seule                                  & Signal sur le canal gauche, droit silencieux (valide le mapping INL/INR)                              &  & \\ \hline
+    \ydnm & TP JackL / JackR : tonalité R seule                                  & Inverse du précédent                                                                                  &  & \\ \hline
+    \ydnm & TP JackL / JackR : volume numérique PCM5242                          & Pas de 0,5~dB respecté                                                                                &  & \\ \hline
+    \ydnm & TP Vol $\rightarrow$ niveau au TP JackL / JackR                      & Niveau monotone et croissant de 147 à 2518~mV                                                         &  & \\ \hline
 \end{longtable}
 
 
@@ -332,10 +331,10 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                    \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Appairage A2DP                              & Appairage réussi                           &  & \\ \hline
-    \rh \ydnm & Appareil connecté, streaming d'une musique  & Son présent, sans coupure                  &  & \\ \hline
-    \rh \ydnm & Tourner le potentiomètre de volume          & Le volume du streaming Bluetooth change    &  & \\ \hline
-    \rh \ydnm & Bascule filaire $\leftrightarrow$ Bluetooth & Commutation propre, sans blocage ni glitch &  & \\ \hline
+    \ydnm & Appairage A2DP                              & Appairage réussi                           &  & \\ \hline
+    \ydnm & Appareil connecté, streaming d'une musique  & Son présent, sans coupure                  &  & \\ \hline
+    \ydnm & Tourner le potentiomètre de volume          & Le volume du streaming Bluetooth change    &  & \\ \hline
+    \ydnm & Bascule filaire $\leftrightarrow$ Bluetooth & Commutation propre, sans blocage ni glitch &  & \\ \hline
 \end{longtable}
 
 
@@ -351,11 +350,11 @@ avant de relever la valeur finale. Critère de court-circuit : R < 10 \Omega.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                          \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & Lecture MP3 complète depuis microSD                   & Décodage libhelix, audio continu, buffer jamais en interrompu          &  & \\ \hline
-    \rh \ydnm & Navigation UI complète (boutons $\rightarrow$ écrans) & Réactive, pas de blocage de tâche                                      &  & \\ \hline
-    \rh \ydnm & Autonomie sur batterie                                & Cible de minimum 10h                                                   &  & \\ \hline
-    \rh \ydnm & Charge pendant la lecture d'une musique               & Fonctionne, la charge progresse, pas d'instabilité                     &  & \\ \hline
-    \rh \ydnm & Échauffement sous charge prolongée (caméra thermique) & TPS62A01, MAX77757, MAX97220, module ESP32 : aucun point chaud anormal &  & \\ \hline
+    \ydnm & Lecture MP3 complète depuis microSD                   & Décodage libhelix, audio continu, buffer jamais en interrompu          &  & \\ \hline
+    \ydnm & Navigation UI complète (boutons $\rightarrow$ écrans) & Réactive, pas de blocage de tâche                                      &  & \\ \hline
+    \ydnm & Autonomie sur batterie                                & Cible de minimum 10h                                                   &  & \\ \hline
+    \ydnm & Charge pendant la lecture d'une musique               & Fonctionne, la charge progresse, pas d'instabilité                     &  & \\ \hline
+    \ydnm & Échauffement sous charge prolongée (caméra thermique) & TPS62A01, MAX77757, MAX97220, module ESP32 : aucun point chaud anormal &  & \\ \hline
 \end{longtable}
 
 
@@ -385,16 +384,16 @@ au niveau système sont à relever.
     \toprule \phdr \midrule \endhead
     \midrule \multicolumn{5}{r}{\footnotesize\itshape suite page suivante}                                                                                 \\ \endfoot
     \bottomrule \endlastfoot
-    \rh \ydnm & TP JackL / JackR : niveau max                                       & $\approx$ 2,1~V\textsubscript{rms}                              &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : réponse en fréquence 20~Hz--20~kHz               & Plate $\pm$0,5~dB                                               &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : THD+N à 1~kHz                                    & réf. DAC $-$94~dB ($\approx$ 0,002~\%)                          &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : THD+N vs fréquence (20~Hz--20~kHz)               & Faible et plat sur la bande                                     &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : THD+N vs niveau (balayage, 1~kHz)                & Courbe en U. Relever valeur minimale                            &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : SNR pondéré A                                    & réf. DAC 114~dB                                                 &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : bruit résiduel pondéré A                         & $<$ 15 $\mu$V                                                   &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : diaphonie (1~kHz et 10~kHz)                      & $>$ 80~dB à 1~kHz typ.                                          &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : balance L/R (registre volume identique)          & Écart $<$ 0,5~dB                                                &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : impédance de sortie à vide vs 32~$\Omega$)       & $Z_\mathrm{out} = R_L\,(V_\mathrm{vide}/V_\mathrm{charge} - 1)$ &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : réponse en fréquence sous charge 32~$\Omega$     & Variation faible                                                &  & \\ \hline
-    \rh \ydnm & TP JackL / JackR : niveau avant écrêtage (16~$\Omega$, 32~$\Omega$) & À relever                                                       &  & \\ \hline
+    \ydnm & TP JackL / JackR : niveau max                                       & $\approx$ 2,1~V\textsubscript{rms}                              &  & \\ \hline
+    \ydnm & TP JackL / JackR : réponse en fréquence 20~Hz--20~kHz               & Plate $\pm$0,5~dB                                               &  & \\ \hline
+    \ydnm & TP JackL / JackR : THD+N à 1~kHz                                    & réf. DAC $-$94~dB ($\approx$ 0,002~\%)                          &  & \\ \hline
+    \ydnm & TP JackL / JackR : THD+N vs fréquence (20~Hz--20~kHz)               & Faible et plat sur la bande                                     &  & \\ \hline
+    \ydnm & TP JackL / JackR : THD+N vs niveau (balayage, 1~kHz)                & Courbe en U. Relever valeur minimale                            &  & \\ \hline
+    \ydnm & TP JackL / JackR : SNR pondéré A                                    & réf. DAC 114~dB                                                 &  & \\ \hline
+    \ydnm & TP JackL / JackR : bruit résiduel pondéré A                         & $<$ 15 $\mu$V                                                   &  & \\ \hline
+    \ydnm & TP JackL / JackR : diaphonie (1~kHz et 10~kHz)                      & $>$ 80~dB à 1~kHz typ.                                          &  & \\ \hline
+    \ydnm & TP JackL / JackR : balance L/R (registre volume identique)          & Écart $<$ 0,5~dB                                                &  & \\ \hline
+    \ydnm & TP JackL / JackR : impédance de sortie à vide vs 32~$\Omega$)       & $Z_\mathrm{out} = R_L\,(V_\mathrm{vide}/V_\mathrm{charge} - 1)$ &  & \\ \hline
+    \ydnm & TP JackL / JackR : réponse en fréquence sous charge 32~$\Omega$     & Variation faible                                                &  & \\ \hline
+    \ydnm & TP JackL / JackR : niveau avant écrêtage (16~$\Omega$, 32~$\Omega$) & À relever                                                       &  & \\ \hline
 \end{longtable}

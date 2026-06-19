@@ -17,13 +17,13 @@ baladeur à cassette, puis le disque compact portable, avant que la lecture de
 fichiers numériques compressés ne bouleverse l'usage au tournant des années
 2000. Les lecteurs MP3 à mémoire flash, popularisés notamment par l'iPod et
 les baladeurs de SanDisk, Sony ou Cowon, ont alors dominé le marché grand
-public \cite{wikipedia_portable_nodate}.
+public \cite{Wikipedia_Portable_Media_Player}.
 
 Cette catégorie a ensuite été largement absorbée par le smartphone, qui réunit
 dans un seul appareil la lecture audio, la connectivité et le stockage. Le
 lecteur audio dédié, en tant que produit de masse, a ainsi pratiquement
 disparu : les acteurs historiques se sont retirés du segment, qui ne subsiste
-plus guère que sur le marché de l'occasion \cite{tom_smigla_20_2026}.  \\
+plus guère que sur le marché de l'occasion \cite{Tom-Smigla_20_Best_DAP}.  \\
 
 
 \subsection{Le marché actuel}
@@ -31,20 +31,21 @@ Le lecteur audio dédié n'a toutefois pas totalement disparu. Il s'est
 recentré sur deux extrémités du marché, séparées par un large écart de prix et
 d'objectifs.
 
-À une extrémité subsiste un segment \emph{audiophile} dynamique, porté
+À une extrémité subsiste un segment audiophile dynamique, porté
 principalement par des marques telles qu'Astell\&Kern, FiiO, HiBy, Cayin,
-iBasso ou Shanling \cite{tom_smigla_20_2026}. Ces appareils, dits \emph{DAP}
-(\textit{Digital Audio Player}), visent une restitution sonore de très haute
+iBasso ou Shanling \cite{Tom-Smigla_20_Best_DAP}. Ces appareils, dits \emph{DAP}
+(Digital Audio Player), visent une restitution sonore de très haute
 qualité : ils embarquent fréquemment plusieurs convertisseurs en parallèle,
 une amplification soignée et des sorties symétriques, pour des tarifs
 s'échelonnant de quelques centaines à plusieurs milliers de francs
-\cite{homecine_solutions_comparison_2026}. Beaucoup reposent désormais sur un système
-d'exploitation complet (Android) exécuté par un processeur applicatif, ce qui
+\cite{Homecine_DAP_Comparison}. Beaucoup reposent désormais sur un système
+d'exploitation complet comme Android exécuté par un processeur applicatif, ce qui
 les rapproche d'un smartphone dépourvu de fonction téléphonique. \\
 
+\vspace{1cm}
 À l'autre extrémité se maintiennent des lecteurs d'entrée de gamme,
 généralement de conception simple, à faible coût et à faible consommation,
-destinés à un usage quotidien sans prétention audiophile \cite{audiophile_on_10_2027}.  \\
+destinés à un usage quotidien sans prétention audiophile \cite{AudiophileOn_Best_Cheap_DAP}.  \\
 
 
 \subsection{Positionnement du projet}
@@ -70,7 +71,7 @@ choix pertinents pour ce projet.  \\
 Deux approches coexistent. Les DAP haut de gamme s'appuient sur un processeur
 applicatif exécutant un système d'exploitation complet, ce qui apporte
 souplesse et accès au streaming, au prix d'une consommation et d'une
-complexité élevées \cite{homecine_solutions_comparison_2026}. À l'opposé, un microcontrôleur ou
+complexité élevées \cite{Homecine_DAP_Comparison}. À l'opposé, un microcontrôleur ou
 un SoC intégré suffit pour un lecteur dédié : il offre une consommation réduite
 et un comportement temps réel maîtrisé, au prix d'un développement logiciel
 plus proche du matériel. Cette seconde approche, retenue ici, correspond à un
@@ -82,7 +83,7 @@ La restitution audio repose sur une chaîne désormais classique : décodage du
 flux compressé, conversion numérique-analogique, filtrage puis amplification.
 Le décodage MP3 est un procédé mature, disponible sous forme de bibliothèques
 logicielles éprouvées. La conversion fait appel à un convertisseur dédié
-(\textit{DAC}) communiquant en I\textsuperscript{2}S, suivi d'un étage
+(DAC) communiquant en I\textsuperscript{2}S, suivi d'un étage
 d'amplification capable d'attaquer un casque. Les architectures les plus
 soignées privilégient des liaisons symétriques afin de réduire la sensibilité
 au bruit, principe que l'on retrouve à toutes les gammes de prix.  \\
@@ -111,20 +112,18 @@ standard.  \\
 Le tableau~\ref{tab:comparatif} résume les approches existantes et situe le
 présent projet par rapport à elles.
 
-\newcommand{\rh}{\rule[-1.1\baselineskip]{0pt}{2.6\baselineskip}}% hauteur ~2 lignes
-
 \begin{table}[h]
     \centering
     \setlength{\tabcolsep}{8pt}
     \begin{tabular}{m{2.6cm} | m{3.4cm} | m{3.4cm} | m{3.4cm}}
         \hline
-        \rh\textbf{Critère} & \textbf{DAP audiophile}         & \textbf{DAP entrée de gamme} & \textbf{Ce projet}             \\
+        \textbf{Critère} & \textbf{DAP audiophile}         & \textbf{DAP entrée de gamme} & \textbf{Ce projet}             \\
         \hline
-        \rh Calcul          & Processeur applicatif (Android) & Microcontrôleur / SoC        & SoC ESP32                      \\
-        \rh Objectif audio  & Très haute fidélité             & Basique                      & Qualité maîtrisée et justifiée \\
-        \rh Connectivité    & Jack + Bluetooth                & Jack + Bluetooth             & Jack + Bluetooth               \\
-        \rh Coût            & Élevé à très élevé              & Faible                       & Sans objet (prototype)         \\
-        \rh Finalité        & Produit commercial              & Produit commercial           & Démarche d'ingénierie complète \\
+        Calcul          & Processeur applicatif (Android) & Microcontrôleur / SoC        & SoC ESP32                      \\
+        Objectif audio  & Très haute fidélité             & Basique                      & Qualité maîtrisée et justifiée \\
+        Connectivité    & Jack + Bluetooth                & Jack + Bluetooth             & Jack + Bluetooth               \\
+        Coût            & Élevé à très élevé              & Faible                       & Sans objet (prototype)         \\
+        Finalité        & Produit commercial              & Produit commercial           & Démarche d'ingénierie complète \\
         \hline
     \end{tabular}
     \caption{Positionnement du projet par rapport aux solutions existantes.}
