@@ -1,0 +1,178 @@
+\section{Choix des composants}
+
+Cette section traitera le choix des composants. En premier lieu, le micro-contrôleur, qui est le coeur du système, sera choisi.
+
+Ensuite, les composants externes, qui seront visibles depuis l'extérieur du boîtier et avec lesquels l'utilisateur interragira, seront sélectionnés.
+Ces composants doivent être choisi en priorité pour pouvoir par la suite designer le boîtier et connaître la taille finale du PCB à réaliser.
+
+Et finalement le restant des composants sera choisi. \\
+
+\subsection{Micro-contrôleur}
+
+
+% ---------------------------------------
+
+
+\subsection{Écran}
+
+
+% ---------------------------------------
+
+
+\subsection{DAC}
+Le choix d'un DAC se fait principalement sur les caractéristiques suivantes :
+
+\begin{itemize}
+    \item Résolution en bit
+    \item Frequence d'échantillonnage en Hz
+\end{itemize}
+
+
+% ---------------------------------------
+
+
+\subsection{Amplificateur audio}
+
+% Le choix du MAX97220 parmi les différentes solutions comparées précède
+% cette section. On considère ici l'amplificateur retenu et l'on justifie
+% le gain à lui appliquer compte tenu du DAC déjà sélectionné.
+
+\subsubsection{Adaptation de niveau et choix du gain}
+
+Le DAC retenu, le PCM5242, délivre une tension différentielle de pleine
+échelle $V_{\text{DAC}} \approx 4.2\,\text{V}_{\text{RMS}}$ (à
+$0\,\text{dBFS}$). Or, sous une alimentation de $3.3\,\text{V}$, l'excursion
+maximale en sortie de l'amplificateur (\emph{output voltage swing}) est
+limitée à $V_{\text{swing}} \approx 2.1\text{--}2.2\,\text{V}_{\text{RMS}}$.
+Transmettre directement les $4.2\,\text{V}_{\text{RMS}}$ du DAC, c'est-à-dire
+appliquer un gain unitaire, reviendrait à demander à l'étage de sortie une
+tension supérieure à ce qu'il peut reproduire. Une adaptation de niveau est
+donc nécessaire entre les deux étages.
+
+Le gain de l'amplificateur est fixé par le rapport des résistances externes
+selon
+\begin{equation}
+    A_v = \frac{R_f}{R_{in}}.
+\end{equation}
+Il est ici choisi de manière à ramener la pleine échelle du DAC au niveau du
+swing maximal de l'amplificateur~:
+\begin{equation}
+    A_v = \frac{5.1\,\text{k}\Omega}{10.2\,\text{k}\Omega} = 0.5
+    \quad (\approx -6\,\text{dB}),
+\end{equation}
+ce qui donne en sortie
+\begin{equation}
+    V_{\text{out,max}} = A_v \cdot V_{\text{DAC}}
+    = 0.5 \times 4.2\,\text{V}_{\text{RMS}}
+    = 2.1\,\text{V}_{\text{RMS}}
+    \le V_{\text{swing}}.
+\end{equation}
+La pleine échelle numérique du DAC est ainsi calée exactement sur l'excursion
+maximale de l'amplificateur~: toute la dynamique disponible est exploitée sans
+jamais atteindre la zone d'écrêtage.
+
+\subsubsection{Conséquence d'un gain inadapté}
+
+Il importe de souligner que la saturation n'est pas déterminée par le gain
+seul, mais par le produit du gain et du niveau d'entrée instantané. Le DAC
+n'atteint $4.2\,\text{V}_{\text{RMS}}$ qu'à pleine échelle numérique~; un gain
+unitaire ne provoquerait donc pas une distorsion permanente, mais un
+écrêtage limité aux crêtes du signal proches de $0\,\text{dBFS}$. Ce
+comportement constitue le cas le plus défavorable du point de vue perceptif~:
+le signal demeure propre à faible niveau, puis se dégrade brutalement sur les
+passages de forte amplitude. Le choix d'un gain de $0.5$ écarte entièrement
+ce risque.
+
+% ---------------------------------------
+
+\subsection{Régulateur de tension}
+
+Pour choisir correctement le régulateur de tension 3.3\,V du système, il est nécessaire de connaître la consommation de chaque composant alimenté par cette tension. Le composant le plus énergivore étant le micro-contrôleur ESP32, notamment lors du streaming Bluetooth, une mesure a été réalisée pour estimer sa consommation réelle dans les conditions d'utilisation du projet.
+
+Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant moyen de 137\,mA et un pic de 321\,mA en transmission Bluetooth. Cette dernière valeur est arrondie à 350\,mA pour aligner la marge sur le pire cas spécifié par la datasheet (pic Wi-Fi TX 802.11b). Le tableau~\ref{tab:conso_totale} recense l'ensemble des composants du rail 3,3\,V, en retenant pour chacun sa valeur maximale afin de dimensionner dans le pire cas.
+
+\begin{table}[H]
+    \centering
+    \caption{Bilan de consommation sur le rail 3,3\,V}
+    \label{tab:conso_totale}
+    \begin{tabular}{p{0.30\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} p{0.36\linewidth}}
+        \hline
+        \textbf{Composant}                            & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                         \\
+        \hline
+        ESP32-WROVER-E                                & 137                              & 350                              & Mesuré + marge datasheet                  \\
+        Écran OLED NHD-1.91-176176UBC3                & 285                              & 310                              & Rail 3,3 V unique, 100\,\% pixels allumés \\
+        DAC PCM5242                                   & 37                               & 47                               & AVDD+CPVDD (signal) + DVDD à 192\,kHz     \\
+        Amplificateur MAX97220A                       & 5.5                              & 7                                & Version A                                 \\
+        Carte microSD                                 & ---                              & 100                              & Pire cas, dépend de la carte              \\
+        Divers (expanseur, jauge, pull-ups, etc\dots) & ---                              & 15                               & Estimation                                \\
+        \hline
+        \textbf{Total}                                &                                  & \textbf{$\sim$\,830}             & Somme des pires cas                       \\
+        \hline
+    \end{tabular}
+\end{table}
+
+La somme des courants maximaux atteint environ 830\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominant, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32. \\
+
+\subsubsection{Choix de la topologie : buck plutôt que LDO}
+
+Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'à 3,2\,V, seuil de coupure imposé par le superviseur de tension. Deux topologies permettent d'obtenir le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck).
+
+Le rendement d'un LDO étant borné par le rapport $V_{out}/V_{in}$, il plafonne à $3{,}3/4{,}2 \approx 80\,\%$ : les 20\,\% restants sont dissipés en chaleur. Dans un appareil portable à boîtier compact, cette dissipation est problématique à la fois pour l'autonomie et pour la thermique. Un buck maintient au contraire un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée, ce qui prolonge sensiblement l'autonomie, l'un des objectifs central pour un lecteur audio nomade.
+
+Le principal inconvénient théorique d'un buck en fin de décharge est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation. La topologie buck est donc retenue. \\
+
+\subsubsection{Comparaison des composants candidats}
+
+Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo_buck}). Le courant de sortie maximal étant identique, la sélection s'opère sur le rendement, la consommation à vide, le boîtier et le prix.
+
+\begin{table}[H]
+    \centering
+    \caption{Comparaison des convertisseurs buck candidats}
+    \label{tab:comparo_buck}
+    \footnotesize
+    \begin{tabular}{l c c c c}
+        \hline
+                                         & \textbf{TLV62568} & \textbf{TPS62A01} & \textbf{MAX17624} & \textbf{AP61102} \\
+        \hline
+        Fabricant                        & TI                & TI                & Analog Devices    & Diodes Inc.      \\
+        $V_{IN}$ [V]                     & 2,5--5,5          & 2,5--5,5          & 2,9--5,5          & 2,3--5,5         \\
+        $I_{OUT}$ max [A]                & 1                 & 1                 & 1                 & 1                \\
+        $f_{SW}$ [MHz]                   & 1,5               & 2,4               & 4                 & 2,2              \\
+        $I_Q$ à vide [$\mu$A]            & 35                & 23                & 40                & 15               \\
+        $R_{DS(on)}$ HS / LS [m$\Omega$] & 150 / 100         & \textbf{100 / 67} & 160 / 130         & 110 / 80         \\
+        Rendement (3,3\,V, 1\,A) [\%]    & $\sim$95          & $\sim$95          & $\sim$92          & $\sim$92         \\
+        Light-load auto.                 & Oui               & Oui               & Oui               & Oui              \\
+        100\,\% duty cycle               & Oui               & Oui               & Oui               & Oui              \\
+        Power Good / OCP / Soft-start    & Oui               & Oui               & Oui               & Oui              \\
+        Boîtier                          & SOT-563           & SOT-563-6         & TDFN 2$\times$2   & SOT-563          \\
+        Prix unitaire [CHF]              & 0,21              & \textbf{0,15}     & 1,31              & 0,16             \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Les quatre composants offrent le même jeu de protections (Power Good, limitation de courant, démarrage progressif) et le mode allégé automatique. Le choix se porte sur le \textbf{TPS62A01} pour les raisons suivantes :
+
+\begin{itemize}
+    \item Il présente les résistances de conduction les plus faibles (100\,/\,67\,m$\Omega$), ce qui lui assure le meilleur rendement ($\sim$95\,\%) au point de fonctionnement le plus fréquent --- lecture audio écran allumé, soit plusieurs centaines de milliampères. C'est ce régime, et non la veille, qui domine l'usage réel.
+    \item Sa consommation à vide de 23\,$\mu$A reste excellente. L'AP61102 fait mieux sur ce seul critère (15\,$\mu$A), mais perd environ 3\,\% de rendement à pleine charge ; compte tenu du profil d'utilisation, l'avantage en conduction du TPS62A01 prime.
+    \item Il est le moins cher (0,15\,CHF), dans un boîtier compact (SOT-563-6), et issu d'un fabricant offrant un bon support de conception et une bonne disponibilité.
+\end{itemize}
+
+Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pour un rendement inférieur, et le TLV62568 pour ses résistances de conduction et sa consommation à vide plus élevées que celles du TPS62A01 à prix comparable. Le \textbf{TPS62A01} est donc retenu pour le régulateur 3,3\,V du système.
+
+
+% ---------------------------------------
+
+\clearpage
+\subsection{Batterie}
+Pour déterminer la capacité de la batterie, il faut se baser sur la consommation maximale des gros consommateurs et de de l'autonomie souhaitée. Dans ce cas, les gros consommateurs sont l'écran, le micro-contrôleur, le DAC et l'amplificateur.
+
+% ---------------------------------------
+
+\subsection{Boutons}
+
+% ---------------------------------------
+
+\subsection{Contrôle du volume}
+
+% ---------------------------------------
