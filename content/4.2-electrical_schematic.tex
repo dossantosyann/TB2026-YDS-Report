@@ -1,2 +1,38 @@
 \clearpage
 \section{Schéma électrique}
+
+\subsection{Audio filaire}
+
+\subsubsection{Adaptation de niveau et choix du gain}
+
+Le DAC retenu, le PCM5242, délivre une tension différentielle de pleine
+échelle $V_{\text{DAC}} \approx 4.2\,\text{V}_{\text{RMS}}$ (à
+$0\,\text{dBFS}$). Or, sous une alimentation de $3.3\,\text{V}$, l'excursion
+maximale en sortie de l'amplificateur (\emph{output voltage swing}) est
+limitée à $V_{\text{swing}} \approx 2.1\text{--}2.2\,\text{V}_{\text{RMS}}$.
+Transmettre directement les $4.2\,\text{V}_{\text{RMS}}$ du DAC, c'est-à-dire
+appliquer un gain unitaire, reviendrait à demander à l'étage de sortie une
+tension supérieure à ce qu'il peut reproduire. Une adaptation de niveau est
+donc nécessaire entre les deux étages.
+
+Le gain de l'amplificateur est fixé par le rapport des résistances externes
+selon
+\begin{equation}
+    A_v = \frac{R_f}{R_{in}}.
+\end{equation}
+Il est ici choisi de manière à ramener la pleine échelle du DAC au niveau du
+swing maximal de l'amplificateur~:
+\begin{equation}
+    A_v = \frac{5.1\,\text{k}\Omega}{10.2\,\text{k}\Omega} = 0.5
+    \quad (\approx -6\,\text{dB}),
+\end{equation}
+ce qui donne en sortie
+\begin{equation}
+    V_{\text{out,max}} = A_v \cdot V_{\text{DAC}}
+    = 0.5 \times 4.2\,\text{V}_{\text{RMS}}
+    = 2.1\,\text{V}_{\text{RMS}}
+    \le V_{\text{swing}}.
+\end{equation}
+La pleine échelle numérique du DAC est ainsi calée exactement sur l'excursion
+maximale de l'amplificateur~: toute la dynamique disponible est exploitée sans
+jamais atteindre la zone d'écrêtage.

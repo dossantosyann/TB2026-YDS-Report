@@ -1,22 +1,54 @@
 \section{Choix des composants}
 
-Cette section traitera le choix des composants. En premier lieu, le micro-contrôleur, qui est le coeur du système, sera choisi.
 
-Ensuite, les composants externes, qui seront visibles depuis l'extérieur du boîtier et avec lesquels l'utilisateur interragira, seront sélectionnés.
-Ces composants doivent être choisi en priorité pour pouvoir par la suite designer le boîtier et connaître la taille finale du PCB à réaliser.
+Ce chapitre justifie la sélection des principaux composants du système. Chaque choix découle des spécifications établies précédemment et résulte d'une comparaison entre plusieurs candidats évalués selon un ensemble de critères communs : adéquation fonctionnelle aux besoins du projet, performances techniques relevées dans les datasheets, consommation énergétique, format du boîtier, ainsi que le coût et la disponibilité des composants.
 
-Et finalement le restant des composants sera choisi. \\
+La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format BGA ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie. \\
 
-\subsection{Micro-contrôleur}
 
 
 % ---------------------------------------
+
+
+
+\subsection{Micro-contrôleur}
+
+Le micro-contrôleur constitue le cœur du système : il orchestre le décodage audio, le pilotage de l'écran et de la carte microSD, la gestion de l'interface utilisateur et, surtout, la diffusion sans fil de la musique. C'est ce dernier besoin qui s'est révélé le critère déterminant du choix.  \\
+
+\subsubsection{Le critère décisif : le Bluetooth Classic et le profil A2DP}
+
+La diffusion audio vers une enceinte ou un casque Bluetooth repose sur le profil \textit{Advanced Audio Distribution Profile} (A2DP). Ce profil fait partie du Bluetooth Classic et non du Bluetooth à basse consommation (BLE) : un micro-contrôleur ne disposant que d'une radio BLE est donc incapable de transmettre un flux A2DP, quelle que soit sa puissance de calcul.
+
+Cette contrainte élimine d'emblée la grande majorité des micro-contrôleurs sans fil du marché. Les familles nRF52 et nRF53 de Nordic Semiconductor, les STM32WB de STMicroelectronics, ainsi que les variantes récentes de l'ESP32 lui-même (S3, C3, C6) n'intègrent qu'une radio BLE. L'ESP32 d'origine est l'un des rares micro-contrôleurs à la fois largement disponibles, peu coûteux et bien documentés à combiner le Bluetooth Classic avec le support de l'A2DP en mode source, via la pile Bluedroid de son environnement de développement.
+
+Une architecture alternative aurait consisté à associer un micro-contrôleur généraliste, un STM32, par exemple, à un circuit Bluetooth audio dédié, externe au MCU. Cette solution a été écartée car elle multiplie les contraintes sans bénéfice pour le cahier des charges. Elle impose deux circuits au lieu d'un, reliés par une interface audio (I\textsuperscript{2}S) et un canal de contrôle, ce qui alourdit le routage, la nomenclature et l'encombrement, à l'inverse d'un appareil portable compact. Le circuit Bluetooth dédié nécessiterait par ailleurs son propre étage radiofréquence certifié, ramenant au problème que le module ESP32 résout d'emblée. Une telle partition ne se justifierait que pour exploiter des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure, deux besoins absents de ce projet. Réunir le micro-contrôleur, le Bluetooth Classic et le profil A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste. \\
+
+\subsubsection{Atouts complémentaires de l'ESP32}
+
+Au-delà de ce critère éliminatoire, l'ESP32 réunit les ressources matérielles nécessaires à l'ensemble du système. Son architecture à double cœur offre la possibilité de répartir les traitements sur deux cœurs, par exemple en isolant le traitement audio, sensible au temps, du reste des opérations. Ses périphériques couvrent par ailleurs les besoins d'un tel système : une interface I\textsuperscript{2}S pour la transmission audio numérique vers un convertisseur, plusieurs contrôleurs SPI permettant de dédier un bus à l'affichage et un autre au stockage, un bus I\textsuperscript{2}C pour d'éventuels circuits de configuration et de gestion, ainsi qu'un convertisseur analogique-numérique pour des entrées analogiques telles qu'un potentiomètre de volume. L'ESP32 s'appuie enfin sur un écosystème mature et une large communauté d'utilisateurs, gage de documentation et de ressources abondantes tout au long du projet.  \\
+
+\subsubsection{Choix de la variante : ESP32-WROVER-E}
+
+Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseudo-statique (PSRAM) intégrée. Celle-ci offre une marge de mémoire vive appréciable pour les tampons audio que la variante WROOM, dépourvue de PSRAM, ne procure pas.  \\
+
+\subsubsection{Module plutôt que puce nue}
+
+L'ESP32 est disponible aussi bien sous forme de puce nue que de module pré-assemblé. Concevoir une carte autour de la puce nue imposerait de réaliser soi-même tout l'étage radiofréquence, antenne, ligne d'adaptation d'impédance à 50\,$\Omega$, réseau d'adaptation, en plus d'ajouter la mémoire flash, le quartz et le découplage associés. Cet étage RF est la partie la plus délicate de la conception : une antenne mal adaptée ou mal placée dégrade directement la portée et la fiabilité de la liaison Bluetooth, et sa mise au point exige une expertise et une instrumentation spécifique. À cela s'ajouterait, dans une perspective de mise sur le marché, l'obtention des certifications radio (FCC, CE, IC) ; bien que cet aspect sorte du cadre d'un prototype de travail de bachelor, il illustre la complexité que représente la conception d'un module radio à partir d'une puce nue.
+
+Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, flash, quartz et découplage, sur un circuit certifié fonctionnel. Il supprime ainsi la partie la plus risquée de la conception et simplifie considérablement le routage de la carte principale. Pour un prototype mono-carte réalisé dans un temps contraint, cet avantage est décisif et justifie le recours au module plutôt qu'à la puce nue.  \\
+
+
+
+% ---------------------------------------
+
 
 
 \subsection{Écran}
 
 
+
 % ---------------------------------------
+
 
 
 \subsection{DAC}
@@ -28,48 +60,14 @@ Le choix d'un DAC se fait principalement sur les caractéristiques suivantes :
 \end{itemize}
 
 
+
 % ---------------------------------------
+
 
 
 \subsection{Amplificateur audio}
 
-% Le choix du MAX97220 parmi les différentes solutions comparées précède
-% cette section. On considère ici l'amplificateur retenu et l'on justifie
-% le gain à lui appliquer compte tenu du DAC déjà sélectionné.
 
-\subsubsection{Adaptation de niveau et choix du gain}
-
-Le DAC retenu, le PCM5242, délivre une tension différentielle de pleine
-échelle $V_{\text{DAC}} \approx 4.2\,\text{V}_{\text{RMS}}$ (à
-$0\,\text{dBFS}$). Or, sous une alimentation de $3.3\,\text{V}$, l'excursion
-maximale en sortie de l'amplificateur (\emph{output voltage swing}) est
-limitée à $V_{\text{swing}} \approx 2.1\text{--}2.2\,\text{V}_{\text{RMS}}$.
-Transmettre directement les $4.2\,\text{V}_{\text{RMS}}$ du DAC, c'est-à-dire
-appliquer un gain unitaire, reviendrait à demander à l'étage de sortie une
-tension supérieure à ce qu'il peut reproduire. Une adaptation de niveau est
-donc nécessaire entre les deux étages.
-
-Le gain de l'amplificateur est fixé par le rapport des résistances externes
-selon
-\begin{equation}
-    A_v = \frac{R_f}{R_{in}}.
-\end{equation}
-Il est ici choisi de manière à ramener la pleine échelle du DAC au niveau du
-swing maximal de l'amplificateur~:
-\begin{equation}
-    A_v = \frac{5.1\,\text{k}\Omega}{10.2\,\text{k}\Omega} = 0.5
-    \quad (\approx -6\,\text{dB}),
-\end{equation}
-ce qui donne en sortie
-\begin{equation}
-    V_{\text{out,max}} = A_v \cdot V_{\text{DAC}}
-    = 0.5 \times 4.2\,\text{V}_{\text{RMS}}
-    = 2.1\,\text{V}_{\text{RMS}}
-    \le V_{\text{swing}}.
-\end{equation}
-La pleine échelle numérique du DAC est ainsi calée exactement sur l'excursion
-maximale de l'amplificateur~: toute la dynamique disponible est exploitée sans
-jamais atteindre la zone d'écrêtage.
 
 \subsubsection{Conséquence d'un gain inadapté}
 
@@ -83,11 +81,15 @@ le signal demeure propre à faible niveau, puis se dégrade brutalement sur les
 passages de forte amplitude. Le choix d'un gain de $0.5$ écarte entièrement
 ce risque.
 
+
+
 % ---------------------------------------
+
+
 
 \subsection{Régulateur de tension}
 
-Pour choisir correctement le régulateur de tension 3.3\,V du système, il est nécessaire de connaître la consommation de chaque composant alimenté par cette tension. Le composant le plus énergivore étant le micro-contrôleur ESP32, notamment lors du streaming Bluetooth, une mesure a été réalisée pour estimer sa consommation réelle dans les conditions d'utilisation du projet.
+Pour choisir correctement le régulateur de tension 3,3\,V du système, il est nécessaire de connaître la consommation de chaque composant alimenté par cette tension. Le composant le plus énergivore étant le micro-contrôleur ESP32, notamment lors du streaming Bluetooth, une mesure a été réalisée pour estimer sa consommation réelle dans les conditions d'utilisation du projet.
 
 Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant moyen de 137\,mA et un pic de 321\,mA en transmission Bluetooth. Cette dernière valeur est arrondie à 350\,mA pour aligner la marge sur le pire cas spécifié par la datasheet (pic Wi-Fi TX 802.11b). Le tableau~\ref{tab:conso_totale} recense l'ensemble des composants du rail 3,3\,V, en retenant pour chacun sa valeur maximale afin de dimensionner dans le pire cas.
 
@@ -97,29 +99,29 @@ Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant
     \label{tab:conso_totale}
     \begin{tabular}{p{0.30\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} p{0.36\linewidth}}
         \hline
-        \textbf{Composant}                            & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                         \\
+        \textbf{Composant}                            & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                 \\
         \hline
-        ESP32-WROVER-E                                & 137                              & 350                              & Mesuré + marge datasheet                  \\
-        Écran OLED NHD-1.91-176176UBC3                & 285                              & 310                              & Rail 3,3 V unique, 100\,\% pixels allumés \\
-        DAC PCM5242                                   & 37                               & 47                               & AVDD+CPVDD (signal) + DVDD à 192\,kHz     \\
-        Amplificateur MAX97220A                       & 5.5                              & 7                                & Version A                                 \\
-        Carte microSD                                 & ---                              & 100                              & Pire cas, dépend de la carte              \\
-        Divers (expanseur, jauge, pull-ups, etc\dots) & ---                              & 15                               & Estimation                                \\
+        ESP32-WROVER-E                                & 137                              & 350                              & Mesuré + marge datasheet                          \\
+        Écran OLED NHD-1.91-176176UBC3                & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés \\
+        DAC PCM5242                                   & 37                               & 47                               & AVDD+CPVDD (signal) + DVDD à 192\,kHz             \\
+        Amplificateur MAX97220A                       & 5,5                              & 7                                & Version A                                         \\
+        Carte microSD                                 & ---                              & 100                              & Pire cas, dépend de la carte                      \\
+        Divers (expanseur, jauge, pull-ups, etc\dots) & ---                              & 15                               & Estimation                                        \\
         \hline
-        \textbf{Total}                                &                                  & \textbf{$\sim$\,830}             & Somme des pires cas                       \\
+        \textbf{Total}                                &                                  & \textbf{$\sim$\,830}             & Somme des pires cas                               \\
         \hline
     \end{tabular}
 \end{table}
 
-La somme des courants maximaux atteint environ 830\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominant, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32. \\
+La somme des courants maximaux atteint environ 830\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominants, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32. \\
 
 \subsubsection{Choix de la topologie : buck plutôt que LDO}
 
 Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'à 3,2\,V, seuil de coupure imposé par le superviseur de tension. Deux topologies permettent d'obtenir le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck).
 
-Le rendement d'un LDO étant borné par le rapport $V_{out}/V_{in}$, il plafonne à $3{,}3/4{,}2 \approx 80\,\%$ : les 20\,\% restants sont dissipés en chaleur. Dans un appareil portable à boîtier compact, cette dissipation est problématique à la fois pour l'autonomie et pour la thermique. Un buck maintient au contraire un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée, ce qui prolonge sensiblement l'autonomie, l'un des objectifs central pour un lecteur audio nomade.
+Le rendement d'un LDO étant borné par le rapport $V_{OUT}/V_{IN}$, il plafonne à $3{,}3/4{,}2 \approx 80\,\%$ : les 20\,\% restants sont dissipés en chaleur. Dans un appareil portable à boîtier compact, cette dissipation est problématique à la fois pour l'autonomie et pour la thermique. Un buck maintient au contraire un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée, ce qui prolonge sensiblement l'autonomie, l'un des objectifs centraux pour un lecteur audio nomade.
 
-Le principal inconvénient théorique d'un buck en fin de décharge est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation. La topologie buck est donc retenue. \\
+Le principal inconvénient théorique d'un buck en fin de décharge de la battgerie est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation. La topologie buck est donc retenue. \\
 
 \subsubsection{Comparaison des composants candidats}
 
@@ -129,50 +131,72 @@ Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo
     \centering
     \caption{Comparaison des convertisseurs buck candidats}
     \label{tab:comparo_buck}
-    \footnotesize
-    \begin{tabular}{l c c c c}
+    %\footnotesize
+    \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
         \hline
-                                         & \textbf{TLV62568} & \textbf{TPS62A01} & \textbf{MAX17624} & \textbf{AP61102} \\
+                                           & \textbf{TLV62568} & \textbf{TPS62A01} & \textbf{MAX17624} & \textbf{AP61102} \\
+        Fabricant                          & TI                & TI                & Analog Devices    & Diodes Inc.      \\
         \hline
-        Fabricant                        & TI                & TI                & Analog Devices    & Diodes Inc.      \\
-        $V_{IN}$ [V]                     & 2,5--5,5          & 2,5--5,5          & 2,9--5,5          & 2,3--5,5         \\
-        $I_{OUT}$ max [A]                & 1                 & 1                 & 1                 & 1                \\
-        $f_{SW}$ [MHz]                   & 1,5               & 2,4               & 4                 & 2,2              \\
-        $I_Q$ à vide [$\mu$A]            & 35                & 23                & 40                & 15               \\
-        $R_{DS(on)}$ HS / LS [m$\Omega$] & 150 / 100         & \textbf{100 / 67} & 160 / 130         & 110 / 80         \\
-        Rendement (3,3\,V, 1\,A) [\%]    & $\sim$95          & $\sim$95          & $\sim$92          & $\sim$92         \\
-        Light-load auto.                 & Oui               & Oui               & Oui               & Oui              \\
-        100\,\% duty cycle               & Oui               & Oui               & Oui               & Oui              \\
-        Power Good / OCP / Soft-start    & Oui               & Oui               & Oui               & Oui              \\
-        Boîtier                          & SOT-563           & SOT-563-6         & TDFN 2$\times$2   & SOT-563          \\
-        Prix unitaire [CHF]              & 0,21              & \textbf{0,15}     & 1,31              & 0,16             \\
+        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
+        \hline
+        $V_{IN}$ [V]                       & 2,5--5,5          & 2,5--5,5          & 2,9--5,5          & 2,3--5,5         \\
+        $I_{OUT}$ max [A]                  & 1                 & 1                 & 1                 & 1                \\
+        $f_{SW}$ [MHz]                     & 1,5               & 2,4               & 4                 & 2,2              \\
+        $I_Q$ à vide [$\mu$A]              & 35                & 23                & 40                & 15               \\
+        $R_{DS(on)}$ côté haut [m$\Omega$] & 150               & 100               & 160               & 110              \\
+        $R_{DS(on)}$ côté bas [m$\Omega$]  & 100               & 67                & 130               & 80               \\
+        Rendement (3,3\,V, 1\,A) [\%]      & $\sim$95          & $\sim$95          & $\sim$92          & $\sim$92         \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
+        \hline
+        Mode light-load                    & Auto.             & Auto.             & Auto.             & Auto.            \\
+        100\,\% duty cycle                 & Oui               & Oui               & Oui               & Oui              \\
+        Over Current Protection            & Oui               & Oui               & Oui               & Oui              \\
+        Soft-start                         & Oui               & Oui               & Oui               & Oui              \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
+        \hline
+        Boîtier                            & SOT-23 / SOT-563  & SOT-563-6         & TDFN 2$\times$2   & SOT-563          \\
+        Prix unitaire [CHF]                & 0,21              & 0,15              & 1,31              & 0,16             \\
         \hline
     \end{tabular}
 \end{table}
 
-Les quatre composants offrent le même jeu de protections (Power Good, limitation de courant, démarrage progressif) et le mode allégé automatique. Le choix se porte sur le \textbf{TPS62A01} pour les raisons suivantes :
+Les quatre composants offrant les mêmes fonctionnalités, le choix final s'est donc porté sur le \textbf{TPS62A01} pour les raisons suivantes :
 
 \begin{itemize}
-    \item Il présente les résistances de conduction les plus faibles (100\,/\,67\,m$\Omega$), ce qui lui assure le meilleur rendement ($\sim$95\,\%) au point de fonctionnement le plus fréquent --- lecture audio écran allumé, soit plusieurs centaines de milliampères. C'est ce régime, et non la veille, qui domine l'usage réel.
-    \item Sa consommation à vide de 23\,$\mu$A reste excellente. L'AP61102 fait mieux sur ce seul critère (15\,$\mu$A), mais perd environ 3\,\% de rendement à pleine charge ; compte tenu du profil d'utilisation, l'avantage en conduction du TPS62A01 prime.
-    \item Il est le moins cher (0,15\,CHF), dans un boîtier compact (SOT-563-6), et issu d'un fabricant offrant un bon support de conception et une bonne disponibilité.
+    \item Il présente les résistances de conduction les plus faibles (100\,/\,67\,m$\Omega$), ce qui lui assure un meilleur rendement ($\sim$95\,\%).
+    \item Sa consommation à vide de 23\,$\mu$A reste excellente. L'AP61102 fait mieux sur ce seul critère (15\,$\mu$A), mais perd environ 3\,\% de rendement à pleine charge et la différence de 8\,$\mu$A est négligeable.
+    \item Il est le moins cher, dans un boîtier compact, et issu d'un fabricant offrant un bon support de conception et une bonne disponibilité.
 \end{itemize}
 
 Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pour un rendement inférieur, et le TLV62568 pour ses résistances de conduction et sa consommation à vide plus élevées que celles du TPS62A01 à prix comparable. Le \textbf{TPS62A01} est donc retenu pour le régulateur 3,3\,V du système.
 
 
+
 % ---------------------------------------
+
+
 
 \clearpage
 \subsection{Batterie}
 Pour déterminer la capacité de la batterie, il faut se baser sur la consommation maximale des gros consommateurs et de de l'autonomie souhaitée. Dans ce cas, les gros consommateurs sont l'écran, le micro-contrôleur, le DAC et l'amplificateur.
 
+
+
 % ---------------------------------------
+
+
 
 \subsection{Boutons}
 
+
+
 % ---------------------------------------
+
+
 
 \subsection{Contrôle du volume}
 
-% ---------------------------------------
+
+
