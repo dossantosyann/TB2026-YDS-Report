@@ -67,13 +67,59 @@ Enfin, cet écran est en couleur. Cet aspect n'a pas constitué un critère de s
 
 
 
-\subsection{DAC}
-Le choix d'un DAC se fait principalement sur les caractéristiques suivantes :
+\subsection{Convertisseur numérique-analogique, DAC}
 
-\begin{itemize}
-    \item Résolution en bit
-    \item Frequence d'échantillonnage en Hz
-\end{itemize}
+Le convertisseur numérique-analogique transforme le flux audio numérique issu du micro-contrôleur en un signal analogique destiné à l'étage d'amplification. Les premiers critères qui viennent à l'esprit sont la résolution, exprimée en bits, et la fréquence d'échantillonnage maximale. Ces deux paramètres ne sont toutefois pas discriminants ici : tous les candidats considérés atteignent 32~bits et au moins 384~kHz, soit bien au-delà des besoins du projet. Le choix s'est donc joué sur les caractéristiques qui déterminent réellement la qualité audio, le rapport signal sur bruit (SNR) et la distorsion harmonique totale plus bruit (THD+N), ainsi que sur l'architecture du composant, l'objectif premier du projet étant d'offrir la meilleure qualité audio possible.  \\
+
+\subsubsection{Architecture : DAC seul ou DAC avec amplificateur intégré}
+
+Deux architectures étaient envisageables. La première réunit le DAC et l'amplificateur casque dans un même boîtier, ce qui réduit le nombre de composants et permet d'attaquer directement un casque. Cette solution avait initialement la préférence, et le TAD5212 en était le candidat. L'étude de sa fiche technique et la préparation de son intégration ont toutefois montré qu'il était largement surdimensionné pour le besoin : il s'agit en réalité d'un codec audio complet, intégrant notamment des entrées microphone et un chemin de capture sans aucune utilité pour un appareil dédié à la seule restitution. Cette polyvalence se paie par une configuration nettement plus lourde, sans contrepartie pour l'application visée. Retenir un composant aussi complexe pour n'en exploiter qu'une fraction aurait introduit une charge de mise en œuvre injustifiée. Le choix s'est donc reporté sur la seconde architecture : un DAC seul, dont la fonction correspond exactement au besoin, suivi d'un amplificateur dédié séparé. Cette solution demande davantage de composants, mais chaque étage reste plus simple à configurer, à mettre au point et à déboguer, un avantage déterminant pour un prototype.  \\
+
+\subsubsection{Type de sortie : différentielle}
+
+Le système étant alimenté par un régulateur à découpage, du bruit de commutation se couple inévitablement sur les rails d'alimentation et la masse. Une sortie différentielle a donc été privilégiée : en transmettant le signal sur deux lignes symétriques, elle permet à l'étage suivant de rejeter les perturbations communes aux deux conducteurs, dont les artefacts de commutation, préservant ainsi le SNR et la distorsion sur une carte à signaux mixtes compacte. Le type de sortie constitue donc, aux côtés de l'architecture, l'un des critères déterminants pour départager les candidats.  \\
+
+\subsubsection{Composant retenu}
+
+La comparaison se limite à des composants de Texas Instruments, seul fabricant à proposer, pour cette application, des DAC audio réellement intéressants. La famille Burr-Brown PCM faisant référence dans le domaine et bénéficiant d'une documentation abondante. Le tableau~\ref{tab:comparo_dac} récapitule les quatre candidats.
+
+\begin{table}[H]
+    \centering
+    \caption{Comparaison des convertisseurs numérique-analogique candidats}
+    \label{tab:comparo_dac}
+    %\footnotesize
+    \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
+        \hline
+                                & \textbf{PCM5102A} & \textbf{PCM5122}   & \textbf{PCM5242} & \textbf{TAD5212}      \\
+        Fabricant               & TI                & TI                 & TI               & TI                    \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                   \\
+        \hline
+        $V_{IN}$ [V]            & 3,3               & 3,3                & 3,3              & 3,3                   \\
+        $I_{IN}$ max [mA]       & 22                & 24                 & 24               & 19                    \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Caractéristiques audio}}                                                         \\
+        \hline
+        Type de sortie          & Single-ended      & Single-ended       & Différentielle   & Différentielle        \\
+        Niveau de sortie [Vrms] & 2,1               & 2,1                & 4,2              & 2                     \\
+        SNR [dB]                & 112               & 112                & 114              & 120                   \\
+        THD+N [dB]              & $-93$             & $-93$              & $-100$           & $-104$                \\
+        Ampli casque intégré    & Non               & Non                & Non              & 62,5~mW @ 16~$\Omega$ \\
+        Résolution max [bits]   & 32                & 32                 & 32               & 32                    \\
+        $F_s$ max [kHz]         & 384               & 384                & 384              & 768                   \\
+        DSP                     & Non               & Oui ($\leq$48~kHz) & miniDSP          & Biquads EQ            \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                \\
+        \hline
+        Boîtier                 & TSSOP-20          & TSSOP-28           & VQFN-32          & VQFN-24               \\
+        Prix unitaire [CHF]     & 2,97              & 2,62               & 8,06             & 4,42                  \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Une fois écartés l'architecture à amplificateur intégré (TAD5212) et les sorties asymétriques (PCM5102A et PCM5122), le PCM5242 s'impose comme le seul convertisseur à la fois différentiel et dépourvu d'amplificateur intégré. Ses performances le situent à un niveau audio élevé : 114~dB de SNR, $-100$~dB de THD+N, une résolution de 32~bits jusqu'à 384~kHz et une sortie différentielle de 4,2~Vrms. Il intègre par ailleurs un miniDSP programmable. Celui-ci n'a pas constitué un critère de choix, mais permettra de remplir l'objectif supplémentaire qui est d'implémenter un égaliseur dans le système si le calendrier le permet. Sur le plan de l'intégration, la famille PCM peut en outre dériver son horloge de la ligne BCK au moyen d'une PLL interne, sans horloge maître dédiée, ce qui simplifie le câblage de l'interface I\textsuperscript{2}S avec le micro-contrôleur.
+
+Le PCM5242 est le plus cher des quatre candidats (8,06~CHF). Cet écart reste néanmoins marginal à l'échelle de la nomenclature complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio. \\
 
 
 
