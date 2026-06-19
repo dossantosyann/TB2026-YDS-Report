@@ -35,7 +35,9 @@ Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseud
 
 L'ESP32 est disponible aussi bien sous forme de puce nue que de module pré-assemblé. Concevoir une carte autour de la puce nue imposerait de réaliser soi-même tout l'étage radiofréquence, antenne, ligne d'adaptation d'impédance à 50\,$\Omega$, réseau d'adaptation, en plus d'ajouter la mémoire flash, le quartz et le découplage associés. Cet étage RF est la partie la plus délicate de la conception : une antenne mal adaptée ou mal placée dégrade directement la portée et la fiabilité de la liaison Bluetooth, et sa mise au point exige une expertise et une instrumentation spécifique. À cela s'ajouterait, dans une perspective de mise sur le marché, l'obtention des certifications radio (FCC, CE, IC) ; bien que cet aspect sorte du cadre d'un prototype de travail de bachelor, il illustre la complexité que représente la conception d'un module radio à partir d'une puce nue.
 
-Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, flash, quartz et découplage, sur un circuit certifié fonctionnel. Il supprime ainsi la partie la plus risquée de la conception et simplifie considérablement le routage de la carte principale. Pour un prototype mono-carte réalisé dans un temps contraint, cet avantage est décisif et justifie le recours au module plutôt qu'à la puce nue.  \\
+Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, flash, quartz et découplage, sur un circuit certifié fonctionnel. Il supprime ainsi la partie la plus risquée de la conception et simplifie considérablement le routage de la carte principale. Pour un prototype mono-carte réalisé dans un temps contraint, cet avantage est décisif et justifie le recours au module plutôt qu'à la puce nue.
+
+Le choix de l'ESP32 fixe enfin la tension d'alimentation logique du système à 3,3~V. Tous les composants retenus par la suite devront donc être compatibles avec ce rail, contrainte commune à l'ensemble des choix présentés dans ce chapitre. \\
 
 
 
@@ -44,6 +46,20 @@ Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, fl
 
 
 \subsection{Écran}
+
+L'interface utilisateur du lecteur repose sur un écran graphique, c'est-à-dire adressable pixel par pixel, indispensable pour afficher des menus, des icones et des éléments visuels personnalisés, là où un afficheur à caractères serait trop limité. La technologie OLED a été retenue pour cet écran. Contrairement à un écran LCD, chaque pixel y émet sa propre lumière : les noirs sont parfaitement profonds, le contraste est élevé et l'angle de vue très large. L'absence de rétroéclairage permet, sur une interface à principalement sombre, une consommation réduite puisque les pixels noirs sont éteints. Un atout majeur pour un appareil sur batterie.  \\
+
+\subsubsection{Critères de dimensionnement}
+
+Deux contraintes ont guidé le choix de la dalle. La première est la taille : pour un appareil portable tenant dans la main, la diagonale a été bornée entre 1,3 et 3 pouces. En dessous, une interface graphique devient difficilement lisible, au-delà, l'écran divient trop grand. La seconde est le rapport d'aspect, recherché entre 1:1 et 2:1. Plusieurs dalles existaient en 3:1, mais ce format allongé, proche d'un bandeau, se prête mal à l'interface envisagée.  \\
+
+\subsubsection{Composant retenu}
+
+Le choix s'est porté sur le NHD-1.91-176176UB de Newhaven Display, et plus précisément sur sa déclinaison NHD-1.91-176176UBC3. Cet écran de 1,91~pouce affiche une résolution de 176$\times$176~pixels, soit un rapport d'aspect de 1:1 idéalement adapté à l'interface visée, et se situe dans la plage de tailles ciblée. Son contrôleur SSD1333 est intégré à la dalle.
+
+La déclinaison UBC3 présente l'avantage déterminant d'embarquer l'ensemble des composants nécessaires au pilotage de l'écran sur un petit circuit imprimé. Elle se commande directement en SPI et ne requiert qu'une alimentation unique de 3,3~volts, sans étage élévateur ni circuiterie de pilotage à concevoir : l'architecture d'alimentation s'en trouve simplifiée. Cette intégration se paie par un encombrement plus important, l'écran se présentant sous la forme d'un PCB à monter sur la carte principale au moyen de connecteurs au pas classique de 2,54~mm, ce qui ajoute de la hauteur à l'ensemble. Pour un prototype, ce compromis est largement favorable : il échange un surcroît d'encombrement contre une mise en œuvre nettement plus simple et plus fiable.
+
+Enfin, cet écran est en couleur. Cet aspect n'a pas constitué un critère de sélection primordial, mais il offre une liberté supplémentaire pour l'interface et constitue un bonus appréciable.  \\
 
 
 
