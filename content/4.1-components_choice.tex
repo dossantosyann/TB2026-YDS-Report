@@ -21,7 +21,7 @@ La diffusion audio vers une enceinte ou un casque Bluetooth repose sur le profil
 
 Cette contrainte élimine d'emblée la grande majorité des micro-contrôleurs sans fil du marché. Les familles nRF52 et nRF53 de Nordic Semiconductor, les STM32WB de STMicroelectronics, ainsi que les variantes récentes de l'ESP32 lui-même (S3, C3, C6) n'intègrent qu'une radio BLE. L'ESP32 d'origine est l'un des rares micro-contrôleurs à la fois largement disponibles, peu coûteux et bien documentés à combiner le Bluetooth Classic avec le support de l'A2DP en mode source, via la pile Bluedroid de son environnement de développement.
 
-Une architecture alternative aurait consisté à associer un micro-contrôleur généraliste, un STM32, par exemple, à un circuit Bluetooth audio dédié, externe au MCU. Cette solution a été écartée car elle multiplie les contraintes sans bénéfice pour le cahier des charges. Elle impose deux circuits au lieu d'un, reliés par une interface audio (I\textsuperscript{2}S) et un canal de contrôle, ce qui alourdit le routage, la nomenclature et l'encombrement, à l'inverse d'un appareil portable compact. Le circuit Bluetooth dédié nécessiterait par ailleurs son propre étage radiofréquence certifié, ramenant au problème que le module ESP32 résout d'emblée. Une telle partition ne se justifierait que pour exploiter des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure, deux besoins absents de ce projet. Réunir le micro-contrôleur, le Bluetooth Classic et le profil A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste. \\
+Une architecture alternative aurait consisté à associer un micro-contrôleur généraliste, un STM32, par exemple, à un circuit Bluetooth audio dédié, externe au MCU. Cette solution a été écartée car elle multiplie les contraintes sans bénéfice pour le cahier des charges. Elle impose deux circuits au lieu d'un, reliés par une interface audio (I\textsuperscript{2}S) et un canal de contrôle, ce qui alourdit le routage, la BOM et l'encombrement, à l'inverse d'un appareil portable compact. Le circuit Bluetooth dédié nécessiterait par ailleurs son propre étage radiofréquence certifié, ramenant au problème que le module ESP32 résout d'emblée. Une telle partition ne se justifierait que pour exploiter des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure, deux besoins absents de ce projet. Réunir le micro-contrôleur, le Bluetooth Classic et le profil A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste. \\
 
 \subsubsection{Atouts complémentaires de l'ESP32}
 
@@ -44,7 +44,7 @@ Le choix de l'ESP32 fixe enfin la tension d'alimentation logique du système à 
 % ---------------------------------------
 
 
-
+\clearpage
 \subsection{Écran}
 
 L'interface utilisateur du lecteur repose sur un écran graphique, c'est-à-dire adressable pixel par pixel, indispensable pour afficher des menus, des icones et des éléments visuels personnalisés, là où un afficheur à caractères serait trop limité. La technologie OLED a été retenue pour cet écran. Contrairement à un écran LCD, chaque pixel y émet sa propre lumière : les noirs sont parfaitement profonds, le contraste est élevé et l'angle de vue très large. L'absence de rétroéclairage permet, sur une interface à principalement sombre, une consommation réduite puisque les pixels noirs sont éteints. Un atout majeur pour un appareil sur batterie.  \\
@@ -66,14 +66,14 @@ Enfin, cet écran est en couleur. Cet aspect n'a pas constitué un critère de s
 % ---------------------------------------
 
 
-
+\clearpage
 \subsection{Convertisseur numérique-analogique, DAC}
 
-Le convertisseur numérique-analogique transforme le flux audio numérique issu du micro-contrôleur en un signal analogique destiné à l'étage d'amplification. Les premiers critères qui viennent à l'esprit sont la résolution, exprimée en bits, et la fréquence d'échantillonnage maximale. Ces deux paramètres ne sont toutefois pas discriminants ici : tous les candidats considérés atteignent 32~bits et au moins 384~kHz, soit bien au-delà des besoins du projet. Le choix s'est donc joué sur les caractéristiques qui déterminent réellement la qualité audio, le rapport signal sur bruit (SNR) et la distorsion harmonique totale plus bruit (THD+N), ainsi que sur l'architecture du composant, l'objectif premier du projet étant d'offrir la meilleure qualité audio possible.  \\
+Le convertisseur numérique-analogique transforme le flux audio numérique issu du micro-contrôleur en un signal analogique destiné à l'étage d'amplification. Son choix repose sur plusieurs critères : la résolution, exprimée en bits, la fréquence d'échantillonnage maximale, le rapport signal sur bruit (SNR) et la distorsion harmonique totale plus bruit (THD+N), qui déterminent la qualité audio restituée, ainsi que l'architecture du composant. L'objectif premier du projet étant d'offrir la meilleure qualité audio possible, ces critères sont examinés pour chacun des composants candidats.  \\
 
 \subsubsection{Architecture : DAC seul ou DAC avec amplificateur intégré}
 
-Deux architectures étaient envisageables. La première réunit le DAC et l'amplificateur casque dans un même boîtier, ce qui réduit le nombre de composants et permet d'attaquer directement un casque. Cette solution avait initialement la préférence, et le TAD5212 en était le candidat. L'étude de sa fiche technique et la préparation de son intégration ont toutefois montré qu'il était largement surdimensionné pour le besoin : il s'agit en réalité d'un codec audio complet, intégrant notamment des entrées microphone et un chemin de capture sans aucune utilité pour un appareil dédié à la seule restitution. Cette polyvalence se paie par une configuration nettement plus lourde, sans contrepartie pour l'application visée. Retenir un composant aussi complexe pour n'en exploiter qu'une fraction aurait introduit une charge de mise en œuvre injustifiée. Le choix s'est donc reporté sur la seconde architecture : un DAC seul, dont la fonction correspond exactement au besoin, suivi d'un amplificateur dédié séparé. Cette solution demande davantage de composants, mais chaque étage reste plus simple à configurer, à mettre au point et à déboguer, un avantage déterminant pour un prototype.  \\
+Deux architectures étaient envisageables. La première réunit le DAC et l'amplificateur casque dans un même boîtier, ce qui réduit le nombre de composants et permet d'attaquer directement un casque. Cette solution avait initialement la préférence, et le TAD5212 en était le candidat. L'étude de sa fiche technique et la préparation de son intégration ont toutefois montré qu'il était largement surdimensionné pour le besoin : il s'agit en réalité d'un codec audio complet, intégrant notamment des entrées microphone et un chemin de capture sans aucune utilité pour un appareil dédié uniquement à la restitution du son. Cette polyvalence se paie par une configuration nettement plus lourde, sans contrepartie pour l'application visée. Retenir un composant aussi complexe pour n'en exploiter qu'une fraction aurait introduit une charge de mise en œuvre injustifiée. Le choix s'est donc reporté sur la seconde architecture : un DAC seul, dont la fonction correspond exactement au besoin, suivi d'un amplificateur dédié séparé. Cette solution demande davantage de composants, mais chaque étage reste plus simple à configurer, à mettre au point et à déboguer, un avantage déterminant pour un prototype.  \\
 
 \subsubsection{Type de sortie : différentielle}
 
@@ -117,9 +117,20 @@ La comparaison se limite à des composants de Texas Instruments, seul fabricant 
     \end{tabular}
 \end{table}
 
-Une fois écartés l'architecture à amplificateur intégré (TAD5212) et les sorties asymétriques (PCM5102A et PCM5122), le PCM5242 s'impose comme le seul convertisseur à la fois différentiel et dépourvu d'amplificateur intégré. Ses performances le situent à un niveau audio élevé : 114~dB de SNR, $-100$~dB de THD+N, une résolution de 32~bits jusqu'à 384~kHz et une sortie différentielle de 4,2~Vrms. Il intègre par ailleurs un miniDSP programmable. Celui-ci n'a pas constitué un critère de choix, mais permettra de remplir l'objectif supplémentaire qui est d'implémenter un égaliseur dans le système si le calendrier le permet. Sur le plan de l'intégration, la famille PCM peut en outre dériver son horloge de la ligne BCK au moyen d'une PLL interne, sans horloge maître dédiée, ce qui simplifie le câblage de l'interface I\textsuperscript{2}S avec le micro-contrôleur.
+Tous les composants remplissant le critère minimum de 24 bits de résolution et une fréquence d'échantillonnage allant jusqu'à minimum 192 kHz, le choix final s'est donc porté sur le \textbf{PCM5242} pour les raisons suivantes :
 
-Le PCM5242 est le plus cher des quatre candidats (8,06~CHF). Cet écart reste néanmoins marginal à l'échelle de la nomenclature complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio. \\
+\begin{itemize}
+    \item Il possède des sorties différentielles.
+    \item Il n'intègre pas d'amplificateur et n'est pas surdimensionné pour le projet, à l'inverse du TAD5212.
+    \item Il offre d'excellentes performances audio avec un SNR de 114 dB et un THD+N de -100 dB.
+\end{itemize}
+
+
+Il intègre par ailleurs un miniDSP programmable. Celui-ci n'a pas constitué un critère de choix, mais permettra de remplir l'objectif supplémentaire qui est d'implémenter un égaliseur dans le système si le calendrier le permet.
+
+Sur le plan de l'intégration, la famille PCM peut en outre dériver son horloge de la ligne BCK au moyen d'une PLL interne, sans horloge maître dédiée, ce qui simplifie le câblage de l'interface I\textsuperscript{2}S avec le micro-contrôleur.
+
+Le PCM5242 est le plus cher des quatre candidats (8,06~CHF). Cet écart reste néanmoins marginal à l'échelle de la BOM complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio. \\
 
 
 
@@ -127,21 +138,61 @@ Le PCM5242 est le plus cher des quatre candidats (8,06~CHF). Cet écart reste n�
 
 
 
+\clearpage
 \subsection{Amplificateur audio}
 
+L'amplificateur reçoit le signal analogique du convertisseur et le porte au niveau nécessaire pour attaquer un casque par la prise jack. Le convertisseur retenu, le PCM5242, présentant une sortie différentielle, l'amplificateur doit en accepter une en entrée afin de préserver la réjection du bruit de mode commun mise en place précédemment. Au-delà de ce prérequis, le choix repose sur les caractéristiques qui gouvernent la qualité de restitution : le SNR, le THD+N, le bruit de sortie, la diaphonie, le PSRR et la puissance de sortie disponible sur une charge de casque typique. Conformément à la priorité du projet, la qualité audio prime. \\
 
+\subsubsection{Composant retenu}
 
-\subsubsection{Conséquence d'un gain inadapté}
+Trois amplificateurs, issus de trois fabricants différents, ont été comparés (tableau~\ref{tab:comparo_ampli}). Tous acceptant une entrée différentielle, ce prérequis ne départage pas les candidats : la sélection s'est donc jouée sur les performances audio.
 
-Il importe de souligner que la saturation n'est pas déterminée par le gain
-seul, mais par le produit du gain et du niveau d'entrée instantané. Le DAC
-n'atteint $4.2\,\text{V}_{\text{RMS}}$ qu'à pleine échelle numérique~; un gain
-unitaire ne provoquerait donc pas une distorsion permanente, mais un
-écrêtage limité aux crêtes du signal proches de $0\,\text{dBFS}$. Ce
-comportement constitue le cas le plus défavorable du point de vue perceptif~:
-le signal demeure propre à faible niveau, puis se dégrade brutalement sur les
-passages de forte amplitude. Le choix d'un gain de $0.5$ écarte entièrement
-ce risque.
+\begin{table}[H]
+    \centering
+    \caption{Comparaison des amplificateurs casque candidats}
+    \label{tab:comparo_ampli}
+    %\footnotesize
+    \begin{tabular}{l c c >{\columncolor{teal!12}}c}
+        \hline
+                                                & \textbf{PAM8908}     & \textbf{TPA6132A2}   & \textbf{MAX97220A} \\
+        Fabricant                               & Diodes Inc.          & Texas Instruments    & Analog Devices     \\
+        \hline
+        \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                                  \\
+        \hline
+        $V_{IN}$ [V]                            & 3,3                  & 3,3                  & 3,3                \\
+        $I_{repos}$ max [mA]                    & 4                    & 2,1                  & 5,5                \\
+        \hline
+        \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                                        \\
+        \hline
+        Type d'entrées                          & Single-ended + diff. & Single-ended + diff. & Différentielle     \\
+        SNR [dB]                                & 100                  & 100                  & 112,5              \\
+        THD+N [dB]                              & $-70{,}5$            & $-74$                & $-89$              \\
+        $P_{out}$ max (32~$\Omega$, 3,3~V) [mW] & 30                   & 22                   & 50                 \\
+        Bruit de sortie pondéré A [$\mu$Vrms]   & 10                   & 5,5                  & 7                  \\
+        PSRR [dB]                               & 80 @ 1~kHz           & 90 @ 10~kHz          & 80 @ 1~kHz         \\
+        Diaphonie @ 1~kHz [dB]                  & $-80$ @ 15~mW        & $-80$ @ 20~mW        & $-102$ @ 20~mW     \\
+        \hline
+        \multicolumn{4}{c}{\textbf{Boîtier et prix}}                                                               \\
+        \hline
+        Boîtier                                 & QFN-16               & QFN-16               & QFN-16             \\
+        Prix unitaire [CHF]                     & 0,68                 & 0,86                 & 1,82               \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Le MAX97220A se détache nettement sur les critères qui gouvernent la qualité de restitution :
+
+\begin{itemize}
+    \item Le meilleur rapport signal sur bruit, à 112,5~dB contre 100~dB pour les deux autres.
+    \item La plus faible distorsion, avec $-89$~dB de THD+N contre $-70{,}5$ et $-74$~dB.
+    \item Une séparation des canaux  supérieure, avec $-102$~dB de diaphonie contre $-80$~dB.
+    \item La puissance de sortie la plus élevée, soit environ 50~mW sous 32~$\Omega$.
+\end{itemize}
+
+En contrepartie, son bruit de sortie (7~$\mu$Vrms) et son courant de repos (5,5~mA) sont légèrement supérieurs à ceux du TPA6132A2, mais demeurent faibles et sans incidence pratique.
+
+Le MAX97220A est le plus cher des trois candidats (1,82~CHF). Comme pour le convertisseur, cet écart reste marginal à l'échelle de la BOM complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio.
+
 
 
 
@@ -149,6 +200,14 @@ ce risque.
 
 
 
+\clearpage
+\subsection{Expanseur I/O}
+
+
+
+% ---------------------------------------
+
+\clearpage
 \subsection{Régulateur de tension}
 
 Pour choisir correctement le régulateur de tension 3,3\,V du système, il est nécessaire de connaître la consommation de chaque composant alimenté par cette tension. Le composant le plus énergivore étant le micro-contrôleur ESP32, notamment lors du streaming Bluetooth, une mesure a été réalisée pour estimer sa consommation réelle dans les conditions d'utilisation du projet.
@@ -161,21 +220,21 @@ Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant
     \label{tab:conso_totale}
     \begin{tabular}{p{0.30\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} p{0.36\linewidth}}
         \hline
-        \textbf{Composant}                            & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                 \\
+        \textbf{Composant}                     & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                        \\
         \hline
-        ESP32-WROVER-E                                & 137                              & 350                              & Mesuré + marge datasheet                          \\
-        Écran OLED NHD-1.91-176176UBC3                & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés \\
-        DAC PCM5242                                   & 37                               & 47                               & AVDD+CPVDD (signal) + DVDD à 192\,kHz             \\
-        Amplificateur MAX97220A                       & 5,5                              & 7                                & Version A                                         \\
-        Carte microSD                                 & ---                              & 100                              & Pire cas, dépend de la carte                      \\
-        Divers (expanseur, jauge, pull-ups, etc\dots) & ---                              & 15                               & Estimation                                        \\
+        ESP32-WROVER-E                         & 137                              & 350                              & Mesuré + marge datasheet                                 \\
+        Écran OLED NHD-1.91-176176UBC3         & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés        \\
+        DAC PCM5242                            & 37                               & 47                               & AVDD + CPVDD + DVDD à 192\,kHz                           \\
+        Amplificateur MAX97220A                & ---                              & 50                               & Estimation en fonction de la puissance de sortie @ 3.3 V \\
+        Carte microSD                          & ---                              & 100                              & Pire cas, dépend de la carte                             \\
+        Divers (expanseur, pull-ups, etc\dots) & ---                              & 15                               & Estimation                                               \\
         \hline
-        \textbf{Total}                                &                                  & \textbf{$\sim$\,830}             & Somme des pires cas                               \\
+        \textbf{Total}                         &                                  & \textbf{$\sim$\,875}             & Somme des pires cas                                      \\
         \hline
     \end{tabular}
 \end{table}
 
-La somme des courants maximaux atteint environ 830\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominants, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32. \\
+La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominants, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32. \\
 
 \subsubsection{Choix de la topologie : buck plutôt que LDO}
 
@@ -241,6 +300,15 @@ Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pou
 
 
 \clearpage
+\subsection{Superviseur de tension}
+
+
+
+% ---------------------------------------
+
+
+
+\clearpage
 \subsection{Batterie}
 Pour déterminer la capacité de la batterie, il faut se baser sur la consommation maximale des gros consommateurs et de de l'autonomie souhaitée. Dans ce cas, les gros consommateurs sont l'écran, le micro-contrôleur, le DAC et l'amplificateur.
 
@@ -249,8 +317,16 @@ Pour déterminer la capacité de la batterie, il faut se baser sur la consommati
 % ---------------------------------------
 
 
+\clearpage
+\subsection{Chargeur de batterie}
 
-\subsection{Boutons}
+
+
+% ---------------------------------------
+
+
+\clearpage
+\subsection{Jauge de charge}
 
 
 
@@ -258,6 +334,16 @@ Pour déterminer la capacité de la batterie, il faut se baser sur la consommati
 
 
 
+\clearpage
+\subsection{Pont USB-UART}
+
+
+
+% ---------------------------------------
+
+
+
+\clearpage
 \subsection{Contrôle du volume}
 
 

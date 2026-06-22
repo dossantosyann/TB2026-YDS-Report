@@ -35,4 +35,16 @@ ce qui donne en sortie
 \end{equation}
 La pleine échelle numérique du DAC est ainsi calée exactement sur l'excursion
 maximale de l'amplificateur~: toute la dynamique disponible est exploitée sans
-jamais atteindre la zone d'écrêtage.
+jamais atteindre la zone d'écrêtage. \\
+
+\subsubsection{Conséquence d'un gain inadapté}
+
+Il importe de souligner que la saturation n'est pas déterminée par le gain
+seul, mais par le produit du gain et du niveau d'entrée instantané. Le DAC
+n'atteint $4.2\,\text{V}_{\text{RMS}}$ qu'à pleine échelle numérique~; un gain
+unitaire ne provoquerait donc pas une distorsion permanente, mais un
+écrêtage limité aux crêtes du signal proches de $0\,\text{dBFS}$. Ce
+comportement constitue le cas le plus défavorable du point de vue perceptif~:
+le signal demeure propre à faible niveau, puis se dégrade brutalement sur les
+passages de forte amplitude. Le choix d'un gain de $0.5$ écarte entièrement
+ce risque.
