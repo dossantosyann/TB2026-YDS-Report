@@ -5,6 +5,8 @@ Ce chapitre justifie la sélection des principaux composants du système. Chaque
 
 La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format BGA ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie. \\
 
+Toutes les références de prix ont été prises sur DigiKey. \\
+
 
 
 % ---------------------------------------
@@ -342,9 +344,12 @@ Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pou
 % ---------------------------------------
 
 
-
-\clearpage
+\vspace{2cm}
 \subsection{Superviseur de tension}
+
+Le superviseur de tension protège la cellule lithium-ion contre la décharge profonde, qui endommagerait irréversiblement la batterie. Il surveille en permanence la tension de la cellule et déclenche un verrouillage dès qu'elle descend sous un seuil de sécurité. Ce seuil, fixé ici à 3,2~V, répond à deux exigences. D'une part, il interrompt la décharge avant que la cellule n'atteigne une tension dangereuse pour sa durée de vie. D'autre part, en dessous de 3,2~V les composants de la chaîne audio filaire ne sont alors plus assurés de fonctionner à leurs performances nominales. Pour rappel, en dessous de 3,3 V de tension sur la batterie le régulateur entre en mode \textit{passthrough}. Abaisser le seuil pour exploiter davantage la batterie se ferait donc au prix d'une dégradation possible de la qualité audio pour un gain d'autonomie très faible.
+
+Contrairement aux composants précédents, cette fonction ne se prête pas à une comparaison détaillée. Il s'agit d'une fonction standard, pour laquelle il existe de nombreuses références quasiment interchangeables une fois le seuil fixé. Les seuls critères secondaires à respecter sont un courant de repos très faible, puisque le composant est alimenté en permanence, une sortie adaptée à la commande du verrouillage et un coût faible. Parmi les références satisfaisant ces critères, le XC6120N (référence XC6120N322NR-G) a été retenu pour sa disponibilité et son coût. Il offre un seuil de détection de 3,2~V, une consommation d'environ 0,6~$\mu$A et une sortie à drain ouvert.
 
 
 
@@ -354,7 +359,7 @@ Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pou
 
 \clearpage
 \subsection{Batterie}
-Pour déterminer la capacité de la batterie, il faut se baser sur la consommation maximale des gros consommateurs et de de l'autonomie souhaitée. Dans ce cas, les gros consommateurs sont l'écran, le micro-contrôleur, le DAC et l'amplificateur.
+À faire lorsque la mesure de courant du système sera faite
 
 
 
@@ -363,6 +368,55 @@ Pour déterminer la capacité de la batterie, il faut se baser sur la consommati
 
 \clearpage
 \subsection{Chargeur de batterie}
+
+Le chargeur de batterie gère la recharge de la cellule lithium-ion depuis l'entrée USB. Le critère déterminant pour ce composant est sa capacité à adapter le courant prélevé à la source connectée. Une source USB peut en effet fournir des courants très différents : un port USB d'ordinateur portable est limité à environ 0,5~A, tandis qu'un chargeur secteur dédié peut en délivrer jusqu'à 3~A. Le chargeur doit donc identifier la capacité de la source et ajuster son courant d'entrée en conséquence, afin de charger le plus rapidement possible sans jamais excéder ce que la source peut fournir. \\
+
+\subsubsection{Composant retenu}
+
+Quatre circuits de charge ont été comparés (tableau~\ref{tab:comparo_chargeur}).
+
+\begin{table}[H]
+    \centering
+    \caption{Comparaison des chargeurs de batterie candidats}
+    \label{tab:comparo_chargeur}
+    %\footnotesize
+    \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
+        \hline
+                                  & \textbf{BQ25890}      & \textbf{BQ25629}      & \textbf{MAX77757} & \textbf{MCP73871} \\
+        Fabricant                 & Texas Instr.          & Texas Instr.          & Maxim             & Microchip         \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
+        \hline
+        $I_{charge}$ max [A]      & 5                     & 2                     & 3,15              & 0,5               \\
+        Plage $V_{IN}$ [V]        & 3,9--14               & 3,9--18               & 4,5--13,7         & 4,4--6            \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
+        \hline
+        Interface                 & I\textsuperscript{2}C & I\textsuperscript{2}C & Matérielle        & Matérielle        \\
+        Détection BC1.2           & Oui                   & Oui                   & Oui               & Non               \\
+        Détection USB Type-C (CC) & Non                   & Non                   & Oui               & Non               \\
+        Power Path                & Oui                   & Oui                   & Oui               & Non               \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
+        \hline
+        Boîtier                   & QFN-24                & QFN-28                & QFN-24            & QFN-20            \\
+        Prix unitaire [CHF]       & 2,61                  & 3,05                  & 3,52              & 1,89              \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Le MCP73871 est d'emblée écarté. Dépourvu de détection de source et limité à 0,5~A, il ne permet ni d'exploiter un chargeur puissant ni d'alimenter le système pendant la charge faute de Power Path. Parmi les trois autres, le choix s'est porté sur le MAX77757 pour les raisons suivantes :
+
+\begin{itemize}
+    \item Il est le seul à offrir la détection USB Type-C par les broches CC, en complément de la détection BC1.2 des sources USB classiques. Sur un appareil à connecteur USB-C, c'est le moyen natif de lire le courant annoncé par la source et de s'y adapter automatiquement, sans intervention logicielle.
+    \item Il met en œuvre une régulation adaptative du courant d'entrée (AICL), qui réduit ce courant si la tension d'un adaptateur faible commence à s'effondrer. Le chargeur prélève ainsi le maximum que la source peut soutenir sans la faire chuter.
+    \item Il fonctionne de manière autonome, configuré par résistances et renseignant son état par des broches matérielles, sans recourir à l'I\textsuperscript{2}C. La charge est entièrement gérée par le circuit, indépendamment du firmware, ce qui simplifie le logiciel et rend la recharge robuste.
+    \item Il intègre un Power Path, permettant d'alimenter le système directement depuis l'USB pendant la charge, y compris lorsque la batterie est très déchargée.
+\end{itemize}
+
+Les BQ25890 et BQ25629, bien que performants, ne disposent pas de la détection Type-C par les broches CC et requièrent une configuration par I\textsuperscript{2}C, donc une intervention du firmware pour piloter la charge.
+
+Le MAX77757 est le plus cher des quatre candidats (3,52~CHF). Comme pour les composants précédents, cet écart reste marginal à l'échelle de la BOM complète de la carte, et se justifie par sa parfaite adéquation avec une entrée USB-C et un fonctionnement autonome.
 
 
 
