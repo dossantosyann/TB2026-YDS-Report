@@ -423,8 +423,69 @@ Le MAX77757 est le plus cher des quatre candidats (3,52~CHF). Comme pour les com
 % ---------------------------------------
 
 
+\vspace{3cm}
+\subsection{Jauge de batterie}
+
+La jauge de batterie estime l'état de charge de la cellule. L'objectif principal est d'afficher à l'utilisateur le pourcentage de charge restant (SOC). Un objectif secondaire consiste à rapporter le plus de grandeurs annexes possible (tension, courant, température, autonomie estimée, état de santé, entre autres), utiles au suivi de la batterie sans être indispensables. Le choix se joue donc sur deux critères : la précision de l'estimation de l'état de charge et la richesse des données fournies. Deux approches existent pour cette estimation : la mesure de la seule tension de la cellule, simple mais sensible aux variations de charge, et le comptage de coulomb, qui intègre le courant réellement échangé pour un suivi plus fidèle. \\
+
+\subsubsection{Composant retenu}
+
+Une jauge à comptage de coulomb mesure le courant au moyen d'une résistance de mesure, intégrée au composant ou externe. Les jauges à résistance intégrée auraient évité ce composant supplémentaire, mais elles ne sont proposées qu'en boîtier BGA, écarté pour ce projet. La recherche s'est donc orientée vers des jauges à résistance de mesure externe, seules à offrir le comptage de coulomb dans un boîtier compatible avec l'assemblage du prototype.
+
 \clearpage
-\subsection{Jauge de charge}
+Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}). \\
+
+\begin{table}[H]
+    \centering
+    \caption{Comparaison des jauges de batterie candidates}
+    \label{tab:comparo_jauge}
+    %\footnotesize
+    \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
+        \hline
+                                     & \textbf{MAX17048}     & \textbf{MAX17260}     & \textbf{BQ27441-G1}   & \textbf{STC3100}      \\
+        Fabricant                    & Analog Devices        & Analog Devices        & Texas Instr.          & STMicroelectronics    \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Caractéristiques}}                                                                                \\
+        \hline
+        Compteur de coulomb          & Non                   & Oui                   & Oui                   & Oui                   \\
+        $R_{sense}$ externe          & Non                   & Oui                   & Oui                   & Oui                   \\
+        Interface                    & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C \\
+        Courant actif max [$\mu$A]   & 40                    & 30                    & 93                    & 100                   \\
+        Courant hibernation [$\mu$A] & 5                     & 5,1                   & 9                     & 2                     \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Données fournies}}                                                                                \\
+        \hline
+        Tension                      & Oui                   & Oui                   & Oui                   & Oui                   \\
+        État de charge (SOC)         & Oui                   & Oui                   & Oui                   & Non                   \\
+        Capacité restante            & Non                   & Oui                   & Oui                   & Non                   \\
+        Courant instantané           & Non                   & Oui                   & Oui                   & Oui                   \\
+        Température                  & Non                   & Oui                   & Oui                   & Oui                   \\
+        Time-to-empty                & Oui                   & Oui                   & Non                   & Non                   \\
+        Time-to-full                 & Oui                   & Oui                   & Non                   & Non                   \\
+        State-of-Health              & Non                   & Oui                   & Oui                   & Non                   \\
+        Cycles                       & Non                   & Oui                   & Non                   & Non                   \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                                 \\
+        \hline
+        Boîtier                      & TDFN-14               & TDFN-14               & VSON-12               & MiniSO-8              \\
+        Prix unitaire [CHF]          & 3,22                  & 2,72                  & 3,10                  & 3,07                  \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Le STC3100 est écarté en premier : il ne calcule pas l'état de charge, se limitant à fournir la tension, le courant, la température et la charge brute accumulée. Il ne remplit donc même pas l'objectif principal, l'obtention d'un état de charge exploitable supposant d'en implémenter l'estimation dans le firmware, alors que les autres candidats le fournissent directement. Le MAX17048 repose quant à lui sur une estimation fondée uniquement sur la tension : sans compteur de coulomb, il ne fournit ni la capacité restante, ni le courant, ni la température, ni l'état de santé ou le nombre de cycles, et son estimation se dégrade sous charge variable. Le BQ27441-G1 constitue un candidat sérieux, doté d'un compteur de coulomb et de données complètes, mais il ne renseigne ni l'autonomie estimée (time-to-empty et time-to-full), ni le nombre de cycles. \\
+
+\clearpage
+Le MAX17260 répond pleinement aux deux objectifs et a donc été retenu, pour les raisons suivantes :
+
+\begin{itemize}
+    \item Il associe un compteur de coulomb à l'algorithme ModelGauge m5, qui combine la mesure de tension et l'intégration du courant. L'estimation de l'état de charge demeure ainsi précise même sous une charge variable, là où une méthode fondée sur la seule tension dérive.
+    \item Il est le seul candidat à rapporter l'ensemble des grandeurs utiles : tension, état de charge, capacité restante, courant instantané, température, autonomie estimée, état de santé et nombre de cycles. L'autonomie estimée est particulièrement précieuse pour l'affichage à l'utilisateur.
+    \item Il présente la plus faible consommation du comparatif, avec 30~$\mu$A en mode actif contre 93~$\mu$A pour le BQ27441-G1, ce qui réduit d'autant la charge prélevée en permanence sur la batterie.
+\end{itemize}
+
+Comme expliqué plus haut, le MAX17260 nécessite une résistance de mesure externe, conséquence acceptée de la contrainte de boîtier, dont le coût reste négligeable. Le choix ne souffre par ailleurs d'aucun compromis sur le prix : à 2,72~CHF, le MAX17260 est le moins cher des quatre candidats, tout en offrant le jeu de données le plus complet et la plus faible consommation.
+
 
 
 
