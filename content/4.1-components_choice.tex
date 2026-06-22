@@ -86,45 +86,45 @@ Le système étant alimenté par un régulateur à découpage, du bruit de commu
 La comparaison se limite à des composants de Texas Instruments, seul fabricant à proposer, pour cette application, des DAC audio réellement intéressants. La famille Burr-Brown PCM faisant référence dans le domaine et bénéficiant d'une documentation abondante. Le tableau~\ref{tab:comparo_dac} récapitule les quatre candidats.
 
 \begin{table}[H]
-    \centering
-    \caption{Comparaison des convertisseurs numérique-analogique candidats}
-    \label{tab:comparo_dac}
-    %\footnotesize
-    \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
-        \hline
-                                & \textbf{PCM5102A} & \textbf{PCM5122}   & \textbf{PCM5242} & \textbf{TAD5212}      \\
-        Fabricant               & TI                & TI                 & TI               & TI                    \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                   \\
-        \hline
-        $V_{IN}$ [V]            & 3,0 - 3,46        & 3,0 - 3,46         & 3,0 - 3,46       & 3,0 - 3,6             \\
-        $I_{IN}$ max [mA]       & 22                & 24                 & 24               & 19                    \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques audio}}                                                         \\
-        \hline
-        Type de sortie          & Single-ended      & Single-ended       & Différentielle   & Différentielle        \\
-        Niveau de sortie [Vrms] & 2,1               & 2,1                & 4,2              & 2                     \\
-        SNR [dB]                & 112               & 112                & 114              & 120                   \\
-        THD+N [dB]              & $-93$             & $-93$              & $-100$           & $-104$                \\
-        Ampli casque intégré    & Non               & Non                & Non              & 62,5~mW @ 16~$\Omega$ \\
-        Résolution max [bits]   & 32                & 32                 & 32               & 32                    \\
-        $F_s$ max [kHz]         & 384               & 384                & 384              & 768                   \\
-        DSP                     & Non               & Oui ($\leq$48~kHz) & miniDSP          & Biquads EQ            \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                \\
-        \hline
-        Boîtier                 & TSSOP-20          & TSSOP-28           & VQFN-32          & VQFN-24               \\
-        Prix unitaire [CHF]     & 2,97              & 2,62               & 8,06             & 4,42                  \\
-        \hline
-    \end{tabular}
+  \centering
+  \caption{Comparaison des convertisseurs numérique-analogique candidats}
+  \label{tab:comparo_dac}
+  %\footnotesize
+  \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
+    \hline
+                            & \textbf{PCM5102A} & \textbf{PCM5122}   & \textbf{PCM5242} & \textbf{TAD5212}      \\
+    Fabricant               & TI                & TI                 & TI               & TI                    \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                   \\
+    \hline
+    $V_{IN}$ [V]            & 3,0 - 3,46        & 3,0 - 3,46         & 3,0 - 3,46       & 3,0 - 3,6             \\
+    $I_{IN}$ max [mA]       & 22                & 24                 & 24               & 19                    \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Caractéristiques audio}}                                                         \\
+    \hline
+    Type de sortie          & Single-ended      & Single-ended       & Différentielle   & Différentielle        \\
+    Niveau de sortie [Vrms] & 2,1               & 2,1                & 4,2              & 2                     \\
+    SNR [dB]                & 112               & 112                & 114              & 120                   \\
+    THD+N [dB]              & $-93$             & $-93$              & $-100$           & $-104$                \\
+    Ampli casque intégré    & Non               & Non                & Non              & 62,5~mW @ 16~$\Omega$ \\
+    Résolution max [bits]   & 32                & 32                 & 32               & 32                    \\
+    $F_s$ max [kHz]         & 384               & 384                & 384              & 768                   \\
+    DSP                     & Non               & Oui ($\leq$48~kHz) & miniDSP          & Biquads EQ            \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                \\
+    \hline
+    Boîtier                 & TSSOP-20          & TSSOP-28           & VQFN-32          & VQFN-24               \\
+    Prix unitaire [CHF]     & 2,97              & 2,62               & 8,06             & 4,42                  \\
+    \hline
+  \end{tabular}
 \end{table}
 
 Tous les composants remplissant le critère minimum de 24 bits de résolution et une fréquence d'échantillonnage allant jusqu'à minimum 192 kHz, le choix final s'est donc porté sur le \textbf{PCM5242} pour les raisons suivantes :
 
 \begin{itemize}
-    \item Il possède des sorties différentielles.
-    \item Il n'intègre pas d'amplificateur et n'est pas surdimensionné pour le projet, à l'inverse du TAD5212.
-    \item Il offre d'excellentes performances audio avec un SNR de 114 dB et un THD+N de -100 dB.
+  \item Il possède des sorties différentielles.
+  \item Il n'intègre pas d'amplificateur et n'est pas surdimensionné pour le projet, à l'inverse du TAD5212.
+  \item Il offre d'excellentes performances audio avec un SNR de 114 dB et un THD+N de -100 dB.
 \end{itemize}
 
 
@@ -150,45 +150,45 @@ L'amplificateur reçoit le signal analogique du convertisseur et le porte au niv
 Trois amplificateurs, issus de trois fabricants différents, ont été comparés (tableau~\ref{tab:comparo_ampli}). Tous acceptant une entrée différentielle, ce prérequis ne départage pas les candidats : la sélection s'est donc jouée sur les performances audio.
 
 \begin{table}[H]
-    \centering
-    \caption{Comparaison des amplificateurs casque candidats}
-    \label{tab:comparo_ampli}
-    %\footnotesize
-    \begin{tabular}{l c c >{\columncolor{teal!12}}c}
-        \hline
-                                                & \textbf{PAM8908}     & \textbf{TPA6132A2}   & \textbf{MAX97220A} \\
-        Fabricant                               & Diodes Inc.          & Texas Instruments    & Analog Devices     \\
-        \hline
-        \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                                  \\
-        \hline
-        $V_{IN}$ [V]                            & 2,5 - 5,5            & 2,3 - 5,5            & 2,5 - 5,5          \\
-        $I_{repos}$ max [mA]                    & 4                    & 2,1                  & 5,5                \\
-        \hline
-        \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                                        \\
-        \hline
-        Type d'entrées                          & Single-ended + diff. & Single-ended + diff. & Différentielle     \\
-        SNR [dB]                                & 100                  & 100                  & 112,5              \\
-        THD+N [dB]                              & $-70{,}5$            & $-74$                & $-89$              \\
-        $P_{out}$ max (32~$\Omega$, 3,3~V) [mW] & 30                   & 22                   & 50                 \\
-        Bruit de sortie pondéré A [$\mu$Vrms]   & 10                   & 5,5                  & 7                  \\
-        PSRR [dB]                               & 80 @ 1~kHz           & 90 @ 10~kHz          & 80 @ 1~kHz         \\
-        Diaphonie @ 1~kHz [dB]                  & $-80$ @ 15~mW        & $-80$ @ 20~mW        & $-102$ @ 20~mW     \\
-        \hline
-        \multicolumn{4}{c}{\textbf{Boîtier et prix}}                                                               \\
-        \hline
-        Boîtier                                 & QFN-16               & QFN-16               & QFN-16             \\
-        Prix unitaire [CHF]                     & 0,68                 & 0,86                 & 1,82               \\
-        \hline
-    \end{tabular}
+  \centering
+  \caption{Comparaison des amplificateurs casque candidats}
+  \label{tab:comparo_ampli}
+  %\footnotesize
+  \begin{tabular}{l c c >{\columncolor{teal!12}}c}
+    \hline
+                                            & \textbf{PAM8908}     & \textbf{TPA6132A2}   & \textbf{MAX97220A} \\
+    Fabricant                               & Diodes Inc.          & Texas Instruments    & Analog Devices     \\
+    \hline
+    \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                                  \\
+    \hline
+    $V_{IN}$ [V]                            & 2,5 - 5,5            & 2,3 - 5,5            & 2,5 - 5,5          \\
+    $I_{repos}$ max [mA]                    & 4                    & 2,1                  & 5,5                \\
+    \hline
+    \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                                        \\
+    \hline
+    Type d'entrées                          & Single-ended + diff. & Single-ended + diff. & Différentielle     \\
+    SNR [dB]                                & 100                  & 100                  & 112,5              \\
+    THD+N [dB]                              & $-70{,}5$            & $-74$                & $-89$              \\
+    $P_{out}$ max (32~$\Omega$, 3,3~V) [mW] & 30                   & 22                   & 50                 \\
+    Bruit de sortie pondéré A [$\mu$Vrms]   & 10                   & 5,5                  & 7                  \\
+    PSRR [dB]                               & 80 @ 1~kHz           & 90 @ 10~kHz          & 80 @ 1~kHz         \\
+    Diaphonie @ 1~kHz [dB]                  & $-80$ @ 15~mW        & $-80$ @ 20~mW        & $-102$ @ 20~mW     \\
+    \hline
+    \multicolumn{4}{c}{\textbf{Boîtier et prix}}                                                               \\
+    \hline
+    Boîtier                                 & QFN-16               & QFN-16               & QFN-16             \\
+    Prix unitaire [CHF]                     & 0,68                 & 0,86                 & 1,82               \\
+    \hline
+  \end{tabular}
 \end{table}
 
 Le MAX97220A se détache nettement sur les critères qui gouvernent la qualité de restitution :
 
 \begin{itemize}
-    \item Le meilleur rapport signal sur bruit, à 112,5~dB contre 100~dB pour les deux autres.
-    \item La plus faible distorsion, avec $-89$~dB de THD+N contre $-70{,}5$ et $-74$~dB.
-    \item Une séparation des canaux  supérieure, avec $-102$~dB de diaphonie contre $-80$~dB.
-    \item La puissance de sortie la plus élevée, soit environ 50~mW sous 32~$\Omega$.
+  \item Le meilleur rapport signal sur bruit, à 112,5~dB contre 100~dB pour les deux autres.
+  \item La plus faible distorsion, avec $-89$~dB de THD+N contre $-70{,}5$ et $-74$~dB.
+  \item Une séparation des canaux  supérieure, avec $-102$~dB de diaphonie contre $-80$~dB.
+  \item La puissance de sortie la plus élevée, soit environ 50~mW sous 32~$\Omega$.
 \end{itemize}
 
 En contrepartie, son bruit de sortie (7~$\mu$Vrms) et son courant de repos (5,5~mA) sont légèrement supérieurs à ceux du TPA6132A2, mais demeurent faibles et sans incidence pratique.
@@ -212,40 +212,40 @@ Lors de la conception du schéma électrique, il est apparu qu'une fois tous les
 Les candidats envisagés sont des expanseurs 8 bits commandés en I\textsuperscript{2}C et dotés d'une sortie d'interruption. Cette dernière signale tout changement d'état des entrées, ce qui évite d'interroger le composant en permanence pour détecter, par exemple, l'appui sur un bouton. Le tableau~\ref{tab:comparo_exp} récapitule les quatre candidats.
 
 \begin{table}[H]
-    \centering
-    \caption{Comparaison des expanseurs d'entrées-sorties candidats}
-    \label{tab:comparo_exp}
-    %\footnotesize
-    \begin{tabular}{l >{\columncolor{teal!12}}c c c c}
-        \hline
-                              & \textbf{PI4IOE5V9554} & \textbf{TCA9554}  & \textbf{PCA6408A} & \textbf{FXL6408}   \\
-        Fabricant             & Diodes Inc.           & Texas Instruments & NXP               & onsemi             \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                  \\
-        \hline
-        $V_{IN}$ [V]          & 2,3--5,5              & 1,65--5,5         & 1,65--5,5         & 1,65--3,6          \\
-        $I_{IN}$ max [$\mu$A] & 60                    & 34                & 25                & 300                \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques fonctionnelles}}                                               \\
-        \hline
-        Type de sortie        & Push-pull             & Push-pull         & Push-pull         & Push-pull + High-Z \\
-        Pull-up/down internes & Non                   & Non               & Non               & Oui, configurables \\
-        Sortie d'interruption & Oui                   & Oui               & Oui               & Oui                \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                               \\
-        \hline
-        Boîtier               & TSSOP-16              & TSSOP-16          & TSSOP-16          & UQFN-16            \\
-        Prix unitaire [CHF]   & 0,89                  & 1,18              & 0,84              & 0,44               \\
-        \hline
-    \end{tabular}
+  \centering
+  \caption{Comparaison des expanseurs d'entrées-sorties candidats}
+  \label{tab:comparo_exp}
+  %\footnotesize
+  \begin{tabular}{l >{\columncolor{teal!12}}c c c c}
+    \hline
+                          & \textbf{PI4IOE5V9554} & \textbf{TCA9554}  & \textbf{PCA6408A} & \textbf{FXL6408}   \\
+    Fabricant             & Diodes Inc.           & Texas Instruments & NXP               & onsemi             \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                  \\
+    \hline
+    $V_{IN}$ [V]          & 2,3--5,5              & 1,65--5,5         & 1,65--5,5         & 1,65--3,6          \\
+    $I_{IN}$ max [$\mu$A] & 60                    & 34                & 25                & 300                \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Caractéristiques fonctionnelles}}                                               \\
+    \hline
+    Type de sortie        & Push-pull             & Push-pull         & Push-pull         & Push-pull + High-Z \\
+    Pull-up/down internes & Non                   & Non               & Non               & Oui, configurables \\
+    Sortie d'interruption & Oui                   & Oui               & Oui               & Oui                \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                               \\
+    \hline
+    Boîtier               & TSSOP-16              & TSSOP-16          & TSSOP-16          & UQFN-16            \\
+    Prix unitaire [CHF]   & 0,89                  & 1,18              & 0,84              & 0,44               \\
+    \hline
+  \end{tabular}
 \end{table}
 
 Les quatre composants couvrent le besoin de manière équivalente. Le choix s'est porté sur le PI4IOE5V9554 pour les raisons suivantes :
 
 \begin{itemize}
-    \item Il remplit l'ensemble des besoins.
-    \item Son brochage s'accorde particulièrement bien avec l'implantation des composants sur le PCB, ce qui permet un routage plus simple.
-    \item Son prix et son courant de repos, sans être les plus faibles du comparatif, restent modestes et sans incidence à l'échelle de la carte.
+  \item Il remplit l'ensemble des besoins.
+  \item Son brochage s'accorde particulièrement bien avec l'implantation des composants sur le PCB, ce qui permet un routage plus simple.
+  \item Son prix et son courant de repos, sans être les plus faibles du comparatif, restent modestes et sans incidence à l'échelle de la carte.
 \end{itemize}
 
 
@@ -261,23 +261,23 @@ Pour choisir correctement le régulateur de tension 3,3\,V du système, il est n
 Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant moyen de 137\,mA et un pic de 321\,mA en transmission Bluetooth. Cette dernière valeur est arrondie à 350\,mA pour aligner la marge sur le pire cas spécifié par la datasheet (pic Wi-Fi TX 802.11b). Le tableau~\ref{tab:conso_totale} recense l'ensemble des composants du rail 3,3\,V, en retenant pour chacun sa valeur maximale afin de dimensionner dans le pire cas.
 
 \begin{table}[H]
-    \centering
-    \caption{Bilan de consommation sur le rail 3,3\,V}
-    \label{tab:conso_totale}
-    \begin{tabular}{p{0.30\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} p{0.36\linewidth}}
-        \hline
-        \textbf{Composant}                     & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                        \\
-        \hline
-        ESP32-WROVER-E                         & 137                              & 350                              & Mesuré + marge datasheet                                 \\
-        Écran OLED NHD-1.91-176176UBC3         & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés        \\
-        DAC PCM5242                            & 37                               & 47                               & AVDD + CPVDD + DVDD à 192\,kHz                           \\
-        Amplificateur MAX97220A                & ---                              & 50                               & Estimation en fonction de la puissance de sortie @ 3.3 V \\
-        Carte microSD                          & ---                              & 100                              & Pire cas, dépend de la carte                             \\
-        Divers (expanseur, pull-ups, etc\dots) & ---                              & 15                               & Estimation                                               \\
-        \hline
-        \textbf{Total}                         &                                  & \textbf{$\sim$\,875}             & Somme des pires cas                                      \\
-        \hline
-    \end{tabular}
+  \centering
+  \caption{Bilan de consommation sur le rail 3,3\,V}
+  \label{tab:conso_totale}
+  \begin{tabular}{p{0.30\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} p{0.36\linewidth}}
+    \hline
+    \textbf{Composant}                     & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                        \\
+    \hline
+    ESP32-WROVER-E                         & 137                              & 350                              & Mesuré + marge datasheet                                 \\
+    Écran OLED NHD-1.91-176176UBC3         & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés        \\
+    DAC PCM5242                            & 37                               & 47                               & AVDD + CPVDD + DVDD à 192\,kHz                           \\
+    Amplificateur MAX97220A                & ---                              & 50                               & Estimation en fonction de la puissance de sortie @ 3.3 V \\
+    Carte microSD                          & ---                              & 100                              & Pire cas, dépend de la carte                             \\
+    Divers (expanseur, pull-ups, etc\dots) & ---                              & 15                               & Estimation                                               \\
+    \hline
+    \textbf{Total}                         &                                  & \textbf{$\sim$\,875}             & Somme des pires cas                                      \\
+    \hline
+  \end{tabular}
 \end{table}
 
 La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominants, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32. \\
@@ -295,46 +295,46 @@ Le principal inconvénient théorique d'un buck en fin de décharge de la battge
 Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo_buck}). Le courant de sortie maximal étant identique, la sélection s'opère sur le rendement, la consommation à vide, le boîtier et le prix.
 
 \begin{table}[H]
-    \centering
-    \caption{Comparaison des convertisseurs buck candidats}
-    \label{tab:comparo_buck}
-    %\footnotesize
-    \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
-        \hline
-                                           & \textbf{TLV62568} & \textbf{TPS62A01} & \textbf{MAX17624} & \textbf{AP61102} \\
-        Fabricant                          & TI                & TI                & Analog Devices    & Diodes Inc.      \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
-        \hline
-        $V_{IN}$ [V]                       & 2,5--5,5          & 2,5--5,5          & 2,9--5,5          & 2,3--5,5         \\
-        $I_{OUT}$ max [A]                  & 1                 & 1                 & 1                 & 1                \\
-        $f_{SW}$ [MHz]                     & 1,5               & 2,4               & 4                 & 2,2              \\
-        $I_Q$ à vide [$\mu$A]              & 35                & 23                & 40                & 15               \\
-        $R_{DS(on)}$ côté haut [m$\Omega$] & 150               & 100               & 160               & 110              \\
-        $R_{DS(on)}$ côté bas [m$\Omega$]  & 100               & 67                & 130               & 80               \\
-        Rendement (3,3\,V, 1\,A) [\%]      & $\sim$95          & $\sim$95          & $\sim$92          & $\sim$92         \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
-        \hline
-        Mode light-load                    & Auto.             & Auto.             & Auto.             & Auto.            \\
-        100\,\% duty cycle                 & Oui               & Oui               & Oui               & Oui              \\
-        Over Current Protection            & Oui               & Oui               & Oui               & Oui              \\
-        Soft-start                         & Oui               & Oui               & Oui               & Oui              \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
-        \hline
-        Boîtier                            & SOT-23 / SOT-563  & SOT-563-6         & TDFN 2$\times$2   & SOT-563          \\
-        Prix unitaire [CHF]                & 0,21              & 0,15              & 1,31              & 0,16             \\
-        \hline
-    \end{tabular}
+  \centering
+  \caption{Comparaison des convertisseurs buck candidats}
+  \label{tab:comparo_buck}
+  %\footnotesize
+  \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
+    \hline
+                                       & \textbf{TLV62568} & \textbf{TPS62A01} & \textbf{MAX17624} & \textbf{AP61102} \\
+    Fabricant                          & TI                & TI                & Analog Devices    & Diodes Inc.      \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
+    \hline
+    $V_{IN}$ [V]                       & 2,5--5,5          & 2,5--5,5          & 2,9--5,5          & 2,3--5,5         \\
+    $I_{OUT}$ max [A]                  & 1                 & 1                 & 1                 & 1                \\
+    $f_{SW}$ [MHz]                     & 1,5               & 2,4               & 4                 & 2,2              \\
+    $I_Q$ à vide [$\mu$A]              & 35                & 23                & 40                & 15               \\
+    $R_{DS(on)}$ côté haut [m$\Omega$] & 150               & 100               & 160               & 110              \\
+    $R_{DS(on)}$ côté bas [m$\Omega$]  & 100               & 67                & 130               & 80               \\
+    Rendement (3,3\,V, 1\,A) [\%]      & $\sim$95          & $\sim$95          & $\sim$92          & $\sim$92         \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
+    \hline
+    Mode light-load                    & Auto.             & Auto.             & Auto.             & Auto.            \\
+    100\,\% duty cycle                 & Oui               & Oui               & Oui               & Oui              \\
+    Over Current Protection            & Oui               & Oui               & Oui               & Oui              \\
+    Soft-start                         & Oui               & Oui               & Oui               & Oui              \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
+    \hline
+    Boîtier                            & SOT-23 / SOT-563  & SOT-563-6         & TDFN 2$\times$2   & SOT-563          \\
+    Prix unitaire [CHF]                & 0,21              & 0,15              & 1,31              & 0,16             \\
+    \hline
+  \end{tabular}
 \end{table}
 
 Les quatre composants offrant les mêmes fonctionnalités, le choix final s'est donc porté sur le \textbf{TPS62A01} pour les raisons suivantes :
 
 \begin{itemize}
-    \item Il présente les résistances de conduction les plus faibles (100\,/\,67\,m$\Omega$), ce qui lui assure un meilleur rendement ($\sim$95\,\%).
-    \item Sa consommation à vide de 23\,$\mu$A reste excellente. L'AP61102 fait mieux sur ce seul critère (15\,$\mu$A), mais perd environ 3\,\% de rendement à pleine charge et la différence de 8\,$\mu$A est négligeable.
-    \item Il est le moins cher, dans un boîtier compact, et issu d'un fabricant offrant un bon support de conception et une bonne disponibilité.
+  \item Il présente les résistances de conduction les plus faibles (100\,/\,67\,m$\Omega$), ce qui lui assure un meilleur rendement ($\sim$95\,\%).
+  \item Sa consommation à vide de 23\,$\mu$A reste excellente. L'AP61102 fait mieux sur ce seul critère (15\,$\mu$A), mais perd environ 3\,\% de rendement à pleine charge et la différence de 8\,$\mu$A est négligeable.
+  \item Il est le moins cher, dans un boîtier compact, et issu d'un fabricant offrant un bon support de conception et une bonne disponibilité.
 \end{itemize}
 
 Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pour un rendement inférieur, et le TLV62568 pour ses résistances de conduction et sa consommation à vide plus élevées que celles du TPS62A01 à prix comparable. Le \textbf{TPS62A01} est donc retenu pour le régulateur 3,3\,V du système.
@@ -376,42 +376,42 @@ Le chargeur de batterie gère la recharge de la cellule lithium-ion depuis l'ent
 Quatre circuits de charge ont été comparés (tableau~\ref{tab:comparo_chargeur}).
 
 \begin{table}[H]
-    \centering
-    \caption{Comparaison des chargeurs de batterie candidats}
-    \label{tab:comparo_chargeur}
-    %\footnotesize
-    \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
-        \hline
-                                  & \textbf{BQ25890}      & \textbf{BQ25629}      & \textbf{MAX77757} & \textbf{MCP73871} \\
-        Fabricant                 & Texas Instr.          & Texas Instr.          & Maxim             & Microchip         \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
-        \hline
-        $I_{charge}$ max [A]      & 5                     & 2                     & 3,15              & 0,5               \\
-        Plage $V_{IN}$ [V]        & 3,9--14               & 3,9--18               & 4,5--13,7         & 4,4--6            \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
-        \hline
-        Interface                 & I\textsuperscript{2}C & I\textsuperscript{2}C & Matérielle        & Matérielle        \\
-        Détection BC1.2           & Oui                   & Oui                   & Oui               & Non               \\
-        Détection USB Type-C (CC) & Non                   & Non                   & Oui               & Non               \\
-        Power Path                & Oui                   & Oui                   & Oui               & Non               \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
-        \hline
-        Boîtier                   & QFN-24                & QFN-28                & QFN-24            & QFN-20            \\
-        Prix unitaire [CHF]       & 2,61                  & 3,05                  & 3,52              & 1,89              \\
-        \hline
-    \end{tabular}
+  \centering
+  \caption{Comparaison des chargeurs de batterie candidats}
+  \label{tab:comparo_chargeur}
+  %\footnotesize
+  \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
+    \hline
+                              & \textbf{BQ25890}      & \textbf{BQ25629}      & \textbf{MAX77757} & \textbf{MCP73871} \\
+    Fabricant                 & Texas Instr.          & Texas Instr.          & Maxim             & Microchip         \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
+    \hline
+    $I_{charge}$ max [A]      & 5                     & 2                     & 3,15              & 0,5               \\
+    Plage $V_{IN}$ [V]        & 3,9--14               & 3,9--18               & 4,5--13,7         & 4,4--6            \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
+    \hline
+    Interface                 & I\textsuperscript{2}C & I\textsuperscript{2}C & Matérielle        & Matérielle        \\
+    Détection BC1.2           & Oui                   & Oui                   & Oui               & Non               \\
+    Détection USB Type-C (CC) & Non                   & Non                   & Oui               & Non               \\
+    Power Path                & Oui                   & Oui                   & Oui               & Non               \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
+    \hline
+    Boîtier                   & QFN-24                & QFN-28                & QFN-24            & QFN-20            \\
+    Prix unitaire [CHF]       & 2,61                  & 3,05                  & 3,52              & 1,89              \\
+    \hline
+  \end{tabular}
 \end{table}
 
 Le MCP73871 est d'emblée écarté. Dépourvu de détection de source et limité à 0,5~A, il ne permet ni d'exploiter un chargeur puissant ni d'alimenter le système pendant la charge faute de Power Path. Parmi les trois autres, le choix s'est porté sur le MAX77757 pour les raisons suivantes :
 
 \begin{itemize}
-    \item Il est le seul à offrir la détection USB Type-C par les broches CC, en complément de la détection BC1.2 des sources USB classiques. Sur un appareil à connecteur USB-C, c'est le moyen natif de lire le courant annoncé par la source et de s'y adapter automatiquement, sans intervention logicielle.
-    \item Il met en œuvre une régulation adaptative du courant d'entrée (AICL), qui réduit ce courant si la tension d'un adaptateur faible commence à s'effondrer. Le chargeur prélève ainsi le maximum que la source peut soutenir sans la faire chuter.
-    \item Il fonctionne de manière autonome, configuré par résistances et renseignant son état par des broches matérielles, sans recourir à l'I\textsuperscript{2}C. La charge est entièrement gérée par le circuit, indépendamment du firmware, ce qui simplifie le logiciel et rend la recharge robuste.
-    \item Il intègre un Power Path, permettant d'alimenter le système directement depuis l'USB pendant la charge, y compris lorsque la batterie est très déchargée.
+  \item Il est le seul à offrir la détection USB Type-C par les broches CC, en complément de la détection BC1.2 des sources USB classiques. Sur un appareil à connecteur USB-C, c'est le moyen natif de lire le courant annoncé par la source et de s'y adapter automatiquement, sans intervention logicielle.
+  \item Il met en œuvre une régulation adaptative du courant d'entrée (AICL), qui réduit ce courant si la tension d'un adaptateur faible commence à s'effondrer. Le chargeur prélève ainsi le maximum que la source peut soutenir sans la faire chuter.
+  \item Il fonctionne de manière autonome, configuré par résistances et renseignant son état par des broches matérielles, sans recourir à l'I\textsuperscript{2}C. La charge est entièrement gérée par le circuit, indépendamment du firmware, ce qui simplifie le logiciel et rend la recharge robuste.
+  \item Il intègre un Power Path, permettant d'alimenter le système directement depuis l'USB pendant la charge, y compris lorsque la batterie est très déchargée.
 \end{itemize}
 
 Les BQ25890 et BQ25629, bien que performants, ne disposent pas de la détection Type-C par les broches CC et requièrent une configuration par I\textsuperscript{2}C, donc une intervention du firmware pour piloter la charge.
@@ -436,41 +436,41 @@ Une jauge à comptage de coulomb mesure le courant au moyen d'une résistance de
 Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}). \\
 
 \begin{table}[H]
-    \centering
-    \caption{Comparaison des jauges de batterie candidates}
-    \label{tab:comparo_jauge}
-    %\footnotesize
-    \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
-        \hline
-                                     & \textbf{MAX17048}     & \textbf{MAX17260}     & \textbf{BQ27441-G1}   & \textbf{STC3100}      \\
-        Fabricant                    & Analog Devices        & Analog Devices        & Texas Instr.          & STMicroelectronics    \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques}}                                                                                \\
-        \hline
-        Compteur de coulomb          & Non                   & Oui                   & Oui                   & Oui                   \\
-        $R_{sense}$ externe          & Non                   & Oui                   & Oui                   & Oui                   \\
-        Interface                    & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C \\
-        Courant actif max [$\mu$A]   & 40                    & 30                    & 93                    & 100                   \\
-        Courant hibernation [$\mu$A] & 5                     & 5,1                   & 9                     & 2                     \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Données fournies}}                                                                                \\
-        \hline
-        Tension                      & Oui                   & Oui                   & Oui                   & Oui                   \\
-        État de charge (SOC)         & Oui                   & Oui                   & Oui                   & Non                   \\
-        Capacité restante            & Non                   & Oui                   & Oui                   & Non                   \\
-        Courant instantané           & Non                   & Oui                   & Oui                   & Oui                   \\
-        Température                  & Non                   & Oui                   & Oui                   & Oui                   \\
-        Time-to-empty                & Oui                   & Oui                   & Non                   & Non                   \\
-        Time-to-full                 & Oui                   & Oui                   & Non                   & Non                   \\
-        State-of-Health              & Non                   & Oui                   & Oui                   & Non                   \\
-        Cycles                       & Non                   & Oui                   & Non                   & Non                   \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                                 \\
-        \hline
-        Boîtier                      & TDFN-14               & TDFN-14               & VSON-12               & MiniSO-8              \\
-        Prix unitaire [CHF]          & 3,22                  & 2,72                  & 3,10                  & 3,07                  \\
-        \hline
-    \end{tabular}
+  \centering
+  \caption{Comparaison des jauges de batterie candidates}
+  \label{tab:comparo_jauge}
+  %\footnotesize
+  \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
+    \hline
+                                 & \textbf{MAX17048}     & \textbf{MAX17260}     & \textbf{BQ27441-G1}   & \textbf{STC3100}      \\
+    Fabricant                    & Analog Devices        & Analog Devices        & Texas Instr.          & STMicroelectronics    \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Caractéristiques}}                                                                                \\
+    \hline
+    Compteur de coulomb          & Non                   & Oui                   & Oui                   & Oui                   \\
+    $R_{sense}$ externe          & Non                   & Oui                   & Oui                   & Oui                   \\
+    Interface                    & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C \\
+    Courant actif max [$\mu$A]   & 40                    & 30                    & 93                    & 100                   \\
+    Courant hibernation [$\mu$A] & 5                     & 5,1                   & 9                     & 2                     \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Données fournies}}                                                                                \\
+    \hline
+    Tension                      & Oui                   & Oui                   & Oui                   & Oui                   \\
+    État de charge (SOC)         & Oui                   & Oui                   & Oui                   & Non                   \\
+    Capacité restante            & Non                   & Oui                   & Oui                   & Non                   \\
+    Courant instantané           & Non                   & Oui                   & Oui                   & Oui                   \\
+    Température                  & Non                   & Oui                   & Oui                   & Oui                   \\
+    Time-to-empty                & Oui                   & Oui                   & Non                   & Non                   \\
+    Time-to-full                 & Oui                   & Oui                   & Non                   & Non                   \\
+    State-of-Health              & Non                   & Oui                   & Oui                   & Non                   \\
+    Cycles                       & Non                   & Oui                   & Non                   & Non                   \\
+    \hline
+    \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                                 \\
+    \hline
+    Boîtier                      & TDFN-14               & TDFN-14               & VSON-12               & MiniSO-8              \\
+    Prix unitaire [CHF]          & 3,22                  & 2,72                  & 3,10                  & 3,07                  \\
+    \hline
+  \end{tabular}
 \end{table}
 
 Le STC3100 est écarté en premier : il ne calcule pas l'état de charge, se limitant à fournir la tension, le courant, la température et la charge brute accumulée. Il ne remplit donc même pas l'objectif principal, l'obtention d'un état de charge exploitable supposant d'en implémenter l'estimation dans le firmware, alors que les autres candidats le fournissent directement. Le MAX17048 repose quant à lui sur une estimation fondée uniquement sur la tension : sans compteur de coulomb, il ne fournit ni la capacité restante, ni le courant, ni la température, ni l'état de santé ou le nombre de cycles, et son estimation se dégrade sous charge variable. Le BQ27441-G1 constitue un candidat sérieux, doté d'un compteur de coulomb et de données complètes, mais il ne renseigne ni l'autonomie estimée (time-to-empty et time-to-full), ni le nombre de cycles. \\
@@ -479,9 +479,9 @@ Le STC3100 est écarté en premier : il ne calcule pas l'état de charge, se lim
 Le MAX17260 répond pleinement aux deux objectifs et a donc été retenu, pour les raisons suivantes :
 
 \begin{itemize}
-    \item Il associe un compteur de coulomb à l'algorithme ModelGauge m5, qui combine la mesure de tension et l'intégration du courant. L'estimation de l'état de charge demeure ainsi précise même sous une charge variable, là où une méthode fondée sur la seule tension dérive.
-    \item Il est le seul candidat à rapporter l'ensemble des grandeurs utiles : tension, état de charge, capacité restante, courant instantané, température, autonomie estimée, état de santé et nombre de cycles. L'autonomie estimée est particulièrement précieuse pour l'affichage à l'utilisateur.
-    \item Il présente la plus faible consommation du comparatif, avec 30~$\mu$A en mode actif contre 93~$\mu$A pour le BQ27441-G1, ce qui réduit d'autant la charge prélevée en permanence sur la batterie.
+  \item Il associe un compteur de coulomb à l'algorithme ModelGauge m5, qui combine la mesure de tension et l'intégration du courant. L'estimation de l'état de charge demeure ainsi précise même sous une charge variable, là où une méthode fondée sur la seule tension dérive.
+  \item Il est le seul candidat à rapporter l'ensemble des grandeurs utiles : tension, état de charge, capacité restante, courant instantané, température, autonomie estimée, état de santé et nombre de cycles. L'autonomie estimée est particulièrement précieuse pour l'affichage à l'utilisateur.
+  \item Il présente la plus faible consommation du comparatif, avec 30~$\mu$A en mode actif contre 93~$\mu$A pour le BQ27441-G1, ce qui réduit d'autant la charge prélevée en permanence sur la batterie.
 \end{itemize}
 
 Comme expliqué plus haut, le MAX17260 nécessite une résistance de mesure externe, conséquence acceptée de la contrainte de boîtier, dont le coût reste négligeable. Le choix ne souffre par ailleurs d'aucun compromis sur le prix : à 2,72~CHF, le MAX17260 est le moins cher des quatre candidats, tout en offrant le jeu de données le plus complet et la plus faible consommation.
