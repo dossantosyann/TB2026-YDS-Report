@@ -95,7 +95,7 @@ La comparaison se limite à des composants de Texas Instruments, seul fabricant 
         \hline
         \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                   \\
         \hline
-        $V_{IN}$ [V]            & 3,3               & 3,3                & 3,3              & 3,3                   \\
+        $V_{IN}$ [V]            & 3,0 - 3,46        & 3,0 - 3,46         & 3,0 - 3,46       & 3,0 - 3,6             \\
         $I_{IN}$ max [mA]       & 22                & 24                 & 24               & 19                    \\
         \hline
         \multicolumn{5}{c}{\textbf{Caractéristiques audio}}                                                         \\
@@ -159,7 +159,7 @@ Trois amplificateurs, issus de trois fabricants différents, ont été comparés
         \hline
         \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                                  \\
         \hline
-        $V_{IN}$ [V]                            & 3,3                  & 3,3                  & 3,3                \\
+        $V_{IN}$ [V]                            & 2,5 - 5,5            & 2,3 - 5,5            & 2,5 - 5,5          \\
         $I_{repos}$ max [mA]                    & 4                    & 2,1                  & 5,5                \\
         \hline
         \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                                        \\
@@ -201,7 +201,51 @@ Le MAX97220A est le plus cher des trois candidats (1,82~CHF). Comme pour le conv
 
 
 \clearpage
-\subsection{Expanseur I/O}
+\subsection{Expanseur d'entrées-sorties}
+
+Lors de la conception du schéma électrique, il est apparu qu'une fois tous les bus de communication câblés (I\textsuperscript{2}S, double liaison SPI, I\textsuperscript{2}C et l'entrée ADC), le nombre de GPIO restant sur le micro-contrôleur devenait insuffisant pour piloter l'ensemble des entrées-sorties restantes du système. Un expanseur d'entrées-sorties commandé en I\textsuperscript{2}C a donc été ajouté. Raccordé au bus déjà présent, il étend le nombre de lignes disponibles sans mobiliser de broches supplémentaires sur le micro-contrôleur. \\
+
+\subsubsection{Composant retenu}
+
+Les candidats envisagés sont des expanseurs 8 bits commandés en I\textsuperscript{2}C et dotés d'une sortie d'interruption. Cette dernière signale tout changement d'état des entrées, ce qui évite d'interroger le composant en permanence pour détecter, par exemple, l'appui sur un bouton. Le tableau~\ref{tab:comparo_exp} récapitule les quatre candidats.
+
+\begin{table}[H]
+    \centering
+    \caption{Comparaison des expanseurs d'entrées-sorties candidats}
+    \label{tab:comparo_exp}
+    %\footnotesize
+    \begin{tabular}{l >{\columncolor{teal!12}}c c c c}
+        \hline
+                              & \textbf{PI4IOE5V9554} & \textbf{TCA9554}  & \textbf{PCA6408A} & \textbf{FXL6408}   \\
+        Fabricant             & Diodes Inc.           & Texas Instruments & NXP               & onsemi             \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                  \\
+        \hline
+        $V_{IN}$ [V]          & 2,3--5,5              & 1,65--5,5         & 1,65--5,5         & 1,65--3,6          \\
+        $I_{IN}$ max [$\mu$A] & 60                    & 34                & 25                & 300                \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Caractéristiques fonctionnelles}}                                               \\
+        \hline
+        Type de sortie        & Push-pull             & Push-pull         & Push-pull         & Push-pull + High-Z \\
+        Pull-up/down internes & Non                   & Non               & Non               & Oui, configurables \\
+        Sortie d'interruption & Oui                   & Oui               & Oui               & Oui                \\
+        \hline
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                               \\
+        \hline
+        Boîtier               & TSSOP-16              & TSSOP-16          & TSSOP-16          & UQFN-16            \\
+        Prix unitaire [CHF]   & 0,89                  & 1,18              & 0,84              & 0,44               \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Les quatre composants couvrent le besoin de manière équivalente. Le choix s'est porté sur le PI4IOE5V9554 pour les raisons suivantes :
+
+\begin{itemize}
+    \item Il remplit l'ensemble des besoins.
+    \item Son brochage s'accorde particulièrement bien avec l'implantation des composants sur le PCB, ce qui permet un routage plus simple.
+    \item Son prix et son courant de repos, sans être les plus faibles du comparatif, restent modestes et sans incidence à l'échelle de la carte.
+\end{itemize}
+
 
 
 
