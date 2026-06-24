@@ -3,9 +3,9 @@
 
 Ce chapitre justifie la sélection des principaux composants du système. Chaque choix découle des spécifications établies précédemment et résulte d'une comparaison entre plusieurs candidats évalués selon un ensemble de critères communs : adéquation fonctionnelle aux besoins du projet, performances techniques relevées dans les datasheets, consommation énergétique, format du boîtier, ainsi que le coût et la disponibilité des composants.
 
-La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format BGA ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie. \\
+La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format BGA ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie.
 
-Toutes les références de prix ont été prises sur DigiKey. \\
+Toutes les références de prix ont été prises sur DigiKey.
 
 
 
@@ -15,7 +15,7 @@ Toutes les références de prix ont été prises sur DigiKey. \\
 
 \subsection{Micro-contrôleur}
 
-Le micro-contrôleur constitue le cœur du système : il orchestre le décodage audio, le pilotage de l'écran et de la carte microSD, la gestion de l'interface utilisateur et, surtout, la diffusion sans fil de la musique. C'est ce dernier besoin qui s'est révélé le critère déterminant du choix.  \\
+Le micro-contrôleur constitue le cœur du système : il orchestre le décodage audio, le pilotage de l'écran et de la carte microSD, la gestion de l'interface utilisateur et, surtout, la diffusion sans fil de la musique. C'est ce dernier besoin qui s'est révélé le critère déterminant du choix.
 
 \subsubsection{Le critère décisif : le Bluetooth Classic et le profil A2DP}
 
@@ -23,15 +23,15 @@ La diffusion audio vers une enceinte ou un casque Bluetooth repose sur le profil
 
 Cette contrainte élimine d'emblée la grande majorité des micro-contrôleurs sans fil du marché. Les familles nRF52 et nRF53 de Nordic Semiconductor, les STM32WB de STMicroelectronics, ainsi que les variantes récentes de l'ESP32 lui-même (S3, C3, C6) n'intègrent qu'une radio BLE. L'ESP32 d'origine est l'un des rares micro-contrôleurs à la fois largement disponibles, peu coûteux et bien documentés à combiner le Bluetooth Classic avec le support de l'A2DP en mode source, via la pile Bluedroid de son environnement de développement.
 
-Une architecture alternative aurait consisté à associer un micro-contrôleur généraliste, un STM32, par exemple, à un circuit Bluetooth audio dédié, externe au MCU. Cette solution a été écartée car elle multiplie les contraintes sans bénéfice pour le cahier des charges. Elle impose deux circuits au lieu d'un, reliés par une interface audio (I\textsuperscript{2}S) et un canal de contrôle, ce qui alourdit le routage, la BOM et l'encombrement, à l'inverse d'un appareil portable compact. Le circuit Bluetooth dédié nécessiterait par ailleurs son propre étage radiofréquence certifié, ramenant au problème que le module ESP32 résout d'emblée. Une telle partition ne se justifierait que pour exploiter des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure, deux besoins absents de ce projet. Réunir le micro-contrôleur, le Bluetooth Classic et le profil A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste. \\
+Une architecture alternative aurait consisté à associer un micro-contrôleur généraliste, un STM32, par exemple, à un circuit Bluetooth audio dédié, externe au MCU. Cette solution a été écartée car elle multiplie les contraintes sans bénéfice pour le cahier des charges. Elle impose deux circuits au lieu d'un, reliés par une interface audio (I\textsuperscript{2}S) et un canal de contrôle, ce qui alourdit le routage, la BOM et l'encombrement, à l'inverse d'un appareil portable compact. Le circuit Bluetooth dédié nécessiterait par ailleurs son propre étage radiofréquence certifié, ramenant au problème que le module ESP32 résout d'emblée. Une telle partition ne se justifierait que pour exploiter des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure, deux besoins absents de ce projet. Réunir le micro-contrôleur, le Bluetooth Classic et le profil A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste.
 
 \subsubsection{Atouts complémentaires de l'ESP32}
 
-Au-delà de ce critère éliminatoire, l'ESP32 réunit les ressources matérielles nécessaires à l'ensemble du système. Son architecture à double cœur offre la possibilité de répartir les traitements sur deux cœurs, par exemple en isolant le traitement audio, sensible au temps, du reste des opérations. Ses périphériques couvrent par ailleurs les besoins d'un tel système : une interface I\textsuperscript{2}S pour la transmission audio numérique vers un convertisseur, plusieurs contrôleurs SPI permettant de dédier un bus à l'affichage et un autre au stockage, un bus I\textsuperscript{2}C pour d'éventuels circuits de configuration et de gestion, ainsi qu'un convertisseur analogique-numérique pour des entrées analogiques telles qu'un potentiomètre de volume. L'ESP32 s'appuie enfin sur un écosystème mature et une large communauté d'utilisateurs, gage de documentation et de ressources abondantes tout au long du projet.  \\
+Au-delà de ce critère éliminatoire, l'ESP32 réunit les ressources matérielles nécessaires à l'ensemble du système. Son architecture à double cœur offre la possibilité de répartir les traitements sur deux cœurs, par exemple en isolant le traitement audio, sensible au temps, du reste des opérations. Ses périphériques couvrent par ailleurs les besoins d'un tel système : une interface I\textsuperscript{2}S pour la transmission audio numérique vers un convertisseur, plusieurs contrôleurs SPI permettant de dédier un bus à l'affichage et un autre au stockage, un bus I\textsuperscript{2}C pour d'éventuels circuits de configuration et de gestion, ainsi qu'un convertisseur analogique-numérique pour des entrées analogiques telles qu'un potentiomètre de volume. L'ESP32 s'appuie enfin sur un écosystème mature et une large communauté d'utilisateurs, gage de documentation et de ressources abondantes tout au long du projet.
 
 \subsubsection{Choix de la variante : ESP32-WROVER-E}
 
-Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseudo-statique (PSRAM) intégrée. Celle-ci offre une marge de mémoire vive appréciable pour les tampons audio que la variante WROOM, dépourvue de PSRAM, ne procure pas.  \\
+Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseudo-statique (PSRAM) intégrée. Celle-ci offre une marge de mémoire vive appréciable pour les tampons audio que la variante WROOM, dépourvue de PSRAM, ne procure pas.
 
 \subsubsection{Module plutôt que puce nue}
 
@@ -39,21 +39,21 @@ L'ESP32 est disponible aussi bien sous forme de puce nue que de module pré-asse
 
 Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, flash, quartz et découplage, sur un circuit certifié fonctionnel. Il supprime ainsi la partie la plus risquée de la conception et simplifie considérablement le routage de la carte principale. Pour un prototype mono-carte réalisé dans un temps contraint, cet avantage est décisif et justifie le recours au module plutôt qu'à la puce nue.
 
-Le choix de l'ESP32 fixe enfin la tension d'alimentation logique du système à 3,3~V. Tous les composants retenus par la suite devront donc être compatibles avec ce rail, contrainte commune à l'ensemble des choix présentés dans ce chapitre. \\
+Le choix de l'ESP32 fixe enfin la tension d'alimentation logique du système à 3,3~V. Tous les composants retenus par la suite devront donc être compatibles avec ce rail, contrainte commune à l'ensemble des choix présentés dans ce chapitre.
 
 
 
 % ---------------------------------------
 
 
-\clearpage
+
 \subsection{Écran}
 
-L'interface utilisateur du lecteur repose sur un écran graphique, c'est-à-dire adressable pixel par pixel, indispensable pour afficher des menus, des icones et des éléments visuels personnalisés, là où un afficheur à caractères serait trop limité. La technologie OLED a été retenue pour cet écran. Contrairement à un écran LCD, chaque pixel y émet sa propre lumière : les noirs sont parfaitement profonds, le contraste est élevé et l'angle de vue très large. L'absence de rétroéclairage permet, sur une interface à principalement sombre, une consommation réduite puisque les pixels noirs sont éteints. Un atout majeur pour un appareil sur batterie.  \\
+L'interface utilisateur du lecteur repose sur un écran graphique, c'est-à-dire adressable pixel par pixel, indispensable pour afficher des menus, des icones et des éléments visuels personnalisés, là où un afficheur à caractères serait trop limité. La technologie OLED a été retenue pour cet écran. Contrairement à un écran LCD, chaque pixel y émet sa propre lumière : les noirs sont parfaitement profonds, le contraste est élevé et l'angle de vue très large. L'absence de rétroéclairage permet, sur une interface à principalement sombre, une consommation réduite puisque les pixels noirs sont éteints. Un atout majeur pour un appareil sur batterie.
 
 \subsubsection{Critères de dimensionnement}
 
-Deux contraintes ont guidé le choix de la dalle. La première est la taille : pour un appareil portable tenant dans la main, la diagonale a été bornée entre 1,3 et 3 pouces. En dessous, une interface graphique devient difficilement lisible, au-delà, l'écran divient trop grand. La seconde est le rapport d'aspect, recherché entre 1:1 et 2:1. Plusieurs dalles existaient en 3:1, mais ce format allongé, proche d'un bandeau, se prête mal à l'interface envisagée.  \\
+Deux contraintes ont guidé le choix de la dalle. La première est la taille : pour un appareil portable tenant dans la main, la diagonale a été bornée entre 1,3 et 3 pouces. En dessous, une interface graphique devient difficilement lisible, au-delà, l'écran divient trop grand. La seconde est le rapport d'aspect, recherché entre 1:1 et 2:1. Plusieurs dalles existaient en 3:1, mais ce format allongé, proche d'un bandeau, se prête mal à l'interface envisagée.
 
 \subsubsection{Composant retenu}
 
@@ -61,25 +61,25 @@ Le choix s'est porté sur le NHD-1.91-176176UB de Newhaven Display, et plus pré
 
 La déclinaison UBC3 présente l'avantage déterminant d'embarquer l'ensemble des composants nécessaires au pilotage de l'écran sur un petit circuit imprimé. Elle se commande directement en SPI et ne requiert qu'une alimentation unique de 3,3~volts, sans étage élévateur ni circuiterie de pilotage à concevoir : l'architecture d'alimentation s'en trouve simplifiée. Cette intégration se paie par un encombrement plus important, l'écran se présentant sous la forme d'un PCB à monter sur la carte principale au moyen de connecteurs au pas classique de 2,54~mm, ce qui ajoute de la hauteur à l'ensemble. Pour un prototype, ce compromis est largement favorable : il échange un surcroît d'encombrement contre une mise en œuvre nettement plus simple et plus fiable.
 
-Enfin, cet écran est en couleur. Cet aspect n'a pas constitué un critère de sélection primordial, mais il offre une liberté supplémentaire pour l'interface et constitue un bonus appréciable.  \\
+Enfin, cet écran est en couleur. Cet aspect n'a pas constitué un critère de sélection primordial, mais il offre une liberté supplémentaire pour l'interface et constitue un bonus appréciable.
 
 
 
 % ---------------------------------------
 
 
-\clearpage
+
 \subsection{Convertisseur numérique-analogique, DAC}
 
-Le convertisseur numérique-analogique transforme le flux audio numérique issu du micro-contrôleur en un signal analogique destiné à l'étage d'amplification. Son choix repose sur plusieurs critères : la résolution, exprimée en bits, la fréquence d'échantillonnage maximale, le rapport signal sur bruit (SNR) et la distorsion harmonique totale plus bruit (THD+N), qui déterminent la qualité audio restituée, ainsi que l'architecture du composant. L'objectif premier du projet étant d'offrir la meilleure qualité audio possible, ces critères sont examinés pour chacun des composants candidats.  \\
+Le convertisseur numérique-analogique transforme le flux audio numérique issu du micro-contrôleur en un signal analogique destiné à l'étage d'amplification. Son choix repose sur plusieurs critères : la résolution, exprimée en bits, la fréquence d'échantillonnage maximale, le rapport signal sur bruit (SNR) et la distorsion harmonique totale plus bruit (THD+N), qui déterminent la qualité audio restituée, ainsi que l'architecture du composant. L'objectif premier du projet étant d'offrir la meilleure qualité audio possible, ces critères sont examinés pour chacun des composants candidats.
 
 \subsubsection{Architecture : DAC seul ou DAC avec amplificateur intégré}
 
-Deux architectures étaient envisageables. La première réunit le DAC et l'amplificateur casque dans un même boîtier, ce qui réduit le nombre de composants et permet d'attaquer directement un casque. Cette solution avait initialement la préférence, et le TAD5212 en était le candidat. L'étude de sa fiche technique et la préparation de son intégration ont toutefois montré qu'il était largement surdimensionné pour le besoin : il s'agit en réalité d'un codec audio complet, intégrant notamment des entrées microphone et un chemin de capture sans aucune utilité pour un appareil dédié uniquement à la restitution du son. Cette polyvalence se paie par une configuration nettement plus lourde, sans contrepartie pour l'application visée. Retenir un composant aussi complexe pour n'en exploiter qu'une fraction aurait introduit une charge de mise en œuvre injustifiée. Le choix s'est donc reporté sur la seconde architecture : un DAC seul, dont la fonction correspond exactement au besoin, suivi d'un amplificateur dédié séparé. Cette solution demande davantage de composants, mais chaque étage reste plus simple à configurer, à mettre au point et à déboguer, un avantage déterminant pour un prototype.  \\
+Deux architectures étaient envisageables. La première réunit le DAC et l'amplificateur casque dans un même boîtier, ce qui réduit le nombre de composants et permet d'attaquer directement un casque. Cette solution avait initialement la préférence, et le TAD5212 en était le candidat. L'étude de sa fiche technique et la préparation de son intégration ont toutefois montré qu'il était largement surdimensionné pour le besoin : il s'agit en réalité d'un codec audio complet, intégrant notamment des entrées microphone et un chemin de capture sans aucune utilité pour un appareil dédié uniquement à la restitution du son. Cette polyvalence se paie par une configuration nettement plus lourde, sans contrepartie pour l'application visée. Retenir un composant aussi complexe pour n'en exploiter qu'une fraction aurait introduit une charge de mise en œuvre injustifiée. Le choix s'est donc reporté sur la seconde architecture : un DAC seul, dont la fonction correspond exactement au besoin, suivi d'un amplificateur dédié séparé. Cette solution demande davantage de composants, mais chaque étage reste plus simple à configurer, à mettre au point et à déboguer, un avantage déterminant pour un prototype.
 
 \subsubsection{Type de sortie : différentielle}
 
-Le système étant alimenté par un régulateur à découpage, du bruit de commutation se couple inévitablement sur les rails d'alimentation et la masse. Une sortie différentielle a donc été privilégiée : en transmettant le signal sur deux lignes symétriques, elle permet à l'étage suivant de rejeter les perturbations communes aux deux conducteurs, dont les artefacts de commutation, préservant ainsi le SNR et la distorsion sur une carte à signaux mixtes compacte. Le type de sortie constitue donc, aux côtés de l'architecture, l'un des critères déterminants pour départager les candidats.  \\
+Le système étant alimenté par un régulateur à découpage, du bruit de commutation se couple inévitablement sur les rails d'alimentation et la masse. Une sortie différentielle a donc été privilégiée : en transmettant le signal sur deux lignes symétriques, elle permet à l'étage suivant de rejeter les perturbations communes aux deux conducteurs, dont les artefacts de commutation, préservant ainsi le SNR et la distorsion sur une carte à signaux mixtes compacte. Le type de sortie constitue donc, aux côtés de l'architecture, l'un des critères déterminants pour départager les candidats.
 
 \subsubsection{Composant retenu}
 
@@ -132,7 +132,7 @@ Il intègre par ailleurs un miniDSP programmable. Celui-ci n'a pas constitué un
 
 Sur le plan de l'intégration, la famille PCM peut en outre dériver son horloge de la ligne BCK au moyen d'une PLL interne, sans horloge maître dédiée, ce qui simplifie le câblage de l'interface I\textsuperscript{2}S avec le micro-contrôleur.
 
-Le PCM5242 est le plus cher des quatre candidats (8,06~CHF). Cet écart reste néanmoins marginal à l'échelle de la BOM complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio. \\
+Le PCM5242 est le plus cher des quatre candidats (8,06~CHF). Cet écart reste néanmoins marginal à l'échelle de la BOM complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio.
 
 
 
@@ -140,10 +140,9 @@ Le PCM5242 est le plus cher des quatre candidats (8,06~CHF). Cet écart reste n�
 
 
 
-\clearpage
 \subsection{Amplificateur audio}
 
-L'amplificateur reçoit le signal analogique du convertisseur et le porte au niveau nécessaire pour attaquer un casque par la prise jack. Le convertisseur retenu, le PCM5242, présentant une sortie différentielle, l'amplificateur doit en accepter une en entrée afin de préserver la réjection du bruit de mode commun mise en place précédemment. Au-delà de ce prérequis, le choix repose sur les caractéristiques qui gouvernent la qualité de restitution : le SNR, le THD+N, le bruit de sortie, la diaphonie, le PSRR et la puissance de sortie disponible sur une charge de casque typique. Conformément à la priorité du projet, la qualité audio prime. \\
+L'amplificateur reçoit le signal analogique du convertisseur et le porte au niveau nécessaire pour attaquer un casque par la prise jack. Le convertisseur retenu, le PCM5242, présentant une sortie différentielle, l'amplificateur doit en accepter une en entrée afin de préserver la réjection du bruit de mode commun mise en place précédemment. Au-delà de ce prérequis, le choix repose sur les caractéristiques qui gouvernent la qualité de restitution : le SNR, le THD+N, le bruit de sortie, la diaphonie, le PSRR et la puissance de sortie disponible sur une charge de casque typique. Conformément à la priorité du projet, la qualité audio prime.
 
 \subsubsection{Composant retenu}
 
@@ -202,10 +201,9 @@ Le MAX97220A est le plus cher des trois candidats (1,82~CHF). Comme pour le conv
 
 
 
-\clearpage
 \subsection{Expanseur d'entrées-sorties}
 
-Lors de la conception du schéma électrique, il est apparu qu'une fois tous les bus de communication câblés (I\textsuperscript{2}S, double liaison SPI, I\textsuperscript{2}C et l'entrée ADC), le nombre de GPIO restant sur le micro-contrôleur devenait insuffisant pour piloter l'ensemble des entrées-sorties restantes du système. Un expanseur d'entrées-sorties commandé en I\textsuperscript{2}C a donc été ajouté. Raccordé au bus déjà présent, il étend le nombre de lignes disponibles sans mobiliser de broches supplémentaires sur le micro-contrôleur. \\
+Lors de la conception du schéma électrique, il est apparu qu'une fois tous les bus de communication câblés (I\textsuperscript{2}S, double liaison SPI, I\textsuperscript{2}C et l'entrée ADC), le nombre de GPIO restant sur le micro-contrôleur devenait insuffisant pour piloter l'ensemble des entrées-sorties restantes du système. Un expanseur d'entrées-sorties commandé en I\textsuperscript{2}C a donc été ajouté. Raccordé au bus déjà présent, il étend le nombre de lignes disponibles sans mobiliser de broches supplémentaires sur le micro-contrôleur.
 
 \subsubsection{Composant retenu}
 
@@ -253,7 +251,8 @@ Les quatre composants couvrent le besoin de manière équivalente. Le choix s'es
 
 % ---------------------------------------
 
-\clearpage
+
+
 \subsection{Régulateur de tension}
 
 Pour choisir correctement le régulateur de tension 3,3\,V du système, il est nécessaire de connaître la consommation de chaque composant alimenté par cette tension. Le composant le plus énergivore étant le micro-contrôleur ESP32, notamment lors du streaming Bluetooth, une mesure a été réalisée pour estimer sa consommation réelle dans les conditions d'utilisation du projet.
@@ -280,16 +279,18 @@ Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant
     \end{tabular}
 \end{table}
 
-La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominants, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32. \\
+La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominants, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32.
 
+\clearpage
 \subsubsection{Choix de la topologie : buck plutôt que LDO}
 
 Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'à 3,2\,V, seuil de coupure imposé par le superviseur de tension. Deux topologies permettent d'obtenir le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck).
 
 Le rendement d'un LDO étant borné par le rapport $V_{OUT}/V_{IN}$, il plafonne à $3{,}3/4{,}2 \approx 80\,\%$ : les 20\,\% restants sont dissipés en chaleur. Dans un appareil portable à boîtier compact, cette dissipation est problématique à la fois pour l'autonomie et pour la thermique. Un buck maintient au contraire un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée, ce qui prolonge sensiblement l'autonomie, l'un des objectifs centraux pour un lecteur audio nomade.
 
-Le principal inconvénient théorique d'un buck en fin de décharge de la battgerie est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation. La topologie buck est donc retenue. \\
+Le principal inconvénient théorique d'un buck en fin de décharge de la battgerie est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation. La topologie buck est donc retenue.
 
+\clearpage
 \subsubsection{Comparaison des composants candidats}
 
 Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo_buck}). Le courant de sortie maximal étant identique, la sélection s'opère sur le rendement, la consommation à vide, le boîtier et le prix.
@@ -344,7 +345,7 @@ Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pou
 % ---------------------------------------
 
 
-\vspace{2cm}
+
 \subsection{Superviseur de tension}
 
 Le superviseur de tension protège la cellule lithium-ion contre la décharge profonde, qui endommagerait irréversiblement la batterie. Il surveille en permanence la tension de la cellule et déclenche un verrouillage dès qu'elle descend sous un seuil de sécurité. Ce seuil, fixé ici à 3,2~V, répond à deux exigences. D'une part, il interrompt la décharge avant que la cellule n'atteigne une tension dangereuse pour sa durée de vie. D'autre part, en dessous de 3,2~V les composants de la chaîne audio filaire ne sont alors plus assurés de fonctionner à leurs performances nominales. Pour rappel, en dessous de 3,3 V de tension sur la batterie le régulateur entre en mode \textit{passthrough}. Abaisser le seuil pour exploiter davantage la batterie se ferait donc au prix d'une dégradation possible de la qualité audio pour un gain d'autonomie très faible.
@@ -360,16 +361,17 @@ Contrairement aux composants précédents, cette fonction ne se prête pas à un
 \clearpage
 \subsection{Batterie}
 À faire lorsque la mesure de courant du système sera faite
+\clearpage
 
 
 
 % ---------------------------------------
 
 
-\clearpage
+
 \subsection{Chargeur de batterie}
 
-Le chargeur de batterie gère la recharge de la cellule lithium-ion depuis l'entrée USB. Le critère déterminant pour ce composant est sa capacité à adapter le courant prélevé à la source connectée. Une source USB peut en effet fournir des courants très différents : un port USB d'ordinateur portable est limité à environ 0,5~A, tandis qu'un chargeur secteur dédié peut en délivrer jusqu'à 3~A. Le chargeur doit donc identifier la capacité de la source et ajuster son courant d'entrée en conséquence, afin de charger le plus rapidement possible sans jamais excéder ce que la source peut fournir. \\
+Le chargeur de batterie gère la recharge de la cellule lithium-ion depuis l'entrée USB. Le critère déterminant pour ce composant est sa capacité à adapter le courant prélevé à la source connectée. Une source USB peut en effet fournir des courants très différents : un port USB d'ordinateur portable est limité à environ 0,5~A, tandis qu'un chargeur secteur dédié peut en délivrer jusqu'à 3~A. Le chargeur doit donc identifier la capacité de la source et ajuster son courant d'entrée en conséquence, afin de charger le plus rapidement possible sans jamais excéder ce que la source peut fournir.
 
 \subsubsection{Composant retenu}
 
@@ -423,17 +425,17 @@ Le MAX77757 est le plus cher des quatre candidats (3,52~CHF). Comme pour les com
 % ---------------------------------------
 
 
-\vspace{3cm}
+
 \subsection{Jauge de batterie}
 
-La jauge de batterie estime l'état de charge de la cellule. L'objectif principal est d'afficher à l'utilisateur le pourcentage de charge restant (SOC). Un objectif secondaire consiste à rapporter le plus de grandeurs annexes possible (tension, courant, température, autonomie estimée, état de santé, entre autres), utiles au suivi de la batterie sans être indispensables. Le choix se joue donc sur deux critères : la précision de l'estimation de l'état de charge et la richesse des données fournies. Deux approches existent pour cette estimation : la mesure de la seule tension de la cellule, simple mais sensible aux variations de charge, et le comptage de coulomb, qui intègre le courant réellement échangé pour un suivi plus fidèle. \\
+La jauge de batterie estime l'état de charge de la cellule. L'objectif principal est d'afficher à l'utilisateur le pourcentage de charge restant (SOC). Un objectif secondaire consiste à rapporter le plus de grandeurs annexes possible (tension, courant, température, autonomie estimée, état de santé, entre autres), utiles au suivi de la batterie sans être indispensables. Le choix se joue donc sur deux critères : la précision de l'estimation de l'état de charge et la richesse des données fournies. Deux approches existent pour cette estimation : la mesure de la seule tension de la cellule, simple mais sensible aux variations de charge, et le comptage de coulomb, qui intègre le courant réellement échangé pour un suivi plus fidèle.
 
 \subsubsection{Composant retenu}
 
 Une jauge à comptage de coulomb mesure le courant au moyen d'une résistance de mesure, intégrée au composant ou externe. Les jauges à résistance intégrée auraient évité ce composant supplémentaire, mais elles ne sont proposées qu'en boîtier BGA, écarté pour ce projet. La recherche s'est donc orientée vers des jauges à résistance de mesure externe, seules à offrir le comptage de coulomb dans un boîtier compatible avec l'assemblage du prototype.
 
 \clearpage
-Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}). \\
+Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}).
 
 \begin{table}[H]
     \centering
@@ -473,7 +475,7 @@ Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}). \\
     \end{tabular}
 \end{table}
 
-Le STC3100 est écarté en premier : il ne calcule pas l'état de charge, se limitant à fournir la tension, le courant, la température et la charge brute accumulée. Il ne remplit donc même pas l'objectif principal, l'obtention d'un état de charge exploitable supposant d'en implémenter l'estimation dans le firmware, alors que les autres candidats le fournissent directement. Le MAX17048 repose quant à lui sur une estimation fondée uniquement sur la tension : sans compteur de coulomb, il ne fournit ni la capacité restante, ni le courant, ni la température, ni l'état de santé ou le nombre de cycles, et son estimation se dégrade sous charge variable. Le BQ27441-G1 constitue un candidat sérieux, doté d'un compteur de coulomb et de données complètes, mais il ne renseigne ni l'autonomie estimée (time-to-empty et time-to-full), ni le nombre de cycles. \\
+Le STC3100 est écarté en premier : il ne calcule pas l'état de charge, se limitant à fournir la tension, le courant, la température et la charge brute accumulée. Il ne remplit donc même pas l'objectif principal, l'obtention d'un état de charge exploitable supposant d'en implémenter l'estimation dans le firmware, alors que les autres candidats le fournissent directement. Le MAX17048 repose quant à lui sur une estimation fondée uniquement sur la tension : sans compteur de coulomb, il ne fournit ni la capacité restante, ni le courant, ni la température, ni l'état de santé ou le nombre de cycles, et son estimation se dégrade sous charge variable. Le BQ27441-G1 constitue un candidat sérieux, doté d'un compteur de coulomb et de données complètes, mais il ne renseigne ni l'autonomie estimée (time-to-empty et time-to-full), ni le nombre de cycles.
 
 \clearpage
 Le MAX17260 répond pleinement aux deux objectifs et a donc été retenu, pour les raisons suivantes :
@@ -493,12 +495,11 @@ Comme expliqué plus haut, le MAX17260 nécessite une résistance de mesure exte
 
 
 
-\clearpage
 \subsection{Pont USB-UART}
 
 La programmation du micro-contrôleur et l'accès à la console série s'effectuent depuis un ordinateur par l'USB. Un pont USB-UART assure la conversion entre le bus USB de l'hôte et l'interface UART du micro-contrôleur.
 
-Au-delà de cette conversion, le composant doit permettre le passage automatique en mode programmation. Ce mécanisme repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART, indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset : la puce démarre alors en mode téléchargement plutôt que depuis la mémoire flash. Le pont exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN (reset) et GPIO0 pour faire entrer automatiquement la puce en mode téléchargement, sans manipulation manuelle. \\
+Au-delà de cette conversion, le composant doit permettre le passage automatique en mode programmation. Ce mécanisme repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART, indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset : la puce démarre alors en mode téléchargement plutôt que depuis la mémoire flash. Le pont exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN (reset) et GPIO0 pour faire entrer automatiquement la puce en mode téléchargement, sans manipulation manuelle.
 
 \subsubsection{Composant retenu}
 
@@ -519,8 +520,11 @@ D'autres ponts existent, comme le CH340 ou les circuits FTDI, mais reprendre la 
 
 
 
-\clearpage
-\subsection{Contrôle du volume}
+\subsection{Potentiomètre de volume}
+
+Le réglage du volume s'effectue au moyen d'un potentiomètre rotatif, dont la position est lue par l'ADC de l'ESP32. À ce stade de la conception, l'appareil est envisagé sous la forme d'un boîtier de type Game Boy. Placer un potentiomètre plat sur le côté du boîtier est un choix de design assumé, à la fois esthétique et pratique à l'usage. Ce parti pris impose une contrainte avant tout mécanique : il faut un modèle plat, montable directement en surface sur le bord du circuit imprimé et actionnable au pouce, plutôt qu'un potentiomètre de panneau classique, plus volumineux et destiné à traverser un châssis. Ce format s'est révélé difficile à trouver, la plupart des potentiomètres du marché étant prévus pour un montage traversant sur panneau.
+
+Le RK10J11R0A0L d'Alps Alpine répond à cette contrainte. Il s'agit d'un potentiomètre rotatif de 10~mm, à montage en surface et doté d'un bouton fin, qui se place au bord de la carte et s'actionne au pouce. D'une résistance totale de 10~k$\Omega$ à variation linéaire, il fournit la position du réglage sans être inséré dans le chemin du signal audio.
 
 
 
