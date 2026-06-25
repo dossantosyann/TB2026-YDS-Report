@@ -37,3 +37,13 @@ C'est exactement notre cas : SREF défaut = 000 (réf = SCK = masse) → PLL ne 
 Voyons l'ampleur : je cherche la table de valeurs recommandées (Table 50) :
 
 Table 50 n'apparaît pas telle quelle (markdown mangé), mais il y a une section d'exemples calculés (8.8.5.1). C'est une vraie configuration PLL à faire — plus que le « driver trivial » qu'on avait scopé. Avant d'aller plus loin, je corrige la mémoire (l'hypothèse auto-clock était fausse) :
+
+\subsubsection{Fs}
+
+Ta question sur le suréchantillonnage
+Oui, chaque fS a sa propre config (Table 50). Et oui, le suréchantillonnage reste calé sur la même bande ~352/384 kHz quelle que soit fS — c'est exactement pour ça que ton filtre RC fixe fonctionne pour tous les débits. Le DAC diminue son facteur d'interpolation quand fS monte (×8 à 44,1/48 kHz, ×4 à 96 kHz, ×2 à 192 kHz, via les bits FSSP) pour maintenir le rythme post-interpolation et le rythme du modulateur quasi constants. La Table 50 le confirme : la fréquence du modulateur (MODf) reste à ≈6,144 MHz de 48 à 192 kHz (et 5,6448 MHz pour la famille 44,1 kHz).
+
+Paragraphe pour ton rapport
+Le PCM5242 est un convertisseur delta-sigma : quelle que soit la fréquence d'échantillonnage fS du fichier (8 à 192 kHz), il suréchantillonne le signal par un filtre d'interpolation, puis un modulateur delta-sigma génère le flux qui attaque l'étage analogique. Le point essentiel pour le dimensionnement du filtre de sortie est que le DAC ajuste son facteur d'interpolation à l'inverse de fS — ×8 à 44,1/48 kHz, ×4 à 96 kHz, ×2 à 192 kHz (sélection par les bits FSSP de vitesse). Le rythme du modulateur reste ainsi quasi constant (≈5,6–6,1 MHz) et le rythme post-interpolation autour de 352,8–384 kHz, indépendamment de fS. C'est précisément ce qui autorise un unique filtre RC de sortie fixe, dimensionné pour cette bande ~352/384 kHz, valable pour toutes les fréquences d'échantillonnage. En contrepartie, chaque fS exige sa propre configuration de PLL et de diviseurs (Table 50 de la datasheet) : ces coefficients sont calculés justement pour que, malgré une fS d'entrée variable, les horloges internes (modulateur, OSR, charge-pump) retombent toujours sur les mêmes fréquences cibles que le filtre analogique attend.
+
+Veux-tu que je force le volume dans le test pour écarter définitivement la piste « potentiomètre » ?
