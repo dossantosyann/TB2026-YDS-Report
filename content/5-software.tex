@@ -12,3 +12,28 @@ Exposez de manière structurée la conception globale de votre projet en illustr
 Que ce soit pour une architecture logicielle, une conception électronique ou une analyse de données, chaque aspect de votre travail doit être présenté de façon logique et détaillée. Il est essentiel de justifier vos choix en soulignant leur pertinence au regard des objectifs fixés et de la problématique posée.
 
 Vous êtes libre de structurer ce chapitre en plusieurs sections distinctes, en fonction de la nature de votre projet. L'objectif est d'offrir au lecteur une vision claire de la manière dont vous avez développé votre travail, en mettant en lumière non seulement les actions entreprises, mais également les décisions qui les ont motivées. Votre implémentation doit refléter une réflexion méthodique et rigoureuse, guidée par la problématique et les objectifs initiaux.
+
+
+\subsection{Chaine audio}
+
+Problème rencontré :
+
+Conclusion : BCK et LRCK arrivent parfaitement, mais le system clock (SCK) interne n'est pas généré et la PLL ne verrouille pas. Or SCK pin = GND (confirmé). Mon pari « SCK pas à GND » était donc faux — le vrai problème : en 3 fils, la PLL doit prendre BCK comme référence pour fabriquer SCK, et visiblement elle ne le fait pas (elle cherche probablement un SCK externe, qui est à la masse → jamais de lock).
+
+Donc l'auto-clock ne suffit pas en mode 3 fils : il faut pointer la référence PLL sur BCK par registre. Je vérifie la section §8.8.3 et le registre concerné :
+
+Voilà la cause racine, et c'est important : ligne 3584 — « In software mode, the user must set all the PLL registers and clock divider registers for referencing BCK. »
+
+Donc en mode logiciel (I²C) 3 fils, l'auto-clock ne configure pas la PLL tout seul — contrairement à ce que ma mémoire et moi affirmions. Le défaut SREF=000 pointe la PLL sur SCK (à la masse) → jamais de lock. Il faut SREF=001 (BCK) et programmer les coefficients PLL + diviseurs.
+
+Je lis la section complète pour extraire la séquence exacte :
+
+Voilà la cause racine confirmée et localisée. La clé est lignes 3573-3584 :
+
+En mode hardwired, si BCK/LRCK démarrent avec SCK à la masse pendant 16 périodes LRCK, la PLL démarre toute seule depuis BCK.
+En mode software (I²C) — le nôtre — il faut configurer la PLL manuellement : SREF=BCK + coefficients PLL + diviseurs (Table 34).
+C'est exactement notre cas : SREF défaut = 000 (réf = SCK = masse) → PLL ne lock jamais → SCK invalide. L'auto-clock ne marche pas en software 3 fils — ma mémoire et mes affirmations précédentes étaient fausses là-dessus, je le corrige.
+
+Voyons l'ampleur : je cherche la table de valeurs recommandées (Table 50) :
+
+Table 50 n'apparaît pas telle quelle (markdown mangé), mais il y a une section d'exemples calculés (8.8.5.1). C'est une vraie configuration PLL à faire — plus que le « driver trivial » qu'on avait scopé. Avant d'aller plus loin, je corrige la mémoire (l'hypothèse auto-clock était fausse) :
