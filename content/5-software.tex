@@ -51,3 +51,13 @@ Veux-tu que je force le volume dans le test pour écarter définitivement la pis
 \subsubsection{Volume}
 
 Même si c'est possible de lier le volume du canal droite et gauche ensemble, je préfère pas le faire pour pouvoir implémenter un réglage de balance pour corriger tout différence hardware de gain entre les canaux
+
+
+\subsubsection{Decoder}
+
+Tout est clair maintenant — et c'est une gotcha spécifique à l'ESP32 qui mérite d'être notée pour la défense :
+
+La doc I2S a trois variantes selon la puce. Pour l'ESP32 (la nôtre, ligne 363 .. only:: esp32) : le 24-bit doit être stocké en uint32_t (4 octets/échantillon), justifié MSB — les 24 bits hauts valides, l'octet bas ignoré. (Les ESP32-S3/C3 veulent du 3-octets compacté — pas nous.)
+Le 16-bit reste en int16_t (2 octets), comme le tone-test.
+On est en stéréo fixe, donc pas de swap mono (le swap ne concerne que le mono 8/16-bit).
+Concrètement pour le WAV 24-bit : un échantillon WAV = 3 octets little-endian b0 b1 b2 → j'émets le mot 32-bit [0x00, b0, b1, b2] (sample dans les 24 bits hauts). Le DAC suit.
