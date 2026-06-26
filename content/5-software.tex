@@ -61,3 +61,68 @@ La doc I2S a trois variantes selon la puce. Pour l'ESP32 (la nôtre, ligne 363 .
 Le 16-bit reste en int16_t (2 octets), comme le tone-test.
 On est en stéréo fixe, donc pas de swap mono (le swap ne concerne que le mono 8/16-bit).
 Concrètement pour le WAV 24-bit : un échantillon WAV = 3 octets little-endian b0 b1 b2 → j'émets le mot 32-bit [0x00, b0, b1, b2] (sample dans les 24 bits hauts). Le DAC suit.
+
+
+\section{Architecture du décodeur audio (MP3 / WAV)}
+
+\subsection*{L'idée en une phrase}
+Il faut lire \textbf{deux formats} (MP3 et WAV), et le reste du programme ne
+doit pas avoir à savoir lequel. Donc : \textbf{une porte d'entrée unique} +
+\textbf{deux moteurs cachés derrière}. C'est exactement le même schéma que le
+\emph{sink}, mais côté entrée.
+
+\subsection*{Les 4 fichiers et leur rôle}
+
+\begin{verbatim}
+                  decoder.h      <- le CONTRAT public (open/read/close)
+                     |
+                  decoder.c      <- la PORTE : regarde le fichier, choisit le moteur
+                     |
+        +------------+------------+
+   decoder_mp3.c           decoder_wav.c   <- les deux MOTEURS (un par format)
+        +------------+------------+
+              decoder_backend.h   <- le contrat INTERNE entre la porte et les moteurs
+\end{verbatim}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{@{}lll@{}}
+        \toprule
+        \textbf{Fichier}                                           & \textbf{Rôle}                                  & \textbf{Analogie sink}     \\
+        \midrule
+        \texttt{decoder.h}                                         & 
+        Contrat appelé par le pipeline : \texttt{open/read/close}. & 
+        \texttt{audio\_sink.h}                                                                                                                   \\
+                                                                   & Ne parle jamais de MP3 ni de WAV.              & (le contrat)               \\[4pt]
+        \texttt{decoder.c}                                         & 
+        La porte : lit l'extension + les premiers octets,          & 
+        ---                                                                                                                                      \\
+                                                                   & puis délègue au bon moteur.                    &                            \\[4pt]
+        \texttt{decoder\_mp3.c}                                    & 
+        Le vrai décodage MP3 (libhelix).                           & 
+        \texttt{sink\_i2s\_dac.c}                                                                                                                \\[4pt]
+        \texttt{decoder\_wav.c}                                    & 
+        Le vrai décodage WAV.                                      & 
+        \texttt{sink\_bluetooth.c}                                                                                                               \\[4pt]
+        \texttt{decoder\_backend.h}                                & 
+        Mini-contrat rempli par les deux moteurs,                  & 
+        \texttt{audio\_sink\_t}                                                                                                                  \\
+                                                                   & pour que \texttt{decoder.c} les traite pareil. & (mais caché à l'intérieur) \\
+        \bottomrule
+    \end{tabular}
+    \caption{Les quatre fichiers du décodeur : 1 contrat + 1 porte + 2 moteurs.}
+\end{table}
+
+\subsection*{Pourquoi cette séparation plutôt qu'un seul fichier}
+Pour le \emph{sink}, un \emph{vtable} se justifie dès qu'il y a \textbf{deux
+    backends réels}. Ici c'est pareil : MP3 + WAV = deux backends, donc on sépare.
+Avec le MP3 seul, tout aurait tenu dans \textbf{un seul fichier} ; c'est la
+demande du WAV qui fait apparaître le second moteur, et donc la séparation.
+
+\subsection*{La seule vraie différence avec le sink}
+Côté sink, \textbf{c'est l'utilisateur} qui choisit (jack ou Bluetooth). Côté
+décodeur, on ne peut pas demander « c'est quel format ? » : il faut le
+\textbf{deviner depuis le fichier}. C'est tout le travail en plus de
+\texttt{decoder.c} (la porte), qui renifle l'extension \texttt{.mp3}/\texttt{.wav}
+et vérifie les premiers octets (\emph{magic bytes}). C'est la seule pièce sans
+équivalent côté sink.
