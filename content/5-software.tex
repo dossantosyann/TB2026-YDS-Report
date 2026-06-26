@@ -57,7 +57,7 @@ Même si c'est possible de lier le volume du canal droite et gauche ensemble, je
 
 Tout est clair maintenant — et c'est une gotcha spécifique à l'ESP32 qui mérite d'être notée pour la défense :
 
-La doc I2S a trois variantes selon la puce. Pour l'ESP32 (la nôtre, ligne 363 .. only:: esp32) : le 24-bit doit être stocké en uint32_t (4 octets/échantillon), justifié MSB — les 24 bits hauts valides, l'octet bas ignoré. (Les ESP32-S3/C3 veulent du 3-octets compacté — pas nous.)
+La doc I2S a trois variantes selon la puce. Pour l'ESP32 (la nôtre, ligne 363 .. only:: esp32) : le 24-bit doit être stocké en \texttt{uint32\_t} (4 octets/échantillon), justifié MSB — les 24 bits hauts valides, l'octet bas ignoré. (Les ESP32-S3/C3 veulent du 3-octets compacté — pas nous.)
 Le 16-bit reste en int16_t (2 octets), comme le tone-test.
 On est en stéréo fixe, donc pas de swap mono (le swap ne concerne que le mono 8/16-bit).
 Concrètement pour le WAV 24-bit : un échantillon WAV = 3 octets little-endian b0 b1 b2 → j'émets le mot 32-bit [0x00, b0, b1, b2] (sample dans les 24 bits hauts). Le DAC suit.
@@ -126,3 +126,46 @@ décodeur, on ne peut pas demander « c'est quel format ? » : il faut le
 \texttt{decoder.c} (la porte), qui renifle l'extension \texttt{.mp3}/\texttt{.wav}
 et vérifie les premiers octets (\emph{magic bytes}). C'est la seule pièce sans
 équivalent côté sink.
+
+
+\subsubsection{Bluetooth}
+
+BLE désactivé. BT Classic gardé uniquement.
+
+\subsection{Saturation de la DRAM interne et déport du framebuffer en PSRAM}
+
+Lors de l'intégration de la pile Bluetooth classique (Bluedroid, profil A2DP
+source), la compilation a révélé une saturation de la \emph{DRAM interne} de
+l'ESP32 : le segment statique \texttt{.bss} atteignait \SI{97}{\kilo\byte} sur
+les \SI{124.6}{\kilo\byte} disponibles, soit une occupation de
+\SI{95.3}{\percent} ne laissant que \SI{5.8}{\kilo\byte} libres. Cette marge
+était insuffisante pour les briques restantes (AVRCP, sink Bluetooth) et
+exposait à un échec d'édition de liens. Il faut souligner que cette contrainte
+ne concerne ni la mémoire Flash (\SI{16}{\mega\byte}, dont la taille du binaire
+n'occupe qu'une partition dédiée) ni la PSRAM externe (\SI{8}{\mega\byte}) :
+elle porte uniquement sur la SRAM interne, où résident les données statiques et
+la pile d'exécution.
+
+L'analyse des symboles de l'exécutable (\texttt{xtensa-esp32-elf-nm}) a
+identifié le principal responsable : le framebuffer du contrôleur d'affichage
+SSD1333, déclaré en tant que tableau statique
+\texttt{s\_fb[176 \times 176]} au format RGB565, occupe à lui seul
+\SI{62}{\kilo\byte} (plus de la moitié du \texttt{.bss}), le reste provenant des
+blocs de contrôle de Bluedroid. La solution retenue consiste à déporter ce
+framebuffer vers la PSRAM externe au moyen de l'attribut
+\texttt{EXT\_RAM\_BSS\_ATTR} de l'ESP-IDF, activé par l'option de configuration
+\texttt{CONFIG\_SPIRAM\_ALLOW\_BSS\_SEG\_EXTERNAL\_MEMORY}. Cette manipulation
+est sûre vis-à-vis du DMA : la routine de rafraîchissement lit le framebuffer
+pixel par pixel via le CPU et n'émet ses transferts DMA SPI que depuis un tampon
+de ligne interne, de sorte que le DMA n'accède jamais à la PSRAM.
+
+Après ce changement, l'occupation de la DRAM interne passe de \SI{95.3}{\percent}
+à \SI{22.8}{\percent} (\texttt{.bss} interne réduit de \SI{97}{\kilo\byte} à
+\SI{6.9}{\kilo\byte}). Le gain dépasse les \SI{62}{\kilo\byte} du seul
+framebuffer, car l'activation de l'option déplace également d'autres tampons
+marqués \texttt{EXT\_RAM\_BSS\_ATTR} dans l'IDF (notamment ceux de la pile
+Bluetooth), jusque-là rapatriés en mémoire interne. Le coût de ce compromis est
+un accès CPU plus lent au framebuffer (la PSRAM étant plus lente que la SRAM
+interne), donc des temps de rendu de l'interface légèrement accrus ; ce
+ralentissement reste imperceptible pour une interface rafraîchie à environ
+\SI{10}{\hertz}, ce qui a été vérifié sur la cible.
