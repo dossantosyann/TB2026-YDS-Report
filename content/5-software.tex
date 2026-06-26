@@ -38,7 +38,7 @@ Voyons l'ampleur : je cherche la table de valeurs recommandées (Table 50) :
 
 Table 50 n'apparaît pas telle quelle (markdown mangé), mais il y a une section d'exemples calculés (8.8.5.1). C'est une vraie configuration PLL à faire — plus que le « driver trivial » qu'on avait scopé. Avant d'aller plus loin, je corrige la mémoire (l'hypothèse auto-clock était fausse) :
 
-\subsubsection{Fs}
+\subsection{Fs}
 
 Ta question sur le suréchantillonnage
 Oui, chaque fS a sa propre config (Table 50). Et oui, le suréchantillonnage reste calé sur la même bande ~352/384 kHz quelle que soit fS — c'est exactement pour ça que ton filtre RC fixe fonctionne pour tous les débits. Le DAC diminue son facteur d'interpolation quand fS monte (×8 à 44,1/48 kHz, ×4 à 96 kHz, ×2 à 192 kHz, via les bits FSSP) pour maintenir le rythme post-interpolation et le rythme du modulateur quasi constants. La Table 50 le confirme : la fréquence du modulateur (MODf) reste à ≈6,144 MHz de 48 à 192 kHz (et 5,6448 MHz pour la famille 44,1 kHz).
@@ -48,17 +48,17 @@ Le PCM5242 est un convertisseur delta-sigma : quelle que soit la fréquence d'é
 
 Veux-tu que je force le volume dans le test pour écarter définitivement la piste « potentiomètre » ?
 
-\subsubsection{Volume}
+\subsection{Volume}
 
 Même si c'est possible de lier le volume du canal droite et gauche ensemble, je préfère pas le faire pour pouvoir implémenter un réglage de balance pour corriger tout différence hardware de gain entre les canaux
 
 
-\subsubsection{Decoder}
+\subsection{Decoder}
 
 Tout est clair maintenant — et c'est une gotcha spécifique à l'ESP32 qui mérite d'être notée pour la défense :
 
 La doc I2S a trois variantes selon la puce. Pour l'ESP32 (la nôtre, ligne 363 .. only:: esp32) : le 24-bit doit être stocké en \texttt{uint32\_t} (4 octets/échantillon), justifié MSB — les 24 bits hauts valides, l'octet bas ignoré. (Les ESP32-S3/C3 veulent du 3-octets compacté — pas nous.)
-Le 16-bit reste en int16_t (2 octets), comme le tone-test.
+Le 16-bit reste en \texttt{int16\_t} (2 octets), comme le tone-test.
 On est en stéréo fixe, donc pas de swap mono (le swap ne concerne que le mono 8/16-bit).
 Concrètement pour le WAV 24-bit : un échantillon WAV = 3 octets little-endian b0 b1 b2 → j'émets le mot 32-bit [0x00, b0, b1, b2] (sample dans les 24 bits hauts). Le DAC suit.
 
@@ -128,9 +128,55 @@ et vérifie les premiers octets (\emph{magic bytes}). C'est la seule pièce sans
 équivalent côté sink.
 
 
-\subsubsection{Bluetooth}
+\subsection{Bluetooth}
 
 BLE désactivé. BT Classic gardé uniquement.
+
+\subsection{Implémentation de la sortie Bluetooth (A2DP source)}
+
+La sortie sans fil repose sur le profil A2DP en rôle \emph{source} : le lecteur
+émet l'audio vers une enceinte, par opposition au rôle \emph{sink} (l'ESP32 se
+comportant en haut-parleur). Ce choix impose de configurer le contrôleur radio
+en mode BR/EDR (Bluetooth classique), le mode BLE par défaut ne permettant pas
+l'A2DP. Le BLE étant inutile au projet, le contrôleur est passé en
+\texttt{BR\_EDR\_ONLY}, ce qui libère au passage la mémoire réservée au BLE.
+
+L'implémentation est scindée en deux pour respecter l'architecture en couches.
+Un \textbf{service Bluetooth} (couche \emph{services}) possède la pile Bluedroid
+et le rôle A2DP source : il initialise le contrôleur et la pile, publie un point
+d'extrémité (\emph{stream endpoint}) annonçant les capacités SBC, puis découvre
+les appareils environnants et se connecte au premier dont le nom annoncé
+contient une sous-chaîne donnée (p.~ex. « JBL »). Le nom est extrait soit de la
+propriété d'inquête, soit des données EIR. L'appairage est de type
+\emph{just-works} (sans saisie de code), adapté à un produit sans clavier. Cette
+connexion a été validée sur matériel contre une enceinte commerciale (découverte
+$\rightarrow$ appairage $\rightarrow$ connexion A2DP établie).
+
+Le second bloc, \texttt{sink\_bluetooth} (couche \emph{audio}), fournit l'audio
+proprement dit. L'API A2DP source d'ESP-IDF offre deux modèles : un modèle
+\emph{push} où l'application encode elle-même le SBC, alloue les tampons et gère
+le rythme d'émission temps réel ; et un modèle \emph{pull} (hérité) où la pile
+réclame du PCM brut via un \emph{callback} et se charge elle-même de l'encodage
+SBC et du cadencement. Le modèle \emph{pull} a été retenu (code nettement plus
+réduit, cadencement assuré par une implémentation éprouvée, et adéquation avec
+l'abstraction de sortie déjà conçue). Comme la pile \emph{tire} le PCM depuis sa
+propre tâche alors que le pipeline le \emph{pousse}, un tampon circulaire
+(FreeRTOS \emph{stream buffer}) découple les deux : l'écriture du pipeline s'y
+bloque lorsqu'il est plein, ce qui le synchronise naturellement sur l'horloge
+temps réel de la liaison Bluetooth ; en cas de sous-alimentation, le
+\emph{callback} comble avec du silence pour ne pas rompre le flux. Le tampon est
+placé en PSRAM externe afin de préserver la SRAM interne (cf.
+\textref{sec:ram}).
+
+Enfin, le pipeline audio a été rendu \emph{indépendant de la sortie} : sa boucle
+producteur/consommateur ne manipule qu'une interface abstraite de \emph{sink}
+(\texttt{start}/\texttt{write}/\texttt{stop}/\texttt{set\_volume}), et une
+fonction de sélection permet de basculer entre la sortie filaire (DAC PCM5242)
+et la sortie Bluetooth sans rien changer au reste de la chaîne. À ce stade, la
+connexion et l'encodage sont en place ; le contrôle du volume et des touches de
+lecture de l'enceinte (profil AVRCP) ainsi que la validation du flux audio sur
+matériel restent à réaliser.
+
 
 \subsection{Saturation de la DRAM interne et déport du framebuffer en PSRAM}
 
