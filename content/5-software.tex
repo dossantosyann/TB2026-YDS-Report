@@ -47,3 +47,7 @@ Paragraphe pour ton rapport
 Le PCM5242 est un convertisseur delta-sigma : quelle que soit la fréquence d'échantillonnage fS du fichier (8 à 192 kHz), il suréchantillonne le signal par un filtre d'interpolation, puis un modulateur delta-sigma génère le flux qui attaque l'étage analogique. Le point essentiel pour le dimensionnement du filtre de sortie est que le DAC ajuste son facteur d'interpolation à l'inverse de fS — ×8 à 44,1/48 kHz, ×4 à 96 kHz, ×2 à 192 kHz (sélection par les bits FSSP de vitesse). Le rythme du modulateur reste ainsi quasi constant (≈5,6–6,1 MHz) et le rythme post-interpolation autour de 352,8–384 kHz, indépendamment de fS. C'est précisément ce qui autorise un unique filtre RC de sortie fixe, dimensionné pour cette bande ~352/384 kHz, valable pour toutes les fréquences d'échantillonnage. En contrepartie, chaque fS exige sa propre configuration de PLL et de diviseurs (Table 50 de la datasheet) : ces coefficients sont calculés justement pour que, malgré une fS d'entrée variable, les horloges internes (modulateur, OSR, charge-pump) retombent toujours sur les mêmes fréquences cibles que le filtre analogique attend.
 
 Veux-tu que je force le volume dans le test pour écarter définitivement la piste « potentiomètre » ?
+
+\subsubsection{Volume}
+
+Même si c'est possible de lier le volume du canal droite et gauche ensemble, je préfère pas le faire pour pouvoir implémenter un réglage de balance pour corriger tout différence hardware de gain entre les canaux
