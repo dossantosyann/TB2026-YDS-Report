@@ -253,3 +253,33 @@ intégralement hors cible, sans matériel, à l'aide du harnais de tests
 séparation a permis de vérifier dès maintenant le filtrage, le tri, le format des chemins
 transmis au décodeur et la gestion du dépassement, alors même que le connecteur microSD
 n'est pas encore monté sur le circuit imprimé.
+
+
+\subsection{Service de playlist}
+
+Le service \texttt{playlist} constitue une fine couche d'état de navigation
+au-dessus de l'index des pistes fourni par le service \texttt{storage}, dont il
+consomme exclusivement l'interface par index (\texttt{storage\_count},
+\texttt{storage\_track\_path}, \texttt{storage\_track\_name}) sans jamais accéder
+lui-même à la carte microSD, au décodeur ou au puits audio~; la chaîne de
+dépendances respecte ainsi le sens \mbox{\texttt{player} $\rightarrow$
+    \texttt{playlist} $\rightarrow$ \texttt{storage}}. Il maintient un état statique
+minimal --- une position courante, un mode de répétition (\emph{off}, \emph{all},
+\emph{one}) et un indicateur de lecture aléatoire --- sans aucune allocation
+dynamique par appel, conformément à la contrainte de consommation. La navigation
+(\texttt{playlist\_next}, \texttt{playlist\_prev}, \texttt{playlist\_select})
+renvoie la piste résultante sous forme d'index et de chemin POSIX prêt pour le
+décodeur, le retour à la ligne (\emph{wrap-around}) étant gouverné par le mode de
+répétition. La lecture aléatoire repose sur une permutation pré-calculée par
+l'algorithme de Fisher--Yates, ce qui garantit un parcours déterministe couvrant
+chaque piste exactement une fois et préserve la piste en cours lors de
+l'activation du mode. La fonction \texttt{playlist\_sync} relie l'état à l'index
+\texttt{storage} courant et borne proprement la position après un nouveau balayage
+de la carte. Le service échoue de manière explicite (codes \texttt{esp\_err\_t} et
+journalisation) lorsque le stockage n'est pas prêt, lorsque la liste est vide ou
+lorsqu'un index est hors borne, n'exposant jamais une position silencieusement
+invalide. Comme cette logique est purement algorithmique, elle a été validée hors
+cible via la suite de tests hôte (\texttt{test/host/}) à l'aide d'un faux index
+\texttt{storage}, couvrant la navigation, le \emph{wrap-around}, le redimensionnement
+de la liste et la lecture aléatoire~; l'intégration complète au \emph{build}
+ESP-IDF~6.0.1 a par ailleurs été confirmée.
