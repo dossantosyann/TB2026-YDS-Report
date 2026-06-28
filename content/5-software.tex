@@ -425,3 +425,60 @@ En sortie Bluetooth, aucun échantillon n'est envoyé tant que l'enceinte n'a pa
 confirmé le niveau de volume (\texttt{bluetooth\_volume\_acked()}). Cette
 condition est revérifiée à chaque enchaînement automatique, ce qui interdit tout
 démarrage à plein volume.
+
+
+\subsection{Contrôle du volume sur la sortie Bluetooth}
+\label{subsec:volume-bluetooth}
+
+La sortie Bluetooth repose sur le profil A2DP en mode \emph{source} : le lecteur
+encode le flux audio et le transmet à une enceinte (validé sur une JBL Charge~5).
+Contrairement à la sortie filaire, où le volume est appliqué localement par le
+convertisseur PCM5242, le niveau sonore d'une enceinte Bluetooth est rendu par
+l'enceinte elle-même. Le réglage doit donc lui être transmis explicitement.
+
+\subsubsection{Volume absolu via AVRCP}
+
+Le transport du volume s'appuie sur le profil AVRCP. Une source A2DP joue le rôle
+de \emph{controller} (CT) et l'enceinte celui de \emph{target} (TG)~; le volume
+est envoyé du CT vers le TG par la commande \texttt{Set Absolute Volume}. Deux
+contraintes de la pile Bluedroid (ESP-IDF~6.0.1) ont été respectées~:
+\begin{itemize}
+    \item le rôle AVRCP~CT doit être initialisé \emph{avant} l'initialisation de
+          la source A2DP~;
+    \item le canal de contrôle AVRCP ne s'établit qu'environ trois secondes
+          \emph{après} la connexion A2DP. Tout réglage émis avant cet instant est
+          donc mémorisé puis réappliqué automatiquement à la connexion du canal.
+\end{itemize}
+
+\subsubsection{Adaptation des échelles}
+
+Les deux sorties n'utilisent pas la même échelle de volume. Le PCM5242 attend un
+octet de registre suivant une courbe en décibels, \emph{inversée} (\texttt{0x00}
+correspond au maximum, les valeurs croissantes atténuent) et bornée à un plancher
+de $-60$\,dB. L'AVRCP attend au contraire une valeur \emph{linéaire} sur la plage
+$0$ à $0\text{x}7\text{F}$, où $0$ correspond au silence total. Réutiliser l'octet
+du DAC pour le Bluetooth n'aurait jamais atteint le silence (le plancher
+$-60$\,dB correspondant à environ 35\,\% côté AVRCP). Une conversion dédiée a donc
+été ajoutée, qui mappe linéairement la fraction de course du potentiomètre vers
+l'intervalle AVRCP, de sorte que le potentiomètre au minimum donne bien $0$\,\%.
+
+\subsubsection{Service de volume sensible à la sortie}
+
+Le service de volume a été rendu \emph{sensible à la sortie active}~: une unique
+fonction de scrutation du potentiomètre route le niveau vers la destination
+courante (DAC, Bluetooth, ou aucune), chacune avec sa propre conversion d'échelle.
+Une écriture n'est émise que lorsque le niveau change (bande morte), ce qui évite
+tout trafic I\textsuperscript{2}C ou AVRCP inutile lorsque le potentiomètre est
+immobile, dans un objectif d'économie d'énergie. Afin de ne pas lier en dur la
+pile Bluetooth au service de volume (et préserver sa suppression par l'éditeur de
+liens lorsque le Bluetooth n'est pas utilisé), le réglage Bluetooth est fourni
+sous forme de \emph{callback} enregistré plutôt que par un appel direct.
+
+\subsubsection{Sécurité auditive}
+
+Une précaution a été imposée pour éviter toute émission sonore non maîtrisée~:
+aucun échantillon audio n'est transmis à l'enceinte tant que celle-ci n'a pas
+\emph{confirmé} la réception et l'application du volume demandé (acquittement de
+la commande \texttt{Set Absolute Volume}). Tant que cet acquittement n'est pas
+reçu, le flux audio reste bloqué. Le niveau est ainsi garanti correct avant le
+premier échantillon, y compris lorsque le potentiomètre est au minimum.
