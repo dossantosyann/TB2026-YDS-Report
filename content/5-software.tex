@@ -215,3 +215,41 @@ un accès CPU plus lent au framebuffer (la PSRAM étant plus lente que la SRAM
 interne), donc des temps de rendu de l'interface légèrement accrus ; ce
 ralentissement reste imperceptible pour une interface rafraîchie à environ
 \SI{10}{\hertz}, ce qui a été vérifié sur la cible.
+
+
+\subsection{Service \texttt{storage} : énumération des pistes}
+
+Le service \texttt{storage} constitue une fine couche d'énumération au-dessus du
+système de fichiers, dont le rôle est de fournir aux couches supérieures
+(\texttt{playlist}, \texttt{player}) la liste indexée des fichiers audio jouables
+présents sur la carte microSD. Il a été conçu pour respecter le découpage en couches
+du firmware : \texttt{storage} encapsule à lui seul le cycle de vie du montage
+(\texttt{storage\_init()} appelle \texttt{sdcard\_mount()}, \texttt{storage\_deinit()}
+démonte le volume), de sorte que les consommateurs n'interagissent jamais directement
+avec le pilote de carte. Après montage du volume \mbox{FAT-FS} sur \texttt{/sdcard},
+l'énumération s'appuie sur l'API POSIX standard (\texttt{opendir}/\texttt{readdir}) :
+le répertoire racine est parcouru une seule fois et seuls les fichiers dont l'extension
+correspond à un format décodable (\texttt{.mp3} ou \texttt{.wav}, insensible à la casse)
+sont retenus. La liste résultante est triée alphabétiquement de manière insensible à la
+casse afin de garantir un comportement \emph{next}/\emph{previous} déterministe et
+prévisible. Conformément à la directive d'optimisation de la consommation, le balayage
+n'est effectué qu'à la demande et le résultat est servi depuis une liste maintenue en
+mémoire, évitant tout accès répété à la carte.
+
+Le stockage de cette liste est borné de façon explicite : un unique bloc contigu est
+alloué en PSRAM (\texttt{heap\_caps\_malloc} avec l'attribut \texttt{MALLOC\_CAP\_SPIRAM}),
+dimensionné pour un maximum de \texttt{STORAGE\_MAX\_TRACKS} pistes de chemin
+\texttt{STORAGE\_PATH\_MAX} octets chacune (couvrant le préfixe de montage et la longueur
+maximale d'un nom de fichier long \mbox{FAT-FS}). Le service applique le principe
+\emph{« échouer fort »} : l'absence de carte, un échec de montage ou un répertoire
+illisible remontent une erreur \texttt{esp\_err\_t} explicite accompagnée d'un journal,
+et un dépassement du nombre maximal de pistes interrompt le balayage plutôt que de
+tronquer silencieusement la liste ; seule une carte valide mais dépourvue de fichiers
+audio constitue un succès légitime à zéro piste. Enfin, la logique pure (filtrage par
+extension, tri, accès par index) a été délibérément isolée du couplage matériel : la
+fonction de balayage est paramétrée par le répertoire cible, ce qui permet de la valider
+intégralement hors cible, sans matériel, à l'aide du harnais de tests
+\texttt{test/host/} sur un dossier temporaire peuplé de fichiers factices. Cette
+séparation a permis de vérifier dès maintenant le filtrage, le tri, le format des chemins
+transmis au décodeur et la gestion du dépassement, alors même que le connecteur microSD
+n'est pas encore monté sur le circuit imprimé.
