@@ -321,3 +321,107 @@ bouton ainsi qu'un compteur d'appuis, en empruntant exactement le chemin de
 production (interruption~$\rightarrow$~file~$\rightarrow$~lecture par la tâche
 d'interface). Ce test permet de valider sur la carte la correspondance des boutons,
 l'absence de déclenchements parasites et le caractère discret de chaque appui.
+
+\subsection{Couche transport : le service \texttt{player}}
+\label{subsec:player}
+
+Une fois le décodeur, les sinks (DAC / Bluetooth) et la pipeline temps-réel en
+place, il manquait l'\emph{orchestrateur} reliant ces briques à la logique de
+lecture. C'est le rôle du service \texttt{player}
+(\texttt{components/services/audio/player.c}), qui transforme la liste de
+lecture en un flux audio pilotable.
+
+\subsubsection{Position dans l'architecture}
+
+Le \texttt{player} ne possède aucune tâche : il réutilise la tâche audio
+épinglée de la pipeline. Il s'insère dans la chaîne de dépendances
+\texttt{ui $\rightarrow$ player $\rightarrow$ playlist $\rightarrow$ storage},
+et pilote la pipeline par sa file de commandes. Il ne touche jamais la carte SD,
+le décodeur ni un sink directement : seule la pipeline décode et écrit l'audio,
+ce qui garde la pipeline « bête » et réutilisable, et concentre toute la
+politique de transport en un seul endroit.
+
+\subsubsection{Machine d'état et interface}
+
+Le transport possède trois états (\texttt{STOPPED}, \texttt{PLAYING},
+\texttt{PAUSED}). L'interface publique est résumée au
+\autoref{tab:player-api}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Fonction}                         & \textbf{Effet}                                        \\
+        \midrule
+        \texttt{player\_play(index)}              & Joue la piste d'index donné (stoppe le flux courant). \\
+        \texttt{player\_pause()}                  & Suspend la lecture (sink éteint, position conservée). \\
+        \texttt{player\_resume()}                 & Reprend la lecture suspendue.                         \\
+        \texttt{player\_stop()}                   & Arrête et éteint la sortie.                           \\
+        \texttt{player\_next()} / \texttt{prev()} & Piste suivante / précédente (ordre de la playlist).   \\
+        \texttt{player\_set\_output()}            & Choisit la sortie DAC ou Bluetooth.                   \\
+        \texttt{player\_get\_state()}             & État courant + piste en cours.                        \\
+        \bottomrule
+    \end{tabular}
+    \caption{Interface publique du service \texttt{player}.}
+    \label{tab:player-api}
+\end{table}
+
+\subsubsection{Choix de conception}
+
+\paragraph{Enchaînement automatique sans scrutation.}
+En fin de fichier, la pipeline détecte la fin de flux (\texttt{got == 0}) et
+appelle un \emph{callback} enregistré par le \texttt{player}, dans le contexte
+de la tâche audio. Le gestionnaire demande alors la piste suivante à la playlist
+et relance la pipeline (\autoref{lst:player-eof}). Ce mécanisme événementiel
+évite toute attente active : au repos, la tâche audio dort et la sortie est
+éteinte, ce qui réduit la consommation.
+
+\begin{listing}[ht]
+    \begin{minted}{c}
+/* Fin de piste signalée par la pipeline (contexte tâche audio) : on avance. */
+static void on_track_end(pipeline_end_reason_t reason)
+{
+    if (reason == PIPE_END_ERROR) { s_state = PLAYER_STOPPED; return; }
+
+    /* EOF : repeat-one rejoue la piste, sinon on avance (la playlist gère le bouclage). */
+    playlist_track_t t;
+    esp_err_t err = (playlist_get_repeat() == PLAYLIST_REPEAT_ONE)
+                        ? playlist_current(&t)
+                        : playlist_next(&t);
+    if (err != ESP_OK) { s_state = PLAYER_STOPPED; return; } /* fin de liste */
+
+    if (bt_volume_unsafe() || pipeline_play_file(t.path) != ESP_OK) {
+        s_state = PLAYER_STOPPED;
+    }
+}
+\end{minted}
+    \caption{Gestionnaire de fin de piste et avance automatique.}
+    \label{lst:player-eof}
+\end{listing}
+
+\paragraph{Pause économe et sans coupure brutale.}
+Le décodeur ne supporte pas le \emph{seek}. La pause consiste donc à éteindre le
+sink (ce qui arrête le bus I\textsuperscript{2}S et l'amplificateur, sans
+\emph{underrun} et avec une consommation minimale) tout en laissant le décodeur
+ouvert à sa position. La tâche audio se met en sommeil sur la file de commandes
+jusqu'à la reprise ou l'arrêt ; à la reprise, le sink est redémarré et le
+décodage se poursuit.
+
+\paragraph{Source unique de vérité.}
+Le \texttt{player} ne duplique pas la piste courante : celle-ci appartient à la
+playlist. Il ne conserve que l'état de transport et la sortie choisie, ce qui
+évite tout verrou (\emph{mutex}) et garde le code minimal. Le contrat est
+qu'on appelle l'API depuis une seule tâche de contrôle (l'interface), le
+callback de fin de piste ne faisant qu'avancer.
+
+\paragraph{Garantie d'un seul flux et validation préalable.}
+Avant d'ouvrir une nouvelle piste, le \texttt{player} arrête systématiquement le
+flux courant : un seul flux décodeur existe à la fois. L'index demandé est
+toutefois validé \emph{avant} d'interrompre la lecture en cours, de sorte qu'un
+index invalide ne coupe pas la piste qui joue.
+
+\paragraph{Sécurité auditive en Bluetooth.}
+En sortie Bluetooth, aucun échantillon n'est envoyé tant que l'enceinte n'a pas
+confirmé le niveau de volume (\texttt{bluetooth\_volume\_acked()}). Cette
+condition est revérifiée à chaque enchaînement automatique, ce qui interdit tout
+démarrage à plein volume.
