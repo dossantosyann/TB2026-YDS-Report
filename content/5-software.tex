@@ -482,3 +482,65 @@ aucun échantillon audio n'est transmis à l'enceinte tant que celle-ci n'a pas
 la commande \texttt{Set Absolute Volume}). Tant que cet acquittement n'est pas
 reçu, le flux audio reste bloqué. Le niveau est ainsi garanti correct avant le
 premier échantillon, y compris lorsque le potentiomètre est au minimum.
+
+
+
+\subsection{Persistance des appareils Bluetooth appairés}
+\label{subsec:bt-persistence}
+
+Le stack Bluedroid sauvegarde automatiquement les clés de liaison
+(\emph{link keys}) dans la NVS lors de l'appairage : un appareil reste donc
+appairé au niveau du stack après un redémarrage. En revanche, la liste
+applicative des appareils connus --- le couple (adresse, nom) utilisé pour
+l'affichage et la reconnexion rapide --- n'existait qu'en RAM. Après un
+\emph{reboot}, le \emph{firmware} ne savait donc plus quel appareil afficher ni
+reconnecter, alors même que le \emph{bond} restait valide. Cette section décrit
+la persistance de cette liste dans la NVS.
+
+\paragraph{Choix de conception.} Plutôt que de ne mémoriser que le dernier
+appareil, le service conserve une \emph{liste} d'au plus
+\verb|BLUETOOTH_MAX_KNOWN| ($=8$) appareils, ordonnée du plus récent au plus
+ancien selon une politique \emph{LRU} (\emph{Least Recently Used}) : une
+connexion réussie remonte l'appareil en tête de liste, et le plus ancien est
+évincé lorsque la capacité est atteinte. La tête de liste (\verb|s_known[0]|)
+constitue le « dernier appareil » offert pour une reconnexion immédiate. Ce
+choix supprime toute duplication d'état : une seule source de vérité décrit à la
+fois l'historique et le dernier appareil.
+
+\paragraph{Format de stockage.} La liste est sérialisée dans la NVS sous la
+forme d'un unique \emph{blob}, dans l'espace de noms (\emph{namespace})
+\verb|"bt"| et sous la clé \verb|"known"|. Le \emph{blob} contient directement
+le tableau des entrées ; le nombre d'appareils est déduit de la taille du
+\emph{blob} ($n = \text{taille} / \text{sizeof(entrée)}$), ce qui évite un
+compteur séparé. Lorsque la liste devient vide, la clé est effacée
+(\verb|nvs_erase_key|) afin de rester cohérente. Cette représentation est
+atomique et minimale, conforme aux usages d'ESP-IDF.
+
+\paragraph{Cycle de vie.} La persistance s'articule autour de trois points :
+\begin{itemize}
+    \item \textbf{Chargement au démarrage} : \verb|bluetooth_init()| restaure la
+          liste depuis la NVS, de sorte que \verb|bluetooth_reconnect_last()|
+          fonctionne immédiatement après un redémarrage, sans nouvelle découverte
+          (\emph{scan}).
+    \item \textbf{Sauvegarde à la connexion} : à chaque connexion A2DP établie,
+          l'appareil est inséré (ou remonté) en tête de liste, son nom est résolu
+          depuis les résultats de \emph{scan} lorsqu'ils sont disponibles, puis la
+          liste est réécrite dans la NVS.
+    \item \textbf{Effacement à l'oubli} : \verb|bluetooth_forget_device()| retire
+          l'entrée correspondante de la liste, persiste la modification, puis supprime
+          le \emph{bond} associé via \verb|esp_bt_gap_remove_bond_device()|.
+\end{itemize}
+
+\paragraph{Concurrence.} La liste est partagée entre la tâche Bluetooth (qui
+l'écrit sur événement de connexion) et la tâche d'interface (qui la lit pour
+l'affichage). L'accès est protégé par un \emph{mutex}. Les écritures en NVS,
+intrinsèquement lentes, n'interviennent que lors d'une connexion ou d'un oubli
+--- jamais sur le chemin audio --- ce qui rend négligeable leur impact sur la
+réactivité et la consommation.
+
+\paragraph{Interface.} L'introduction d'une liste modifie la signature de
+\verb|bluetooth_forget_device()|, qui prend désormais l'adresse de l'appareil à
+oublier (l'« entrée correspondante » n'a de sens que par appareil). Une fonction
+\verb|bluetooth_get_known_devices()| est ajoutée pour permettre à l'interface
+d'afficher les appareils mémorisés. La logique de persistance reste entièrement
+confinée au service Bluetooth, conformément à l'architecture en couches.
