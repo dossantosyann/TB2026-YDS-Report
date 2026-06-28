@@ -283,3 +283,41 @@ cible via la suite de tests hôte (\texttt{test/host/}) à l'aide d'un faux inde
 \texttt{storage}, couvrant la navigation, le \emph{wrap-around}, le redimensionnement
 de la liste et la lecture aléatoire~; l'intégration complète au \emph{build}
 ESP-IDF~6.0.1 a par ailleurs été confirmée.
+
+
+\subsection{Service de gestion des boutons (\textit{input})}
+
+Le service \texttt{input} traduit chaque appui sur l'un des six boutons physiques en
+un événement d'interface unique (\texttt{ui\_event\_t}), déposé dans une file
+FreeRTOS consommée par la couche d'interface. Cinq boutons (haut, bas, gauche,
+droite et~B) sont reliés à l'expandeur d'entrées/sorties I\textsuperscript{2}C
+PI4IOE5V9554A, qui partagent une unique ligne d'interruption, tandis que le
+bouton~A dispose de sa propre broche GPIO dédiée. Le service est entièrement
+\emph{piloté par interruption} : aucune scrutation périodique n'est effectuée, la
+tâche associée restant endormie tant qu'aucune interruption ne survient, ce qui
+minimise la consommation au repos. Comme le bus I\textsuperscript{2}C ne peut être
+lu depuis un contexte d'interruption, chaque routine d'interruption se limite à
+réveiller la tâche, laquelle lit alors l'état des boutons, le déparasite et produit
+l'événement correspondant.
+
+Le comportement est strictement discret : un appui engendre exactement un événement,
+sans répétition lors d'un maintien ni traitement d'appui long. Le déparasitage repose
+sur une détection de front montant assortie d'un verrou temporel
+(\textit{leading-edge lockout}) de \SI{30}{\milli\second}, qui élimine les rebonds
+mécaniques du contact. La logique pure --- déparasitage, détection de front et
+correspondance bouton~$\rightarrow$~événement --- a été isolée du couplage matériel
+(interruptions, I\textsuperscript{2}C, GPIO) afin d'être validée hors cible par des
+tests unitaires sur l'hôte, en injectant des séquences d'états horodatées et en
+vérifiant la suite d'événements produite. Une particularité matérielle a été prise
+en compte : les cinq boutons de l'expandeur sont actifs à l'état bas, alors que le
+bouton~A est actif à l'état haut. Ce dernier, câblé sur une broche compatible avec le
+domaine d'alimentation~RTC, est en outre provisionné comme future source de réveil de
+veille profonde (constantes de broche et de niveau actif exposées pour le futur
+service de mise en veille), sans qu'aucune logique de veille ne soit implémentée à ce
+stade.
+
+Enfin, un mode de test intégré au firmware affiche sur l'écran OLED l'état de chaque
+bouton ainsi qu'un compteur d'appuis, en empruntant exactement le chemin de
+production (interruption~$\rightarrow$~file~$\rightarrow$~lecture par la tâche
+d'interface). Ce test permet de valider sur la carte la correspondance des boutons,
+l'absence de déclenchements parasites et le caractère discret de chaque appui.
