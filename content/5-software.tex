@@ -603,3 +603,71 @@ Le calcul de la position de lecture est mis à jour (\texttt{out\_frame = 8}
 systématiquement) et le tampon du générateur de tonalité de test passe de
 \texttt{int16\_t} à \texttt{int32\_t} afin de rester cohérent avec le même
 format de sortie.
+
+
+\subsection{Correction de la lecture de certains fichiers audio}
+\label{subsec:fix-lecture-fichiers}
+
+Lors des tests de lecture sur carte microSD, deux familles de fichiers
+provoquaient systématiquement une erreur d'ouverture
+(\texttt{pipeline: file: open failed}) suivie de l'arrêt de la lecture.
+L'instrumentation du décodeur a permis d'isoler deux causes indépendantes.
+
+\subsubsection{Fichiers cachés générés par macOS}
+
+Le parcours récursif de la carte (\texttt{storage.c}) indexait comme pistes
+jouables des entrées créées automatiquement par macOS. Outre les répertoires
+cachés (\texttt{.Trashes}, \texttt{.Spotlight-V100}, \texttt{.fseventsd}),
+le système écrit pour chaque fichier un \emph{resource fork} AppleDouble
+nommé \texttt{.\_nomdufichier}. Ces fichiers se terminant par
+\texttt{.wav} ou \texttt{.mp3}, ils passaient le filtre d'extension et
+étaient ajoutés à l'index, alors que leur contenu n'est pas un flux audio.
+
+Le filtre d'origine n'écartait que les entrées \texttt{.} et \texttt{..}.
+Il a été remplacé par l'exclusion de toute entrée dont le nom commence par
+un point, ce qui couvre à la fois les répertoires cachés et les fichiers
+AppleDouble :
+
+\begin{verbatim}
+/* Ignore ., .., répertoires cachés et fichiers AppleDouble (._foo) */
+if (ent->d_name[0] == '.') continue;
+\end{verbatim}
+
+\subsubsection{Faux mot de synchronisation dans le tag ID3v2}
+
+Les fichiers MP3 munis d'un tag ID3v2 (métadonnées, pochette d'album)
+échouaient également, quel que soit leur mode d'encodage (CBR ou VBR).
+À l'ouverture, le backend libhelix recherche le premier \emph{frame sync},
+c'est-à-dire un octet \texttt{0xFF} suivi de trois bits de poids fort à~1
+(\texttt{0xFF~0xEx}). Or le tag ID3v2 est placé en tête de fichier et son
+contenu --- en particulier une pochette JPEG --- est riche en octets
+\texttt{0xFF}. La fonction \texttt{MP3FindSyncWord} détectait donc un
+\emph{faux} mot de synchronisation à l'intérieur du tag, puis
+\texttt{MP3GetNextFrameInfo} échouait en tentant d'interpréter ces octets
+comme un en-tête de trame valide.
+
+Le code initial accordait sa confiance au premier mot de synchronisation
+trouvé et abandonnait dès le premier échec. La correction procède en deux
+temps :
+
+\begin{enumerate}
+    \item \textbf{Saut explicite du tag ID3v2.} Lorsque le fichier débute par
+          la signature \texttt{ID3}, sa taille est lue dans l'en-tête sous
+          forme de quatre octets \emph{synchsafe} (7~bits utiles chacun), et un
+          \texttt{fseek} positionne directement la lecture après le tag. Cette
+          taille pouvant largement dépasser le tampon d'entrée de
+          \SI{4}{\kibi\byte}, le déplacement est effectué au niveau du fichier
+          plutôt qu'en mémoire.
+    \item \textbf{Validation de chaque mot de synchronisation.} Chaque candidat
+          renvoyé par \texttt{MP3FindSyncWord} est confirmé par
+          \texttt{MP3GetNextFrameInfo}. En cas d'échec, la recherche reprend un
+          octet plus loin au lieu d'abandonner, jusqu'à trouver une trame
+          réellement valide ou atteindre la fin du fichier.
+\end{enumerate}
+
+Cette approche fiabilise l'ouverture face à des données parasites résiduelles
+et restaure au passage l'analyse de la durée via le tag Xing/Info, qui
+n'était jamais atteinte auparavant pour ces fichiers. Des messages d'erreur
+explicites ont enfin été ajoutés (absence de trame valide, en-tête corrompu)
+afin de distinguer un véritable fichier non supporté d'un simple problème de
+synchronisation.
