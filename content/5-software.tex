@@ -544,3 +544,62 @@ oublier (l'« entrée correspondante » n'a de sens que par appareil). Une fonct
 \verb|bluetooth_get_known_devices()| est ajoutée pour permettre à l'interface
 d'afficher les appareils mémorisés. La logique de persistance reste entièrement
 confinée au service Bluetooth, conformément à l'architecture en couches.
+
+
+\subsection{Correction du débit de lecture audio (bug vitesse 2×)}
+
+\subsubsection*{Symptôme}
+Toute piste lue depuis la carte SD était jouée à environ deux fois la vitesse
+normale. Les journaux série confirmaient que la fréquence d'échantillonnage
+rapportée par le décodeur et celle programmée dans le périphérique I2S
+coïncidaient (44\,100\,Hz), écartant toute hypothèse de mismatch de fréquence.
+
+\subsubsection*{Cause}
+La chaîne audio utilise des \emph{slots} I2S de 32 bits (nécessaires pour le
+PCM5242 qui attend $\text{BCLK} = 64 \times f_S$), alors que les décodeurs
+produisaient des échantillons 16 bits. La configuration résultante était donc
+\texttt{data\_bit\_width = 16} avec \texttt{slot\_bit\_width = 32}.
+
+Jusqu'à ESP-IDF 5.x, la fonction \texttt{i2s\_channel\_write} effectuait
+automatiquement l'expansion de chaque échantillon 16 bits vers un slot 32 bits
+dans le tampon DMA. En ESP-IDF 6.0.1, ce comportement a changé : la fonction
+copie désormais les octets d'entrée directement dans le DMA sans expansion.
+Le DMA interprète alors chaque paire d'échantillons 16 bits \texttt{(L, R)}
+comme un unique slot 32 bits, ce qui divise par deux le nombre de frames
+effectivement transmis par appel, et double la vitesse de lecture perçue.
+
+\subsubsection*{Correction}
+La solution consiste à aligner \texttt{data\_bit\_width} sur
+\texttt{slot\_bit\_width} (32 bits dans les deux cas) et à déléguer l'expansion
+aux décodeurs, qui produisent désormais des mots de 32 bits MSB-justifiés
+directement exploitables par le DMA.
+
+\paragraph{BSP I2S (\texttt{i2s\_bus.c})}
+La valeur de \texttt{data\_bit\_width} est fixée à
+\texttt{I2S\_DATA\_BIT\_WIDTH\_32BIT} quelle que soit la profondeur de la
+source audio. Le DMA n'a ainsi plus aucune expansion implicite à réaliser.
+
+\paragraph{Décodeur MP3 (\texttt{decoder\_mp3.c})}
+Après que libhelix a décodé une trame dans un tampon \texttt{int16\_t}, chaque
+échantillon est élargi en place vers \texttt{int32\_t} MSB-justifié par un
+décalage à gauche de 16 bits. L'expansion se fait de la fin vers le début du
+tampon afin d'éviter tout écrasement de données non encore traitées :
+\begin{equation*}
+    \texttt{out32}[i] = \texttt{(int32\_t)out}[i] \mathbin{\ll} 16,
+    \quad i = N-1,\dots,0
+\end{equation*}
+La taille du tampon de sortie reste inchangée à 9\,216 octets
+($2\,304\ \text{samples} \times 4\ \text{octets}$).
+
+\paragraph{Décodeur WAV (\texttt{decoder\_wav.c})}
+Le nombre d'octets par frame de sortie passe de 4 à 8 (\texttt{out\_frame = 8}),
+ce qui réduit le nombre de frames lus par itération de 2\,304 à 1\,152 pour
+l'audio 16 bits. Chaque échantillon 16 bits est converti par le même décalage
+$\ll 16$ avant d'être écrit dans le tampon de sortie. Les fichiers 24 bits ne
+sont pas affectés : le décodeur produisait déjà des mots 32 bits MSB-justifiés.
+
+\paragraph{Pipeline audio (\texttt{pipeline.c})}
+Le calcul de la position de lecture est mis à jour (\texttt{out\_frame = 8}
+systématiquement) et le tampon du générateur de tonalité de test passe de
+\texttt{int16\_t} à \texttt{int32\_t} afin de rester cohérent avec le même
+format de sortie.
