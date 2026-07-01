@@ -818,3 +818,56 @@ lancement de la connexion et arrêté dès la résolution de celle-ci (état
 toujours \texttt{CONNECTING}, la tentative est avortée
 (\texttt{esp\_a2d\_source\_disconnect}) et l'état passe à \texttt{FAILED} ;
 l'indicateur repasse alors au rouge et la radio peut de nouveau être éteinte.
+
+
+\subsection{Menu de sélection de la sortie audio}
+\label{subsec:output-select}
+
+Le lecteur dispose de deux chaînes de sortie mutuellement exclusives~: la
+sortie filaire sur jack (DAC PCM5242) et la sortie Bluetooth (A2DP vers une
+enceinte). Un menu de sélection permet à l'utilisateur de basculer de l'une à
+l'autre depuis l'écran de lecture.
+
+\subsubsection{Interface}
+Le menu est réalisé sous forme de \emph{popup}~: un écran empilé sur la pile de
+navigation, dessiné comme une boîte centrée sur fond noir, sans surcouche
+graphique dédiée (le rendu utilise directement le framebuffer). Il est atteint
+depuis l'écran \og Now Playing \fg{} par le bouton \emph{haut}. La popup
+présente trois lignes~:
+\begin{itemize}
+    \item \textbf{Jack} — sortie filaire~;
+    \item \textbf{Bluetooth} — sortie sans fil, \emph{grisée et inerte} tant
+          qu'aucune enceinte n'est connectée~;
+    \item \textbf{BT Settings} — raccourci vers l'écran de réglages Bluetooth
+          (appairage/connexion).
+\end{itemize}
+La sortie active est repérée par un point à droite de la ligne, et le curseur
+est positionné d'emblée sur la sortie courante pour une confirmation rapide.
+
+\subsubsection{Architecture}
+La popup n'exprime qu'un \emph{choix}~: elle n'agit sur aucun périphérique
+directement. Toute la logique de commutation passe par un point d'entrée unique
+côté service, \texttt{player\_set\_output()}, qui~: (i)~pointe le pipeline audio
+vers le puits (\emph{sink}) correspondant, (ii)~met à jour le routage du service
+de volume, et (iii)~éteint la chaîne inutilisée pour économiser du courant. Ce
+point d'entrée unique est également destiné à une future bascule automatique
+lors de la connexion/déconnexion Bluetooth.
+
+\subsubsection{Sécurité du volume Bluetooth (\og never blast \fg{})}
+Un basculement vers le Bluetooth ne doit jamais démarrer un flux avant que
+l'enceinte ait confirmé le volume à appliquer, sous peine d'un pic sonore. Une
+première implémentation refusait la bascule tant que le volume n'était pas
+acquitté~; or l'acquittement (AVRCP) ne peut arriver qu'\emph{après} l'envoi
+d'un volume, lui-même conditionné à ce que la sortie soit déjà le Bluetooth.
+Cette dépendance circulaire produisait un blocage~: la sortie ne pouvait jamais
+passer au Bluetooth.
+
+La solution retenue inverse l'ordre~: on \emph{amorce} d'abord (routage vers le
+Bluetooth $\rightarrow$ envoi du volume AVRCP), puis on \emph{diffère} le
+démarrage du flux au lieu de le refuser. Un indicateur \texttt{s\_bt\_pending}
+marque le démarrage en attente~; une fonction \texttt{player\_poll()}, appelée
+périodiquement par la tâche de maintenance, lance effectivement la lecture dès
+que le volume est acquitté. La bascule elle-même réussit immédiatement (la
+popup se ferme), et le son démarre automatiquement après l'acquittement
+(typiquement \SIrange{0.3}{0.6}{\second}), le tout sans jamais bloquer la tâche
+d'interface.
