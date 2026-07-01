@@ -871,3 +871,69 @@ que le volume est acquitté. La bascule elle-même réussit immédiatement (la
 popup se ferme), et le son démarre automatiquement après l'acquittement
 (typiquement \SIrange{0.3}{0.6}{\second}), le tout sans jamais bloquer la tâche
 d'interface.
+
+
+\subsection{Correction du streaming audio Bluetooth (A2DP)}
+\label{subsec:bluetooth-audio-fix}
+
+Lors de la mise en service de la sortie Bluetooth, deux défauts ont été
+observés lors de la lecture d'un morceau vers une enceinte~: le flux audio
+était réduit à un bruit blanc inaudible, et le streaming ralentissait
+sensiblement l'ensemble du microcontrôleur. L'analyse a révélé deux causes
+distinctes, corrigées successivement.
+
+\subsubsection{Inadéquation du format PCM}
+
+Toute la chaîne audio interne du firmware travaille en échantillons
+\emph{32~bits justifiés à gauche} (\textit{MSB-justified}), stéréo entrelacé.
+Le décodeur MP3 produit des échantillons \texttt{int16} qu'il étend en
+\texttt{int32} (\texttt{s~<<~16}), et le bus I\textsuperscript{2}S est câblé en
+créneaux de 32~bits~; la sortie sur le DAC filaire PCM5242 fonctionne donc
+correctement dans ce format.
+
+En revanche, l'encodeur SBC de la pile A2DP attend du PCM \emph{16~bits}. Le
+puits Bluetooth transmettait les octets 32~bits bruts sans conversion~:
+l'encodeur les réinterprétait comme deux échantillons 16~bits successifs,
+soit une séquence $[0,\,s_0,\,0,\,s_1,\,\dots]$ à l'alignement des canaux
+détruit, perçue comme un bruit blanc.
+
+De plus, ce format doublait le débit de données~: le pipeline produisait
+$44\,100 \times 8 = 352\,800~\text{o/s}$ alors que l'encodeur n'en drainait que
+$44\,100 \times 4 = 176\,400~\text{o/s}$. Le tampon de flux saturait en
+permanence, l'écriture bloquait en boucle sur son délai d'attente et la tâche
+audio saturait son c\oe ur, d'où le ralentissement global observé.
+
+La correction consiste à convertir les échantillons 32~bits en 16~bits
+directement dans la fonction d'écriture du puits Bluetooth, côté producteur, en
+ne conservant que la moitié haute de chaque mot~:
+
+\begin{lstlisting}[language=C]
+/* 32-bit MSB-justifie stereo -> 16-bit stereo */
+for (size_t i = 0; i < samples; i++)
+    s_conv[i] = (int16_t)(in[i] >> 16);
+\end{lstlisting}
+
+Un tampon de conversion statique est utilisé, la fonction n'ayant qu'un seul
+appelant sérialisé (la tâche audio), ce qui évite de charger la pile réduite de
+cette tâche. Cette correction rétablit un son propre \emph{et} supprime le
+ralentissement, le débit produit correspondant désormais exactement à celui
+consommé par l'encodeur.
+
+\subsubsection{Fréquence d'échantillonnage négociée}
+
+Contrairement à la sortie filaire, la fréquence d'échantillonnage d'un lien
+A2DP est négociée une seule fois à la connexion et figée pour toute la session.
+Le firmware annonçait initialement les capacités 44{,}1~kHz \emph{et} 48~kHz,
+laissant l'enceinte choisir. Or le pipeline ne dispose d'aucun
+rééchantillonneur et fournit chaque fichier à sa fréquence native~; si
+l'enceinte négociait 48~kHz, tout fichier en 44{,}1~kHz (la grande majorité)
+était alors joué environ 9~\% trop vite et trop aigu.
+
+Faute de rééchantillonneur, la fréquence annoncée a été restreinte au seul
+44{,}1~kHz. La spécification A2DP imposant à tout récepteur SBC le support
+obligatoire du 44{,}1~kHz, ce choix reste compatible avec l'ensemble des
+appareils conformes tout en rendant déterministe le cas d'usage courant. La
+prise en charge de fichiers à d'autres fréquences via Bluetooth nécessiterait
+l'ajout d'un rééchantillonneur dans le pipeline, préalable au ré-affichage de
+la capacité 48~kHz~; cette limitation est documentée dans le code pour un
+retour ultérieur.
