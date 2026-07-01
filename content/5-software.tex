@@ -671,3 +671,76 @@ n'était jamais atteinte auparavant pour ces fichiers. Des messages d'erreur
 explicites ont enfin été ajoutés (absence de trame valide, en-tête corrompu)
 afin de distinguer un véritable fichier non supporté d'un simple problème de
 synchronisation.
+
+
+\subsection{Interface de gestion de la file d'attente (\emph{playlist browser})}
+\label{subsec:playlist-browser}
+
+Une fois la lecture opérationnelle, l'interface \emph{Now Playing} a été complétée
+par un sous-menu permettant à l'utilisateur de \emph{consulter et de réorganiser}
+la file d'attente des pistes à venir. Il est atteint depuis l'écran \emph{Now
+    Playing} par un appui vers le bas (\texttt{UI\_EVENT\_DOWN}) et empilé sur la pile
+de navigation, de sorte qu'un retour le fait disparaître au profit de l'écran
+précédent.
+
+\subsubsection{La file comme vue de l'ordre de lecture}
+
+Un point de conception mérite d'être souligné~: la file d'attente n'est \emph{pas}
+une structure de données distincte. Le service \texttt{playlist}
+(\autoref{subsec:player}) maintient déjà l'ordre de lecture sous la forme d'une
+permutation \texttt{order[]} des index \texttt{storage}, parcourue à partir d'une
+position courante \texttt{s\_pos}. La file affichée est exactement cette
+permutation vue depuis \texttt{s\_pos}~: la ligne~0 est la piste en cours, les
+lignes suivantes sont les pistes à venir dans leur ordre de lecture. Réutiliser
+cette structure existante, plutôt que d'introduire une seconde liste à maintenir
+en cohérence, évite toute duplication d'état et préserve la source unique de
+vérité déjà établie pour « quelle piste joue ».
+
+L'édition n'a donc requis que l'ajout d'une petite API à \texttt{playlist}
+(\autoref{tab:queue-api}), volontairement restreinte à la \emph{région à venir},
+c'est-à-dire aux positions strictement au-dessus de \texttt{s\_pos}. Toute
+opération (déplacement, retrait) laisse ainsi \texttt{order[0..s\_pos]} intact~:
+la piste en cours et sa lecture ne sont jamais perturbées par une modification de
+la file, ce qui supprime le besoin de synchroniser l'édition avec la tâche audio.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{@{}ll@{}}
+        \toprule
+        \textbf{Fonction}                         & \textbf{Effet}                                                        \\
+        \midrule
+        \texttt{playlist\_queue\_len()}           & Nombre de pistes à partir de la courante (courante + à venir).        \\
+        \texttt{playlist\_queue\_at(row)}         & Lit l'entrée à la ligne \texttt{row} (0~= piste en cours).            \\
+        \texttt{playlist\_queue\_move\_up(row)}   & Avance d'un rang une piste à venir (jamais au-dessus de la courante). \\
+        \texttt{playlist\_queue\_move\_down(row)} & Recule d'un rang une piste à venir.                                   \\
+        \texttt{playlist\_queue\_remove(row)}     & Retire une piste à venir de l'ordre de lecture (session).             \\
+        \bottomrule
+    \end{tabular}
+    \caption{Interface d'édition de la file, ajoutée au service \texttt{playlist}.}
+    \label{tab:queue-api}
+\end{table}
+
+\subsubsection{Comportement de l'interface}
+
+La navigation verticale (haut/bas) parcourt la file, avec défilement et
+\emph{marquee} sur les noms trop longs, selon le même rendu que l'explorateur de
+fichiers. La piste en cours, épinglée en tête, est \emph{verrouillée}~: elle
+s'affiche dans une teinte distincte et ne peut être ni déplacée ni retirée, seul
+son suivi étant permis. Un appui sur le bouton~A ouvre, pour une piste à venir, un
+menu contextuel offrant trois actions --- monter, descendre, retirer --- dont les
+options invalides (par exemple « monter » sur la première piste à venir, qui ne
+peut passer au-dessus de la courante) sont grisées et sans effet.
+
+Deux voies de sortie coexistent~: le bouton~B, conformément à la convention
+générale de retour, et un appui vers le haut alors que la sélection est déjà en
+tête de liste, qui ramène de la même façon à l'écran \emph{Now Playing}.
+
+\paragraph{Retrait non destructif.} Le sens donné à « retirer » a fait l'objet
+d'un choix explicite~: puisque l'ordre de lecture couvre l'ensemble des fichiers
+de la carte, le retrait n'affecte que la \emph{file de la session courante}. Il se
+borne à décaler \texttt{order[]} et à décrémenter le compteur de pistes~; le
+fichier reste présent sur la carte microSD et réapparaît au prochain balayage
+(\texttt{playlist\_sync}, c'est-à-dire après un nouveau montage ou un
+redémarrage). Cette opération est ainsi clairement dissociée de la suppression de
+fichier offerte par l'explorateur de stockage, qui, elle, est irréversible et
+protégée par une confirmation.
