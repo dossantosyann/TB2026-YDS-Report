@@ -744,3 +744,77 @@ fichier reste présent sur la carte microSD et réapparaît au prochain balayage
 redémarrage). Cette opération est ainsi clairement dissociée de la suppression de
 fichier offerte par l'explorateur de stockage, qui, elle, est irréversible et
 protégée par une confirmation.
+
+
+\subsection{Menu de configuration Bluetooth}
+\label{sec:menu-bluetooth}
+
+Le menu Bluetooth regroupe sur un seul écran la liste des appareils connus
+(persistés en NVS, le dernier utilisé en tête) et la liste des appareils
+détectés lors d'une recherche, la force du signal de ces derniers étant
+représentée par des barres accompagnées de la valeur RSSI en dBm.
+Sélectionner un appareil détecté lance la connexion ; sélectionner un appareil
+connu ouvre une fenêtre proposant \emph{Connect}/\emph{Disconnect} et
+\emph{Forget}.
+
+\subsubsection{Gestion de l'alimentation}
+
+Conformément à la contrainte de consommation du projet, la radio est éteinte par
+défaut. À l'entrée de l'écran, la liste des appareils connus est chargée
+directement depuis la NVS sans allumer le contrôleur ; celui-ci n'est activé
+(\texttt{bluetooth\_init}) que lorsque l'utilisateur lance une recherche ou une
+connexion, et éteint de nouveau (\texttt{bluetooth\_shutdown}) à la sortie de
+l'écran sauf si une liaison est active. La radio ne consomme donc du courant que
+pendant une recherche ou une connexion établie.
+
+\subsubsection{Correction du bug de connexion entrante}
+
+Un dysfonctionnement a été observé lorsqu'une enceinte, déjà appairée, tentait de
+se reconnecter automatiquement à l'ESP32 après sa mise sous tension. Trois
+symptômes apparaissaient simultanément : l'indicateur de connexion restait rouge
+alors que la liaison était établie, toute tentative manuelle de connexion restait
+sans effet, et un appareil fantôme nommé \texttt{<unknown>} apparaissait dans la
+liste des appareils connus.
+
+L'analyse a montré une cause unique. L'ESP32 joue le rôle de \emph{source} A2DP
+et l'enceinte celui de \emph{sink} ; or un sink peut lui-même initier la liaison
+(connexion \emph{entrante}). Le firmware ne mémorisait l'adresse du pair
+(\texttt{s\_peer\_bda}) que lorsqu'il initiait la connexion lui-même. Sur une
+connexion entrante, cette adresse restait donc obsolète ou nulle, ce qui faisait
+enregistrer un appareil connu à une adresse invalide (d'où le \texttt{<unknown>}),
+empêchait la comparaison qui pilote l'indicateur d'état (point rouge permanent)
+et faisait cibler la mauvaise adresse lors des demandes de
+connexion/déconnexion.
+
+La correction consiste à capturer l'adresse réelle du pair
+(\texttt{param->conn\_stat.remote\_bda}) fournie par la pile dans les états
+\texttt{CONNECTED} et \texttt{CONNECTING} du \emph{callback} A2DP. Une connexion
+entrante se comporte dès lors comme une connexion sortante : l'adresse correcte
+est enregistrée, l'indicateur passe au vert et la déconnexion vise le bon
+appareil.
+
+\subsubsection{Indicateur de connexion en cours}
+
+Afin de donner un retour visuel pendant l'établissement d'une liaison, un
+troisième état a été ajouté à l'indicateur de la colonne de droite, valable
+aussi bien pour les appareils connus que détectés : un point ambre clignotant
+tant que l'état de connexion vaut \texttt{CONNECTING}. Les trois états sont ainsi
+distingués : ambre clignotant (connexion en cours), vert (connecté), rouge
+(déconnecté). Le clignotement réutilise la cadence de rafraîchissement déjà
+active pendant une connexion (250\,ms), sans introduire de réveil
+supplémentaire.
+
+\subsubsection{Délai maximal de connexion}
+
+Une tentative d'appairage A2DP peut rester bloquée longtemps si l'appareil
+distant ne répond pas, ce qui maintiendrait la radio allumée indéfiniment et
+empêcherait son extinction (celle-ci est refusée tant qu'une liaison est en
+formation). Un délai maximal de \SI{10}{\second} a donc été ajouté dans le
+service Bluetooth, seul niveau capable d'annuler réellement la tentative.
+
+Le mécanisme repose sur un \emph{timer} logiciel FreeRTOS à un coup, armé au
+lancement de la connexion et arrêté dès la résolution de celle-ci (état
+\texttt{CONNECTED} ou \texttt{DISCONNECTED}). S'il expire alors que l'état est
+toujours \texttt{CONNECTING}, la tentative est avortée
+(\texttt{esp\_a2d\_source\_disconnect}) et l'état passe à \texttt{FAILED} ;
+l'indicateur repasse alors au rouge et la radio peut de nouveau être éteinte.
