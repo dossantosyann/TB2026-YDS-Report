@@ -1118,3 +1118,65 @@ la latence est nettement réduite ; les fichiers d'un autre débit que
 incorrectement. Le comportement du transport est en outre verrouillé par des
 tests unitaires hors cible (gestion du refus de format, repli sur la sortie
 filaire à la perte du lien).
+
+
+\subsection{Phase 3 : réactivité de l'interface pendant le streaming Bluetooth}
+
+Après la stabilisation du flux audio (phase 2), deux problèmes liés restaient
+ouverts : une dégradation générale des performances du système pendant le
+streaming Bluetooth (entrées lentes, rafraîchissement d'écran saccadé), et un
+plantage apparu lors des tests de la phase 2, où un enchaînement rapide de
+changements de piste provoquait un redémarrage complet de l'appareil.
+
+\subsubsection{Diagnostic}
+
+Les journaux UART du plantage désignent la cause sans ambiguïté :
+\texttt{A stack overflow in task main has been detected}, suivi d'un
+redémarrage logiciel. Or la tâche \texttt{main} d'ESP-IDF, dimensionnée à
+3584 octets seulement, exécutait l'intégralité de la boucle d'interface
+utilisateur. Son chemin d'appel le plus profond --- rendu de l'écran de
+lecture, lecture des métadonnées de la piste, pile FATFS, pilote SPI de la
+carte SD --- consommait déjà l'essentiel de cette pile ; sur l'architecture
+Xtensa, une interruption dépose de plus sa trame de sauvegarde sur la pile de
+la tâche interrompue avant de basculer sur la pile dédiée aux interruptions.
+
+Les corrections de la phase 2 ont exposé ce sous-dimensionnement préexistant :
+le flux A2DP restant désormais actif pendant les changements de piste,
+l'encodage SBC et les interruptions du contrôleur Bluetooth sollicitent le
+c\oe ur 0 en continu, précisément pendant que la tâche \texttt{main} atteint
+sa profondeur de pile maximale.
+
+Le même constat explique la lenteur de l'interface : la boucle UI s'exécutait
+en priorité 1 sur le c\oe ur 0, c'est-à-dire sur le même c\oe ur que le
+contrôleur Bluetooth (interruptions de haut niveau), la pile protocolaire
+Bluedroid et l'encodage SBC. Pendant un flux actif, l'interface ne recevait
+que le temps processeur résiduel, alors que le c\oe ur 1 restait presque
+inoccupé en dehors de la tâche audio.
+
+\subsubsection{Corrections apportées}
+
+La boucle d'interface a été extraite de \texttt{app\_main} et placée dans une
+tâche FreeRTOS dédiée, épinglée sur le c\oe ur 1 avec une priorité de 5
+(inférieure à la tâche audio, de priorité 22, afin que le rendu ne puisse
+jamais retarder la lecture) et une pile de 8~Kio couvrant le chemin d'appel le
+plus profond avec une marge confortable. La fonction \texttt{app\_run} se
+contente désormais de créer cette tâche puis de rendre la main :
+\texttt{app\_main} se termine et la tâche \texttt{main}, dont la pile
+débordait, est supprimée par le système, libérant sa mémoire.
+
+L'initialisation de l'écran SPI et des boutons a été déplacée à l'intérieur de
+la nouvelle tâche : leurs interruptions étant allouées sur le c\oe ur qui les
+installe, elles migrent ainsi elles aussi vers le c\oe ur 1, réduisant encore
+la charge du c\oe ur 0. La boucle de rendu elle-même et la file d'événements
+d'entrée, thread-safe entre c\oe urs, sont inchangées.
+
+\subsubsection{Résultat}
+
+L'interface reste fluide pendant le streaming Bluetooth : les entrées et le
+rafraîchissement de l'écran ne sont plus perturbés par le flux audio, chaque
+c\oe ur servant désormais sa charge propre. Le débordement de pile est corrigé
+par construction, et les enchaînements rapides de changements de piste ne
+provoquent plus de redémarrage. Des leviers supplémentaires (tampon circulaire
+Bluetooth en RAM interne, augmentation des fréquences PSRAM ou CPU) restent
+identifiés mais n'ont pas été nécessaires ; ils sont volontairement écartés à
+ce stade pour préserver l'autonomie de la batterie.
