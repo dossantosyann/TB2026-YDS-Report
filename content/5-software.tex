@@ -1251,3 +1251,62 @@ de la fréquence depuis une tâche affiche systématiquement 160~MHz, puisque
 l'exécution de la tâche de mesure maintient elle-même le verrou de fréquence
 maximale ; seule une statistique cumulée, tenue par le gestionnaire
 d'alimentation lui-même, reflète le comportement réel.
+
+
+\subsection{Verrouillage de l'écran et arrêt automatique}
+
+\subsubsection{Écran de veille}
+
+L'extinction pure et simple du panneau posait un problème d'ergonomie : un
+appareil écran noir est indistinguable d'un appareil éteint. L'écran verrouillé
+affiche donc un indicateur discret — deux lignes centrées, \og Sleep mode /
+Press A to wake up \fg{}, en gris sombre, le \og A \fg{} cerclé pour rappeler le
+bouton physique. Ce choix exploite une propriété des écrans OLED : un pixel
+noir ne consomme aucun courant, si bien que le coût de l'indicateur se réduit
+au courant de repos du contrôleur SSD1333 et de son élévateur de tension
+(de l'ordre du milliampère), contre $\sim$2~\si{\micro\ampere} en mode veille.
+Cette dépense est bornée : hors lecture, l'arrêt automatique coupe
+l'alimentation après cinq minutes ; en lecture, elle est négligeable devant la
+consommation de la chaîne audio.
+
+Le second risque propre aux OLED est le marquage (\emph{burn-in}) : une image
+statique use inégalement les pixels qu'elle allume. Deux mesures le
+contiennent : la faible luminance du texte (l'usure croît avec le courant de
+pixel) et un déplacement périodique — l'indicateur est redessiné toutes les
+30~secondes à l'une de cinq positions décalées de quelques pixels, de sorte
+qu'aucun pixel ne vieillit plus vite que ses voisins. Le surcoût de ce
+rafraîchissement (un rendu et un transfert SPI d'environ 20~ms toutes les
+30~s, soit un rapport cyclique de 0,07~\%) est négligeable.
+
+\subsubsection{Arrêt automatique}
+
+Le dernier palier coupe entièrement l'alimentation lorsque l'appareil est
+manifestement inutilisé. La tâche de maintenance évalue toutes les deux
+secondes trois conditions : cinq minutes se sont écoulées sans appui sur un
+bouton, aucune lecture n'est en cours (une pause compte comme telle), et
+aucune alimentation externe n'est présente. Cette dernière condition découle
+d'une contrainte matérielle : la présence de l'USB verrouille le régulateur
+principal, si bien que relâcher le signal \texttt{EnableReg} ne couperait pas
+le rail — le firmware resterait figé au lieu de s'éteindre. L'arrêt est donc
+simplement inhibé pendant la charge.
+
+La séquence d'arrêt préserve l'état de l'utilisateur : si un morceau était en
+pause, son chemin et sa position sont enregistrés en mémoire non volatile
+(NVS), puis la lecture est arrêtée proprement, le système de fichiers FAT de
+la carte SD est démonté pour vider ses tampons, et \texttt{power\_shutdown()}
+exécute la séquence d'extinction de l'étage audio (amplificateur puis DAC)
+avant de relâcher \texttt{EnableReg}. Le rail s'effondre ; le réveil ne coûte
+aucune ligne de code, le bouton A réarmant le régulateur par voie matérielle,
+suivi d'un démarrage normal.
+
+Au démarrage suivant, une fois la carte SD indexée, le firmware recherche le
+chemin sauvegardé dans l'index des pistes et re-sélectionne le morceau dans la
+liste de lecture : l'écran \emph{Now Playing} présente à nouveau le titre
+interrompu, prêt à être relancé. La lecture reprend au début du morceau — la
+reprise à la position exacte nécessiterait une primitive de positionnement
+(\emph{seek}) dans le décodeur MP3, absente du pipeline audio ; la position
+étant d'ores et déjà sauvegardée, seul ce chaînon manquant l'en sépare.
+
+Comme les précédents, les deux délais (30~secondes pour le verrouillage, cinq
+minutes pour l'arrêt) sont codés en dur à ce stade et destinés à devenir des
+réglages utilisateur.
