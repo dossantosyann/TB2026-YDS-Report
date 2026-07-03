@@ -1186,3 +1186,68 @@ ce stade pour préserver l'autonomie de la batterie.
 Après des test, 20 MHz c'est pas assez pour les fichiers WAV de 192 kHz, 40 MHz oui mais des fois la carte SD plante, 25 MHz c'est stable et ça permet de lire les fichiers audio de 192 kHz.
 
 Après des tests j'ai réalisé que 25 MHz ça ralentissait le menu storage, donc je suis repassé à 40 MHz
+
+\subsection{Économie d'énergie}
+
+\subsubsection{Analyse des modes de veille de l'ESP32}
+
+L'ESP32 offre trois mécanismes de réduction de la consommation : le
+\emph{modem sleep} (mise en veille périodique de la radio, CPU actif), le
+\emph{light sleep} (CPU gelé et horloges des périphériques suspendues,
+$\sim$0,8~mA) et le \emph{deep sleep} (seul le domaine RTC reste alimenté,
+$\sim$10~\si{\micro\ampere}). Or le cahier des charges impose qu'une lecture
+en cours — sur la sortie jack comme en Bluetooth — ne soit jamais
+interrompue, et que le potentiomètre de volume reste opérationnel en
+permanence. Cette contrainte disqualifie le light sleep et le deep sleep
+pendant la lecture : la suspension des horloges APB arrête le périphérique
+I2S alimentant le DAC, le décodage MP3 cesse et le lien A2DP est rompu.
+Les gains d'énergie doivent donc provenir d'autres leviers, applicables
+pendant la lecture.
+
+\subsubsection{Extinction automatique de l'écran}
+
+L'écran OLED n'étant utile que pendant la navigation, il est éteint après
+30~secondes sans appui sur un bouton (durée codée en dur à ce stade, destinée
+à devenir un réglage utilisateur). Le service d'entrées expose le temps
+d'inactivité global (\texttt{input\_idle\_ms()}), et la boucle de la tâche UI
+borne son attente d'événement à l'échéance d'extinction : à expiration, la
+commande \emph{Display OFF} du contrôleur SSD1333 place le panneau dans son
+état de veille ($\sim$2~\si{\micro\ampere}) tout en conservant le contenu de
+sa RAM graphique. Écran éteint, la boucle UI se bloque indéfiniment sur la
+file d'événements : plus aucun rendu ni trafic SPI n'a lieu. Seul le bouton A
+rallume l'écran — l'appui de réveil est absorbé et non transmis à l'interface,
+et les autres boutons sont ignorés, ce qui protège au passage l'appareil des
+appuis accidentels en poche. L'affichage est redessiné avant la commande
+\emph{Display ON}, afin de ne pas exposer une trame obsolète. La lecture
+audio et le potentiomètre, portés par les tâches audio et de maintenance,
+ne sont pas affectés.
+
+\subsubsection{Adaptation dynamique de la fréquence (DFS)}
+
+La gestion d'alimentation d'ESP-IDF (\texttt{CONFIG\_PM\_ENABLE}) est activée
+et configurée par \texttt{esp\_pm\_configure()} pour faire varier la fréquence
+CPU entre 80 et 160~MHz. Le mécanisme repose sur des verrous : chaque pilote
+(I2S, SPI, I2C, contrôleur Bluetooth) maintient l'horloge dont il a besoin
+pendant ses transferts, et l'ordonnanceur maintient la fréquence maximale
+tant qu'une tâche est prête sur un c\oe{}ur. La fréquence ne retombe à 80~MHz
+que lorsque les deux c\oe{}urs sont inactifs, ce qui rend l'abaissement
+transparent pour l'audio : le décodage MP3 s'exécute à pleine vitesse par
+rafales, entre lesquelles le système redescend. L'horloge I2S, dérivée de
+l'APLL, est par ailleurs indépendante de la fréquence CPU. Le mode
+\emph{modem sleep} du contrôleur Bluetooth est également actif ; à défaut de
+quartz 32,768~kHz sur la carte, son horloge basse consommation est dérivée
+du quartz principal.
+
+\subsubsection{Validation}
+
+La validation fonctionnelle a vérifié l'absence d'artefacts audibles sur la
+sortie jack et en streaming Bluetooth, ainsi que le fonctionnement du
+potentiomètre, écran allumé comme éteint. La répartition du temps par
+fréquence a ensuite été mesurée avec le profilage intégré d'ESP-IDF
+(\texttt{CONFIG\_PM\_PROFILING} et \texttt{esp\_pm\_dump\_locks()}) : au
+repos, le système passe 93~\% du temps à 80~MHz. Cette mesure a d'ailleurs
+mis en évidence un effet d'observateur instructif : une lecture instantanée
+de la fréquence depuis une tâche affiche systématiquement 160~MHz, puisque
+l'exécution de la tâche de mesure maintient elle-même le verrou de fréquence
+maximale ; seule une statistique cumulée, tenue par le gestionnaire
+d'alimentation lui-même, reflète le comportement réel.
