@@ -1396,3 +1396,80 @@ Les trois correctifs ont été validés sur cible : extinctions répétées de l
 sous DFS sans réinitialisation intempestive, cycles extinction--rallumage suivis de
 reconnexions réussies, et récupération automatique d'une connexion enlisée après
 collision, l'enceinte redevenant connectable sans redémarrage du lecteur.
+
+
+\subsection{Protection contre les interblocages logiciels}
+\label{subsec:watchdog}
+
+Un firmware embarqué sans supervision peut se figer indéfiniment si une tâche
+entre dans une boucle infinie ou se bloque sur une ressource jamais libérée
+(\emph{softlock}). Pour un lecteur audio autonome, un tel gel impose à
+l'utilisateur un redémarrage manuel. Un mécanisme de \emph{watchdog} a donc été
+mis en place afin de détecter ces situations et de forcer un redémarrage
+automatique.
+
+\subsubsection{Mécanismes disponibles}
+
+L'ESP-IDF fournit deux chiens de garde matériels complémentaires, tous deux
+actifs dans le projet~:
+\begin{itemize}
+    \item l'\textbf{Interrupt Watchdog} (\SI{800}{\milli\second})\,: il détecte
+          les situations où les interruptions restent désactivées trop longtemps
+          (section critique bloquée, absence de source de tick) et provoque un
+          \emph{panic} suivi d'un redémarrage~;
+    \item le \textbf{Task Watchdog Timer} (TWDT, \SI{5}{\second})\,: il surveille
+          un ensemble de tâches abonnées, chacune devant le réarmer périodiquement.
+          Par défaut il ne surveille que les tâches \emph{idle} des deux c\oe{}urs
+          et se contente d'émettre un avertissement.
+\end{itemize}
+
+Deux ajustements ont été apportés. D'une part, la réaction du TWDT a été passée
+du simple journal au redémarrage effectif
+(\texttt{CONFIG\_ESP\_TASK\_WDT\_PANIC}). D'autre part, les tâches applicatives
+critiques ont été explicitement abonnées au TWDT, ce qui n'était pas le cas par
+défaut.
+
+\subsubsection{Abonnement dynamique}
+
+L'architecture logicielle est entièrement pilotée par événements~: la plupart
+des tâches se bloquent volontairement pour une durée indéterminée
+(\texttt{portMAX\_DELAY}) en l'absence de travail, choix dicté par la
+consommation. Un abonnement permanent au TWDT est donc incompatible avec ce
+modèle~: une tâche en attente légitime (lecture en pause, interface au repos)
+serait interprétée comme figée et déclencherait un redémarrage intempestif.
+
+L'abonnement est par conséquent réalisé de manière \emph{dynamique}, actif
+uniquement lorsque la tâche est censée progresser en continu~:
+\begin{itemize}
+    \item \textbf{Tâche audio}\,: abonnée à l'entrée de la boucle de
+          décodage/lecture et réarmée à chaque bloc traité, puis désabonnée
+          pendant la pause (attente bloquante) et en fin de lecture~;
+    \item \textbf{Tâche d'interface}\,: abonnée uniquement sur les écrans à
+          rafraîchissement périodique ($\leq \SI{250}{\milli\second}$), et
+          désabonnée sur les écrans statiques ou verrouillés, dont l'attente peut
+          atteindre \SI{30}{\second} par conception.
+\end{itemize}
+Les tâches purement événementielles (gestion des boutons, maintenance) ne sont
+délibérément pas abonnées~: leur blocage prolongé constitue un comportement
+correct et non un interblocage. L'absence de \emph{light sleep} dans le projet
+rend par ailleurs le coût énergétique du réarmement négligeable.
+
+\subsubsection{Validation}
+
+Le bon fonctionnement d'un filet de sécurité ne peut être établi par la seule
+absence de défaillance en fonctionnement normal. Un défaut a donc été injecté
+volontairement~: une boucle infinie insérée dans la tâche audio après quelques
+secondes de lecture. Le système redémarre alors environ cinq secondes plus tard,
+le TWDT identifiant correctement la tâche fautive~:
+
+\begin{lstlisting}[basicstyle=\ttfamily\footnotesize]
+E task_wdt: Task watchdog got triggered. The following tasks/users
+            did not reset the watchdog in time:
+E task_wdt:  - ui (CPU 1)
+E task_wdt: CPU 1: audio
+rst:0xc (SW_CPU_RESET)
+\end{lstlisting}
+
+La cause du dernier redémarrage (\texttt{ESP\_RST\_TASK\_WDT}) est de plus
+décodée et affichée dans l'écran de diagnostic, offrant une trace exploitable
+en cas de déclenchement sur le terrain.
