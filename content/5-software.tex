@@ -1310,3 +1310,89 @@ reprise à la position exacte nécessiterait une primitive de positionnement
 Comme les précédents, les deux délais (30~secondes pour le verrouillage, cinq
 minutes pour l'arrêt) sont codés en dur à ce stade et destinés à devenir des
 réglages utilisateur.
+
+
+\subsection{Fiabilisation du cycle d'alimentation de la radio Bluetooth}
+
+La politique d'économie d'énergie du lecteur impose d'éteindre complètement la radio
+Bluetooth dès qu'elle n'a plus de lien à servir, puis de la rallumer à la demande.
+Les essais sur cible ont révélé que ce cycle extinction--rallumage, peu exercé par
+les exemples d'ESP-IDF (qui n'éteignent jamais la pile une fois initialisée),
+déclenchait trois défaillances distinctes. Leur diagnostic a été mené en croisant
+les journaux série avec la lecture du code source de Bluedroid (la pile Bluetooth
+hôte d'ESP-IDF) et du contrôleur.
+
+\subsubsection{Blocage du système à l'extinction de la radio}
+
+Environ 200~ms après une extinction pourtant réussie de la radio, le chien de garde
+d'interruption (\emph{interrupt watchdog}) provoquait un redémarrage : les deux
+c\oe{}urs étaient arrêtés dans la boucle d'attente de l'ordonnanceur
+(\texttt{esp\_cpu\_wait\_for\_intr}) sans plus servir aucune interruption, signe
+que la source de tic système s'était arrêtée. La défaillance n'apparaissait que
+depuis l'activation du \emph{dynamic frequency scaling} (DFS, section précédente) :
+lors de \texttt{esp\_bt\_controller\_disable()}, le contrôleur libère ses verrous
+de gestion d'énergie et désactive la PHY radio, et un changement de fréquence
+survenant au milieu de cette séquence peut laisser le système sans horloge de tic
+valide. Le correctif fige la fréquence CPU pendant la fenêtre critique : un verrou
+\texttt{ESP\_PM\_CPU\_FREQ\_MAX} est acquis juste avant la désactivation du
+contrôleur et relâché après sa désinitialisation. La fenêtre dure environ 300~ms
+par extinction ; le surcoût énergétique est donc négligeable.
+
+Cet épisode a également rappelé une précaution de méthode : la première trace de
+panique avait été décodée avec un fichier ELF ne correspondant pas au binaire
+flashé (avertissement \emph{checksum mismatch} du moniteur), produisant une pile
+d'appels incohérente. Une trace n'est exploitable qu'à condition de vérifier
+cette correspondance.
+
+\subsubsection{Radio inutilisable au second allumage}
+
+Après un premier cycle complet init--connexion--extinction, toute tentative de
+rallumage échouait avec \texttt{ESP\_ERR\_INVALID\_STATE}, et ce jusqu'au
+redémarrage du système. La lecture des sources de Bluedroid a montré que les
+fonctions d'initialisation et de désinitialisation des profils A2DP et AVRCP sont
+\emph{asynchrones} : elles postent un message à la tâche interne BTC et rendent la
+main immédiatement, tandis que des drapeaux globaux (\texttt{g\_a2dp\_on\_deinit},
+\texttt{g\_a2dp\_source\_ongoing\_deinit}) ne sont mis à jour que lorsque ce message
+est traité. Ces drapeaux survivent à \texttt{esp\_bluedroid\_deinit()} : seul un
+démarrage à froid repart d'un état propre. Enchaîner les appels sans attendre crée
+donc deux défauts en cascade : à l'allumage, l'enregistrement du point de
+terminaison SBC pouvait précéder le traitement effectif de l'initialisation A2DP
+(drapeau encore armé, d'où le refus) ; à l'extinction, démonter Bluedroid alors
+qu'une désinitialisation était encore en vol laissait un drapeau armé
+définitivement, condamnant toutes les initialisations suivantes.
+
+Le correctif synchronise chaque étape sur son événement de complétion : les
+rappels de profil signalent un sémaphore binaire à réception de
+\texttt{PROF\_STATE\_EVT}, et le service attend cet événement (avec un délai de
+garde d'une seconde) après chaque appel asynchrone, aussi bien à l'initialisation
+qu'à la désinitialisation --- y compris dans le chemin de repli en cas d'échec
+d'initialisation. Les rappels sont par ailleurs enregistrés \emph{avant} les
+initialisations, faute de quoi le tout premier événement pouvait être perdu.
+
+\subsubsection{Reconnexion enlisée sur un lien fantôme}
+
+Le dernier défaut prolongeait une défaillance déjà documentée : la collision
+interne à Bluedroid qui fait retomber une connexion A2DP quelques secondes après
+son établissement. Les journaux ont montré qu'après cette collision le lien ACL
+sous-jacent survivait \emph{des deux côtés} (aucun \texttt{disc complete} au niveau
+HCI), alors que la couche L2CAP en avait perdu la trace. La reconnexion suivante
+recevait alors \texttt{Connection Already Exists} du contrôleur et la machine
+d'états AV restait indéfiniment dans l'état \texttt{OPENING} : l'enceinte
+s'annonçait connectée pendant que l'interface affichait un échec, et la demande de
+déconnexion émise à l'expiration du délai applicatif était ignorée par la pile
+(événement non géré dans cet état). Bluedroid n'exposant aucune API de rupture
+d'un lien ACL en Bluetooth classique, le seul levier de récupération est le cycle
+d'alimentation complet de la radio --- devenu sûr grâce aux deux correctifs
+précédents. À l'expiration du délai de connexion (qui, par construction, ne se
+produit que dans ce cas d'enlisement : un échec ordinaire signale
+\texttt{DISCONNECTED} et arrête le temporisateur avant), une tâche éphémère
+éteint puis rallume la radio, en conservant l'état « échec » à destination de
+l'interface. Le lien fantôme est détruit et une nouvelle tentative de connexion
+aboutit sans redémarrage.
+
+\subsubsection{Validation}
+
+Les trois correctifs ont été validés sur cible : extinctions répétées de la radio
+sous DFS sans réinitialisation intempestive, cycles extinction--rallumage suivis de
+reconnexions réussies, et récupération automatique d'une connexion enlisée après
+collision, l'enceinte redevenant connectable sans redémarrage du lecteur.
