@@ -937,3 +937,93 @@ prise en charge de fichiers à d'autres fréquences via Bluetooth nécessiterait
 l'ajout d'un rééchantillonneur dans le pipeline, préalable au ré-affichage de
 la capacité 48~kHz~; cette limitation est documentée dans le code pour un
 retour ultérieur.
+
+\subsection{Fiabilisation de la connexion Bluetooth}
+
+Les premiers essais de diffusion audio vers une enceinte Bluetooth ont révélé
+un défaut de fiabilité majeur : la connexion A2DP s'établissait correctement
+(confirmation sonore de l'enceinte, indicateur d'état vert à l'écran), puis
+retombait quelques dizaines de millisecondes plus tard. Toute tentative de
+reconnexion échouait ensuite systématiquement, au point que seul un
+redémarrage complet du système semblait rétablir la fonctionnalité.
+
+\subsubsection{Diagnostic}
+
+L'analyse des traces UART a permis de décomposer le problème en trois causes
+distinctes :
+
+\begin{itemize}
+    \item \textbf{Chute initiale du lien.} Environ 40~ms après l'événement
+          \texttt{A2DP connected}, la pile Bluedroid émettait une seconde demande de
+          connexion ACL vers la même enceinte, refusée par le contrôleur avec le code
+          HCI \texttt{0x0B} (\emph{Connection Already Exists}) et précédée de l'erreur
+          \texttt{L2CAP got conn\_comp in bad state}. Il s'agit d'une collision interne
+          à la pile lors de l'ouverture du canal AVRCP/SDP consécutif à la connexion
+          A2DP ; elle ne peut pas être évitée au niveau applicatif, la stratégie
+          retenue est donc de garantir une récupération propre plutôt que de tenter de
+          la supprimer.
+          
+    \item \textbf{Échec des reconnexions.} Après une chute anormale, l'enceinte
+          conserve le lien mort pendant toute la durée de son \emph{supervision
+              timeout} (24\,000 slots de 0,625~ms, soit 15~s, valeur relevée dans les
+          traces) et ne répond à aucun \emph{paging} durant cette fenêtre. Le délai de
+          page par défaut du contrôleur (\texttt{0x2000} slots, soit environ 5,1~s)
+          expirait donc avant la libération du lien : la reconnexion échouait avec le
+          code HCI \texttt{0x04} (\emph{Page Timeout}), donnant l'illusion d'une pile
+          définitivement bloquée.
+          
+    \item \textbf{Fragilités de l'arrêt et de l'initialisation.} La séquence
+          d'extinction désinitialisait A2DP avant AVRCP, à l'inverse de l'ordre exigé
+          par Bluedroid (avertissement explicite dans les traces et dans la
+          documentation d'\texttt{esp\_avrc\_ct\_deinit}). Par ailleurs, en cas d'échec
+          partiel de \texttt{bluetooth\_init()}, les couches déjà initialisées
+          n'étaient pas défaites : la pile restait dans un état intermédiaire rendant
+          toute initialisation ultérieure impossible sans redémarrage. Enfin, les
+          codes de retour des primitives de connexion étaient ignorés par l'interface,
+          qui ne donnait aucun retour à l'utilisateur en cas d'échec.
+\end{itemize}
+
+\subsubsection{Corrections apportées}
+
+\begin{itemize}
+    \item \textbf{Ordre de désinitialisation corrigé} : AVRCP est désormais
+          désinitialisé avant A2DP, conformément aux exigences de Bluedroid.
+          
+    \item \textbf{Initialisation transactionnelle} : chaque échec dans
+          \texttt{bluetooth\_init()} déclenche le démontage complet des couches déjà
+          montées (contrôleur, Bluedroid, profils), de sorte qu'une tentative suivante
+          reparte toujours d'un état vierge.
+          
+    \item \textbf{Fenêtre de paging étendue} : le délai de page du contrôleur
+          est porté à 15~s via \texttt{esp\_bt\_gap\_set\_page\_timeout()}, afin de
+          couvrir la fenêtre pendant laquelle l'enceinte retient le lien mort ; le
+          garde-fou applicatif qui borne une tentative de connexion est ajusté en
+          conséquence (16~s). Une reconnexion lancée immédiatement après une chute
+          aboutit ainsi dès que l'enceinte libère le lien.
+          
+    \item \textbf{Sémantique d'état affinée} : une déconnexion survenant pendant
+          la phase de connexion (cas du \emph{page timeout}, rapporté comme une
+          fermeture « normale » par la pile) est désormais classée comme un échec et
+          non comme un retour au repos, ce qui la rend visible pour l'interface.
+          
+    \item \textbf{Repli automatique de la sortie audio} : la tâche de
+          maintenance surveille l'état du lien (période de 100~ms) ; si celui-ci
+          disparaît alors que le Bluetooth est la sortie active, la lecture est
+          arrêtée proprement et la sortie rebascule sur le DAC filaire, évitant de
+          laisser le lecteur router l'audio vers un puits mort.
+          
+    \item \textbf{Remontée des erreurs à l'utilisateur} : l'écran de
+          configuration Bluetooth vérifie les codes de retour et affiche l'échec
+          (initialisation ou connexion) sur une ligne d'état ; il se rafraîchit en
+          outre périodiquement tant qu'un lien est actif, de sorte que l'indicateur
+          de connexion reflète une chute sans intervention de l'utilisateur.
+\end{itemize}
+
+\subsubsection{Résultat}
+
+La collision interne à la pile peut toujours provoquer une chute ponctuelle
+juste après l'établissement du lien, mais le système s'en remet désormais sans
+redémarrage : l'échec est signalé à l'utilisateur, une nouvelle tentative de
+connexion aboutit une fois la fenêtre de rétention de l'enceinte écoulée, et
+la sortie audio n'est jamais laissée dans un état incohérent. Les essais sur
+le matériel confirment une connexion nettement plus stable.
