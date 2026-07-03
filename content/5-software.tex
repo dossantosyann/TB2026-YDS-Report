@@ -1027,3 +1027,94 @@ redémarrage : l'échec est signalé à l'utilisateur, une nouvelle tentative de
 connexion aboutit une fois la fenêtre de rétention de l'enceinte écoulée, et
 la sortie audio n'est jamais laissée dans un état incohérent. Les essais sur
 le matériel confirment une connexion nettement plus stable.
+
+
+\subsection{Stabilisation du flux audio Bluetooth}
+
+Une fois la connexion fiabilisée, la diffusion elle-même restait erratique :
+selon les cas, une piste jouait normalement, restait muette alors que le
+lecteur indiquait une lecture en cours, ou se dégradait en bruit blanc pur.
+Les changements de piste rapides aggravaient le phénomène et souffraient en
+outre d'une latence perceptible.
+
+\subsubsection{Diagnostic}
+
+L'analyse du chemin audio a mis en évidence trois mécanismes indépendants :
+
+\begin{itemize}
+    \item \textbf{Bruit blanc : désalignement du flux PCM.} Le puits Bluetooth
+          découple le pipeline (producteur) de la pile A2DP (consommatrice) par un
+          tampon circulaire d'octets. L'écriture s'y faisait par un envoi bloquant à
+          délai borné : en cas d'expiration, la primitive FreeRTOS écrit
+          \emph{autant d'octets que possible}, y compris une fraction d'échantillon.
+          Le flux se retrouvait alors décalé d'un ou plusieurs octets et chaque
+          échantillon 16~bits ultérieur était réinterprété à cheval sur deux
+          échantillons réels --- soit du bruit blanc jusqu'à la prochaine purge du
+          tampon. Le pipeline ignorait par ailleurs le nombre d'octets réellement
+          acceptés et jetait silencieusement le reliquat, source de micro-coupures
+          même sans désalignement.
+          
+    \item \textbf{Pistes muettes et latence de skip : commandes de session non
+              sérialisées.} Chaque changement de piste arrêtait puis redémarrait le puits,
+          ce qui se traduisait par une paire \texttt{SUSPEND} puis
+          \texttt{CHECK\_SRC\_RDY}/\texttt{START} sur la session média A2DP. Ces
+          commandes sont asynchrones et acquittées indépendamment : lors d'un
+          enchaînement rapide, leurs effets pouvaient s'entrelacer et laisser la
+          session suspendue alors que le lecteur se croyait en lecture --- la piste
+          défilait sans aucun son. Chaque paire ajoutait de surcroît plusieurs
+          allers-retours AVDTP au temps de changement de piste.
+          
+    \item \textbf{Vitesse de lecture erronée : débit d'échantillonnage figé.}
+          La liaison A2DP est négociée une fois par session à 44,1~kHz (choix
+          délibéré, le pipeline ne disposant pas de rééchantillonneur), mais le puits
+          ignorait le débit du fichier : un fichier 48~kHz jouait environ 9~\% trop
+          lentement, un fichier 96 ou 192~kHz à la moitié ou au quart de sa vitesse,
+          un grondement pouvant passer pour une absence de son.
+\end{itemize}
+
+\subsubsection{Corrections apportées}
+
+\begin{itemize}
+    \item \textbf{Écritures alignées sur la trame.} Le puits interroge d'abord
+          l'espace libre du tampon, l'arrondit au multiple inférieur d'une trame
+          stéréo 16~bits (4~octets) et n'envoie que ce volume : un envoi ainsi borné
+          se termine toujours intégralement, ce qui rend le désalignement impossible
+          par construction. Le tampon plein se traite par une courte attente et un
+          nouvel essai, borné dans le temps pour qu'une liaison bloquée ne fige pas
+          la tâche audio ; le volume réellement accepté est remonté à l'appelant.
+          
+    \item \textbf{Reprise du reliquat dans le pipeline.} La boucle de lecture
+          conserve un curseur dans le bloc décodé et représente au puits la partie
+          non consommée au tour suivant, au lieu de la jeter. La position de lecture
+          est désormais avancée d'après les octets effectivement acceptés, et la
+          boucle reste réactive aux commandes de pause et d'arrêt pendant une
+          contre-pression prolongée.
+          
+    \item \textbf{Session média persistante.} L'arrêt du puits n'émet plus de
+          \texttt{SUSPEND} immédiat : il arme une suspension différée de 3~s, que le
+          démarrage suivant annule (l'atomicité de la décision est garantie par un
+          mutex partagé avec le minuteur). Un changement de piste --- un arrêt suivi
+          d'un redémarrage immédiat --- conserve donc la session ouverte : la course
+          \texttt{SUSPEND}/\texttt{START} disparaît, de même que l'essentiel de la
+          latence de skip. Une vraie pause aboutit à la suspension au bout de 3~s,
+          préservant le budget énergétique, et une reprise rapide est instantanée.
+          
+    \item \textbf{Refus explicite des débits non pris en charge.} Le puits
+          Bluetooth refuse tout fichier dont le débit diffère de 44,1~kHz ; le refus
+          remonte du pipeline au lecteur sous une raison de fin dédiée, et l'écran
+          de lecture affiche « piste non lisible, 44,1~kHz uniquement en Bluetooth »
+          au lieu d'un arrêt inexpliqué ou d'une lecture à vitesse fausse.
+          L'alternative --- un rééchantillonneur vers 44,1~kHz --- a été écartée à ce
+          stade pour son coût processeur et énergétique ; elle reste l'évolution
+          naturelle si la prise en charge de ces fichiers devient nécessaire.
+\end{itemize}
+
+\subsubsection{Résultat}
+
+Les essais sur le matériel confirment la disparition complète du bruit blanc
+et des pistes muettes, y compris lors d'enchaînements de pistes rapides, dont
+la latence est nettement réduite ; les fichiers d'un autre débit que
+44,1~kHz sont refusés avec un message explicite plutôt que lus
+incorrectement. Le comportement du transport est en outre verrouillé par des
+tests unitaires hors cible (gestion du refus de format, repli sur la sortie
+filaire à la perte du lien).
