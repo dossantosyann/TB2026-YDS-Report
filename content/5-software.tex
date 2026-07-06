@@ -1473,3 +1473,27 @@ rst:0xc (SW_CPU_RESET)
 La cause du dernier redémarrage (\texttt{ESP\_RST\_TASK\_WDT}) est de plus
 décodée et affichée dans l'écran de diagnostic, offrant une trace exploitable
 en cas de déclenchement sur le terrain.
+
+
+\subsection{Indicateur de sortie audio dans la barre de statut}
+
+Afin de rendre visible en permanence la destination du flux audio, la barre de
+statut (affichée au-dessus de chaque écran) a été enrichie d'une icône de sortie
+alignée à gauche, symétrique de l'indicateur de batterie. Son état est piloté par
+\texttt{volume\_get\_output()}, seule source de vérité de la routelage audio :
+un casque blanc pour la sortie jack (\texttt{VOLUME\_OUT\_DAC}), la rune Bluetooth
+en bleu (\texttt{rgb(0,130,252)}) pour une enceinte connectée
+(\texttt{VOLUME\_OUT\_BT}), et un casque grisé lorsqu'aucune sortie n'est active
+(\texttt{VOLUME\_OUT\_NONE}).
+
+Le codage par couleur sert de repère instantané sans coût supplémentaire : sur ce
+panneau OLED RGB565, la teinte n'allume aucun pixel additionnel, ce qui respecte
+les contraintes de consommation et d'\emph{IR-drop} propres à cet afficheur
+passif. Le rafraîchissement est également gratuit, l'interface étant pilotée par
+événements et se redessinant déjà lors d'un changement de sortie. Enfin, comme la
+sélection Bluetooth n'est possible qu'une fois l'enceinte connectée, la couleur
+bleue traduit implicitement l'état « connecté » sans coupler la barre de statut à
+la pile Bluetooth.
+
+Les deux icônes ($16\times16$, 1~bpp) ont été produites via la chaîne existante
+\texttt{icon2c.py} et intégrées au module graphique par \texttt{gfx\_blit\_1bpp()}.
