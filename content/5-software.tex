@@ -1,6 +1,22 @@
 \chapter{Concepetion logicielle}
 
-\fig[H, width=1\textwidth]{Architecture logicielle}{Architecture_logicielle.drawio}
+Ce chapitre présente la conception du firmware du lecteur, développé en C
+sur ESP-IDF et FreeRTOS. Il suit le chemin du signal et des données :
+l'architecture générale et le modèle d'exécution d'abord, puis la chaîne
+audio filaire depuis le bus I\textsuperscript{2}S jusqu'au DAC, le
+transport de lecture qui l'alimente, la sortie Bluetooth, l'interface
+utilisateur et enfin la gestion de l'énergie et la robustesse. Chaque
+section se conclut par la validation des mécanismes décrits, les mesures
+chiffrées étant regroupées au chapitre~\ref{chap:resultats}.
+
+Les choix présentés répondent à trois contraintes constantes : la lecture
+audio ne doit jamais être interrompue, quelle que soit l'activité du
+système, l'autonomie impose une conception événementielle sans aucune
+scrutation, et le code doit rester simple et au plus près du matériel.
+L'ensemble des interfaces publiques du firmware est par ailleurs documenté
+avec Doxygen, ce qui rend le code exploitable indépendamment du présent
+rapport.
+
 
 
 

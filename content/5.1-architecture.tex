@@ -1,0 +1,93 @@
+\section{Architecture générale}
+
+Le firmware est organisé en couches à responsabilité unique, dont la règle de
+dépendance est stricte : une couche ne peut dépendre que de couches situées
+en dessous d'elle, jamais l'inverse. Cette règle est matérialisée par le
+découpage en composants ESP-IDF, chaque composant déclarant explicitement
+ses dépendances dans son \texttt{CMakeLists.txt}. Une dépendance
+ascendante ou circulaire est ainsi détectée à la compilation plutôt qu'à
+l'exécution. La figure~\ref{fig:archi-sw} présente cette organisation.
+
+\fig[H, width=0.85\textwidth]{Architecture logicielle en couches. Les traits pleins représentent les dépendances de compilation. Le module \texttt{main}, racine de composition, est le seul autorisé à toucher toutes les couches, uniquement pour leur initialisation. Le trait pointillé rouge illustre le flux d'événements à l'exécution, distinct des dépendances statiques.}{Architecture_logicielle.drawio}
+
+La couche \texttt{bsp} (\textit{board support package}) est la seule à
+connaître le brochage de la carte, centralisé dans un unique fichier
+\texttt{board\_pins.h}. Elle possède les bus partagés (SPI, I\textsuperscript{2}C,
+I\textsuperscript{2}S, ADC) et en distribue les handles aux couches
+supérieures. La couche \texttt{drivers} contient un pilote fin par circuit
+(écran SSD1333, carte SD, DAC PCM5242, expanseur PI4IOE5V9554A, jauge
+MAX17260), chacun ne dépendant que du \texttt{bsp}. La couche
+\texttt{services} expose des capacités indépendantes du matériel : stockage
+et indexation des pistes, pipeline audio, Bluetooth, entrées utilisateur,
+gestion de l'énergie et préférences persistantes. La couche \texttt{ui}
+fournit le cadre graphique générique (framebuffer, pile de navigation,
+menus), et la couche \texttt{screens} les écrans concrets qui assemblent
+services et interface. Enfin, le module \texttt{main} joue le rôle de
+racine de composition : il instancie chaque couche dans l'ordre de ses
+dépendances au démarrage, puis s'efface.
+
+Une entorse assumée à la chaîne existe : certains services accèdent
+directement au \texttt{bsp}, par exemple la sortie audio filaire qui pilote
+le bus I\textsuperscript{2}S. La règle de dépendance strictement
+descendante reste respectée, aucun module de bas niveau ne connaissant
+les couches au-dessus de lui.
+
+\subsection{Modèle d'exécution}
+
+Le firmware repose sur trois tâches FreeRTOS permanentes et une conception
+entièrement événementielle, résumées au tableau~\ref{tab:taches}. La tâche
+audio, prioritaire et épinglée sur le cœur~1, exécute la boucle de décodage
+et d'écriture vers la sortie active. La tâche d'interface, également sur le
+cœur~1, réalise le rendu et la navigation. Ce placement les isole du
+cœur~0, que la pile Bluetooth sature pendant le streaming (contrôleur,
+pile hôte et encodage SBC). La tâche de maintenance regroupe les corvées
+périodiques sur une base de 100~ms : lecture du potentiomètre de volume,
+supervision de la carte SD et du lien Bluetooth, télémétrie batterie et
+politique d'arrêt automatique.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccl}
+        \toprule
+        Tâche       & Cœur  & Priorité & Pile   & Rôle                                  \\
+        \midrule
+        audio       & 1     & 22       & 4\,Kio & décodage et écriture vers la sortie   \\
+        ui          & 1     & 5        & 8\,Kio & rendu, navigation, verrouillage écran \\
+        input       & libre & 5        & ---    & réveillée par interruption uniquement \\
+        maintenance & libre & 3        & 3\,Kio & corvées périodiques (100~ms)          \\
+        \bottomrule
+    \end{tabular}
+    \caption{Tâches FreeRTOS permanentes du firmware.}
+    \label{tab:taches}
+\end{table}
+
+Aucune tâche ne pratique de scrutation : au repos, chacune est bloquée sur
+sa file d'événements ou de commandes et ne consomme aucun cycle. Un appui
+sur un bouton déclenche une interruption, dont le traitement produit un
+événement dans la file consommée par la tâche d'interface. De même, la
+tâche audio dort tant qu'aucune commande de lecture n'arrive. Ce choix
+sert directement l'autonomie, la gestion dynamique de fréquence du
+processeur pouvant maintenir le système à sa fréquence minimale dès
+qu'aucune activité ne l'exige (section~\ref{sec:energie}).
+
+Le partage des ressources suit le même principe de propriété unique.
+Chaque périphérique SPI dispose de son propre hôte matériel, l'écran sur
+SPI2 et la carte SD sur SPI3, ce qui permet à la tâche audio de lire la
+carte pendant que la tâche d'interface rafraîchit l'écran sans aucune
+exclusion mutuelle. Le bus I\textsuperscript{2}C, partagé entre le DAC, la
+jauge et l'expanseur, est possédé par le \texttt{bsp} qui en distribue les
+handles. Les données volumineuses (framebuffer, index des pistes, tampon
+de découplage Bluetooth) résident en PSRAM afin de préserver la RAM
+interne pour les tampons DMA et la pile Bluetooth.
+
+\subsection{Démarche de validation}
+
+Chaque module a été vérifié au plus près de sa nature : par du code de
+test exécuté hors cible lorsque sa logique est pure et indépendante du
+matériel (indexation, liste de lecture, analyse des formats audio, rendu
+graphique), et directement sur le matériel dans le cas contraire. Le code
+du firmware n'a jamais été restructuré dans le seul but de le rendre
+testable, la simplicité du code embarqué primant sur la couverture. Les
+sections suivantes se concluent chacune par la validation des mécanismes
+qu'elles décrivent.
+
