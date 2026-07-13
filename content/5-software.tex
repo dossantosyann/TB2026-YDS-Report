@@ -1,22 +1,19 @@
-\chapter{Concepetion logicielle}
+\chapter{Conception logicielle}
 
-Ce chapitre présente la conception du firmware du lecteur, développé en C
-sur ESP-IDF et FreeRTOS. Il suit le chemin du signal et des données :
-l'architecture générale et le modèle d'exécution d'abord, puis la chaîne
-audio filaire depuis le bus I\textsuperscript{2}S jusqu'au DAC, le
-transport de lecture qui l'alimente, la sortie Bluetooth, l'interface
-utilisateur et enfin la gestion de l'énergie et la robustesse. Chaque
-section se conclut par la validation des mécanismes décrits, les mesures
-chiffrées étant regroupées au chapitre~\ref{chap:resultats}.
+Ce chapitre présente la conception du firmware du lecteur, développé en C sur ESP-IDF et FreeRTOS. Il suit le chemin du signal et des données : l'architecture générale et le modèle d'exécution d'abord, puis la chaîne audio filaire depuis le bus I\textsuperscript{2}S jusqu'au DAC, le transport de lecture qui l'alimente, la sortie Bluetooth, l'interface utilisateur et enfin la gestion de l'énergie et la robustesse. Chaque section se conclut par la validation des mécanismes décrits, les mesures chiffrées étant regroupées au chapitre~\ref{chap:results}.
 
-Les choix présentés répondent à trois contraintes constantes : la lecture
-audio ne doit jamais être interrompue, quelle que soit l'activité du
-système, l'autonomie impose une conception événementielle sans aucune
-scrutation, et le code doit rester simple et au plus près du matériel.
-L'ensemble des interfaces publiques du firmware est par ailleurs documenté
-avec Doxygen, ce qui rend le code exploitable indépendamment du présent
-rapport.
+Les choix présentés répondent à trois contraintes constantes : la lecture audio ne doit jamais être interrompue, quelle que soit l'activité du système, l'autonomie impose une conception événementielle plutôt qu'une exécution rythmée par la scrutation, et le code doit rester simple et au plus près du matériel. L'ensemble des interfaces publiques du firmware est par ailleurs documenté avec Doxygen, ce qui rend le code exploitable indépendamment du présent rapport.
 
+Chaque module a été vérifié au plus près de sa nature, par du code de test exécuté hors cible lorsque sa logique est pure et indépendante du matériel, et directement sur le matériel dans le cas contraire.
 
-
-
+\vspace{1em}
+\noindent\textit{Des outils d'intelligence artificielle ont été utilisés dans ce chapitre pour :}
+\begin{itemize}
+    \item l'aide à la rédaction, à la relecture critique et à la reformulation du texte,
+    \item la vérification de l'orthographe et de la grammaire,
+    \item l'aide à la compréhension d'ESP-IDF et de FreeRTOS,
+    \item l'aide à la mise en place de l'architecture logicielle,
+    \item l'aide à l'écriture, à la relecture et à la revue du code,
+    \item l'aide à la mise en place des tests automatisés,
+\end{itemize}
+\noindent\textit{L'ensemble des contenus générés a été vérifié, adapté et validé manuellement. Aucun code produit avec ces outils n'a été intégré sans avoir été compris et testé sur la cible. Le détail des modèles utilisés se trouve en annexe.}
