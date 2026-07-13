@@ -1,0 +1,154 @@
+\section{Chaîne audio filaire}
+
+Cette section décrit le chemin qui conduit un flux d'échantillons déjà décodés jusqu'à la prise casque. Elle se limite au versant logiciel de la chaîne matérielle présentée au chapitre~\ref{chap:hardware}, à savoir la programmation du bus \gls{i2s} du micro-contrôleur, celle des horloges du convertisseur PCM5242, le dimensionnement des tampons de transfert et le réglage du volume. La production des échantillons, depuis la carte SD jusqu'au décodeur, fait l'objet de la section suivante.
+
+Le lecteur dispose de deux sorties audio, la prise casque et le Bluetooth. Toutes deux sont exposées au reste du firmware derrière une interface unique, le \gls{sink}, qui se réduit à trois opérations, ouvrir la sortie dans un format donné, y écrire un bloc d'échantillons, puis la fermer. Le module qui décode les fichiers ignore ainsi vers quelle sortie part le son. Sans cette abstraction, la bascule d'une sortie à l'autre en cours de lecture imposerait de dupliquer l'ensemble du transport de lecture. La présente section décrit l'implémentation filaire de ce sink, la variante Bluetooth étant traitée à la section~\ref{sec:soft_bluetooth}.
+
+\subsection{Le bus I\textsuperscript{2}S}
+
+Le bus I\textsuperscript{2}S transporte les échantillons du micro-contrôleur vers le convertisseur au moyen de trois signaux. L'horloge de bit, ou \gls{bck}, cadence la transmission de chaque bit. L'horloge de mot, ou \gls{lrck}, indique le canal auquel appartient le bit courant, son état bas désignant le canal gauche et son état haut le canal droit. Elle bat donc exactement une fois par échantillon stéréo, c'est-à-dire à la fréquence d'échantillonnage. La ligne de données transporte enfin les bits eux-mêmes. Le micro-contrôleur est maître du bus et produit les deux horloges, le convertisseur se contentant de les suivre.
+
+Un quatrième signal, l'horloge maître ou \gls{mclk}, accompagne habituellement ce bus et sert au convertisseur à cadencer son électronique interne. Il n'est pas câblé sur cette carte, ce qui économise une broche et une piste, mais impose au convertisseur de reconstruire l'intégralité de ses horloges internes à partir de la seule horloge de bit. Cette contrainte, décrite à la sous-section~\ref{sec:horloges_dac}, gouverne à elle seule le dimensionnement du bus.
+
+La figure~\ref{Lien_I2S.drawio} résume ce lien et fait apparaître les deux boucles à verrouillage de phase en jeu, l'une appartenant au micro-contrôleur et synthétisant l'horloge de bit, l'autre appartenant au convertisseur et reconstruisant à partir d'elle l'ensemble de ses horloges internes.
+
+\fig[H, width=0.85\textwidth]{Lien I\textsuperscript{2}S entre le micro-contrôleur et le convertisseur. L'horloge maître n'étant pas câblée, le convertisseur reconstruit ses horloges à partir de l'horloge de bit.}{Lien_I2S.drawio}
+
+La figure~\ref{Trame_I2S.drawio} présente la structure d'une trame. Chaque canal occupe un intervalle de temps réservé, appelé \gls{slot}, dont la largeur est indépendante de la résolution réelle des échantillons transmis. Le convertisseur lisant les bits dans leur ordre d'arrivée et attendant le bit de poids fort en premier, l'échantillon est placé en tête de slot et les bits restants sont complétés par des zéros, convention dite de \gls{msbjust}. Un fichier de 16~bits laisse ainsi 16~zéros en queue de slot et un fichier de 24~bits en laisse 8.
+
+\fig[H, width=0.9\textwidth]{Structure d'une trame du bus I\textsuperscript{2}S. Chaque canal occupe un slot de 32~bits dans lequel l'échantillon est justifié à gauche.}{Trame_I2S.drawio}
+
+La largeur du slot n'est pas dictée par le format des fichiers. Le convertisseur admet une horloge de bit comprise entre 32 et 256 fois la fréquence d'échantillonnage, si bien qu'un slot de 16~bits, qui conduirait à un rapport de 32, serait en soi acceptable. Trois raisons ont néanmoins conduit à fixer la largeur à 32~bits en toutes circonstances.
+
+La première tient à la plage de fréquences supportée. La boucle à verrouillage de phase du convertisseur exige une horloge de référence d'au moins 1~MHz. Avec un rapport de 64, la fréquence d'échantillonnage la plus basse acceptée par le lecteur donne une horloge de bit de $16\,000 \times 64 = 1{,}024$~MHz, soit juste au-dessus du seuil. Un rapport de 32 la ramènerait à 512~kHz et la boucle ne se verrouillerait pas. La largeur de 32~bits est donc ce qui rend le support des basses fréquences d'échantillonnage possible.
+
+La deuxième est qu'un échantillon de 24~bits n'entre pas dans un slot de 16~bits. Adapter la largeur du slot à la résolution du fichier imposerait d'en gérer plusieurs, et comme l'horloge de bit dépend de cette largeur, chacune produirait sa propre table de coefficients de boucle. La troisième est que la version~6 d'ESP-IDF a cessé d'élargir automatiquement les échantillons de 16~bits vers la largeur du slot matériel. Un flux de 16~bits transmis tel quel voit alors deux échantillons consécutifs consommés par un même slot, le nombre de trames restituées se trouve divisé par deux, et la lecture s'effectue au double de la vitesse attendue. Une largeur unique sur tout le chemin, assortie d'un élargissement explicite dans les décodeurs, supprime la classe entière de ce défaut plutôt que d'en traiter les symptômes.
+
+Le coût de ce choix se réduit à de la bande passante sur le bus. Un slot de 32~bits pour un contenu de 16~bits double la fréquence de l'horloge de bit, qui culmine à 12,288~MHz à la fréquence d'échantillonnage la plus élevée, très en deçà des 20~MHz que la boucle du convertisseur accepte. Il en découle enfin la convention interne du firmware, l'ensemble de la chaîne logicielle véhiculant des échantillons de 32~bits justifiés à gauche, stéréo entrelacés, quelle que soit la résolution du fichier d'origine, le contrôleur d'accès direct à la mémoire recopiant ensuite les mots tels quels.
+
+\subsection{Synthèse et distribution des horloges}
+\label{sec:horloges_dac}
+
+Le convertisseur dérivant toutes ses horloges de l'horloge de bit, la justesse de cette dernière conditionne directement la justesse tonale de la restitution. Une erreur relative sur l'horloge de bit se traduit par une erreur de même ampleur sur la hauteur des notes restituées.
+
+L'ESP32 synthétise cette horloge à partir d'une horloge interne, dont la source par défaut est sa boucle à verrouillage de phase principale à 160~MHz. Le diviseur du bus est fractionnaire, la fréquence du module valant le quotient de la source par $N + b/a$, où $b$ et $a$ sont deux registres de six bits. Il ne se limite donc pas aux rapports entiers, mais cette source ne convient pas pour autant.
+
+La première raison est que l'exactitude demeure hors d'atteinte. Une fréquence d'échantillonnage de 44,1~kHz demande une horloge de bit de 2,8224~MHz, ce qui conduit à un rapport de $25\,000/441$. Représenter exactement sa partie fractionnaire exigerait un dénominateur de 441, alors que le registre correspondant ne dépasse pas 63. La fréquence obtenue serait donc approchée.
+
+La seconde raison est plus déterminante. Un diviseur fractionnaire ne produit pas une période intermédiaire, il alterne entre deux divisions entières de façon à obtenir le rapport voulu en moyenne, si bien que chaque front d'horloge tombe légèrement trop tôt ou trop tard. La documentation du micro-contrôleur déconseille explicitement la division décimale de la boucle principale et prescrit l'usage de la boucle analogique dédiée à l'audio, l'\gls{apll}, pour les applications exigeantes. Cette recommandation prend ici une portée particulière, l'horloge de bit n'étant pas seulement l'horloge des données mais aussi la référence de la boucle du convertisseur. Toute irrégularité s'y propagerait dans l'intégralité de l'arbre d'horloge du convertisseur, jusqu'à celle du modulateur, là où elle dégraderait directement la conversion. L'\gls{apll}, dont la fréquence de sortie est finement programmable, permet au contraire d'atteindre exactement les fréquences des deux familles usuelles. C'est elle qui est retenue pour cadencer le bus, son surcoût de consommation ne s'appliquant que lorsque le canal est actif, c'est-à-dire pendant la lecture. Cette boucle appartient au micro-contrôleur et se distingue de celle du convertisseur, décrite ci-après, qui reconstruit ses propres horloges à partir du signal ainsi produit.
+
+Le convertisseur ne dispose donc, en tout et pour tout, que de l'horloge de bit. C'est à partir d'elle, et d'elle seule, qu'il doit reconstruire l'ensemble des horloges de son électronique interne, celles du cœur numérique, du filtre de sur-échantillonnage, du modulateur et de la pompe de charge. Il possède pour cela sa propre boucle à verrouillage de phase, distincte de celle du micro-contrôleur, qui multiplie l'horloge de bit jusqu'à un oscillateur à haute fréquence dont tout le reste est ensuite divisé. La figure~\ref{Arbre_horloge_PCM5242.drawio} présente cet arbre.
+
+\fig[H, width=0.85\textwidth]{Arbre d'horloge interne du PCM5242. La boucle à verrouillage de phase porte l'horloge de bit à un oscillateur valant 2048 fois la fréquence d'échantillonnage, dont dérivent l'horloge du cœur numérique et celle du modulateur, cette dernière alimentant à son tour le filtre de sur-échantillonnage et la pompe de charge.}{Arbre_horloge_PCM5242.drawio}
+
+Le convertisseur possède un mode de détection automatique des horloges, mais celui-ci ne configure pas sa boucle à verrouillage de phase lorsque le circuit est piloté par I\textsuperscript{2}C, comme l'indique sa fiche technique. Sa configuration par défaut désigne par ailleurs comme référence une broche d'horloge système qui est reliée à la masse sur cette carte. La boucle tenterait donc de se verrouiller sur un signal inexistant. L'intégralité de l'arbre est pour cette raison programmée manuellement par le firmware, qui commence par ordonner au convertisseur d'ignorer cette broche et de prendre l'horloge de bit pour référence.
+
+Les deux valeurs que peut prendre l'oscillateur valent 90,3168~MHz et 98,304~MHz, soit exactement 2048 fois 44,1~kHz et 2048 fois 48~kHz. Ces valeurs satisfont deux contraintes simultanées. D'une part, la fiche technique impose à l'oscillateur de rester dans une fenêtre comprise entre 64 et 100~MHz. D'autre part, toutes les fréquences d'échantillonnage d'une même famille doivent en être des diviseurs entiers, condition nécessaire pour que les divisions successives de l'arbre retombent exactement sur la fréquence demandée. Chaque fréquence supportée est ainsi rattachée à l'une des deux familles, celle des multiples de 44,1~kHz ou celle des multiples de 48~kHz.
+
+Les coefficients de la boucle se déduisent alors directement. L'oscillateur vaut le produit de l'horloge de bit par les facteurs $J$ et $R$, divisé par le facteur $P$ qui est maintenu à l'unité. Comme l'horloge de bit vaut soixante-quatre fois la fréquence d'échantillonnage, il vient
+
+\[ J \times R = \frac{f_{\text{VCO}}}{64 \cdot f_S} \]
+
+Pour une fréquence d'échantillonnage de 44,1~kHz, ce rapport vaut 90\,316\,800 divisé par 2\,822\,400, soit 32, que la table réalise avec $J = 16$ et $R = 2$. Pour 192~kHz, il vaut 98\,304\,000 divisé par 12\,288\,000, soit 8, obtenu avec $J = 4$ et $R = 2$. L'ensemble des coefficients est rassemblé au tableau~\ref{tab:horloges_dac}. Les lignes de 44,1, 48, 96 et 192~kHz sont celles que fournit la fiche technique du convertisseur, les autres en ayant été dérivées par le calcul ci-dessus.
+
+\begin{table}[H]
+    \centering
+    \caption{Coefficients d'horloge du PCM5242 par fréquence d'échantillonnage}
+    \label{tab:horloges_dac}
+    \begin{tabular}{c c c c c c c}
+        \hline
+        $f_S$ [kHz] & J  & R & NMAC & DOSR & IDAC & Oscillateur [MHz] \\
+        \hline
+        16          & 48 & 2 & 6    & 24   & 1024 & 98,304            \\
+        22,05       & 32 & 2 & 4    & 16   & 1024 & 90,3168           \\
+        24          & 32 & 2 & 4    & 16   & 1024 & 98,304            \\
+        32          & 24 & 2 & 3    & 12   & 1024 & 98,304            \\
+        44,1        & 16 & 2 & 2    & 8    & 1024 & 90,3168           \\
+        48          & 16 & 2 & 2    & 8    & 1024 & 98,304            \\
+        88,2        & 8  & 2 & 2    & 4    & 512  & 90,3168           \\
+        96          & 8  & 2 & 2    & 4    & 512  & 98,304            \\
+        176,4       & 4  & 2 & 2    & 2    & 256  & 90,3168           \\
+        192         & 4  & 2 & 2    & 2    & 256  & 98,304            \\
+        \hline
+    \end{tabular}
+\end{table}
+
+Les diviseurs situés en aval répartissent l'oscillateur en deux branches. La première, par le facteur NMAC, produit l'horloge du cœur numérique. Le rapport de cette horloge à la fréquence d'échantillonnage, noté IDAC, exprime le nombre de cycles de calcul dont le cœur dispose pour traiter chaque échantillon. Sa décroissance de 1024 à 256 à mesure que la fréquence d'échantillonnage augmente traduit le fait que l'horloge du cœur ne peut croître indéfiniment, sa valeur culminant à 49,152~MHz dans la table, si bien qu'il reste mécaniquement moins de cycles disponibles par échantillon aux fréquences élevées.
+
+La seconde branche, par le facteur NDAC maintenu à 16, produit l'horloge du modulateur delta-sigma, égale à 128 fois la fréquence d'échantillonnage. C'est de cette horloge, et non de celle du cœur numérique, que dérivent les deux dernières. Le facteur DOSR fournit l'horloge du filtre de sur-échantillonnage, que la fiche technique impose d'établir exactement à seize fois la fréquence d'échantillonnage, ce qui fixe sa valeur sans aucune latitude. Le facteur NCP, maintenu à 4, fournit enfin l'horloge de la pompe de charge négative dont l'étage de sortie tire son alimentation symétrique.
+
+La plage de fréquences supportée découle de deux limites de nature différente. La borne inférieure est imposée par la boucle du convertisseur, dont l'entrée exige une horloge d'au moins 1~MHz. Avec un rapport fixe de soixante-quatre, cela interdit toute fréquence d'échantillonnage inférieure à 15,6~kHz, la première valeur standard admissible étant donc 16~kHz. La borne supérieure de 192~kHz relève en revanche de la spécification du lecteur et non du matériel, la boucle acceptant une horloge de bit jusqu'à 20~MHz et le convertisseur des fréquences d'échantillonnage jusqu'à 384~kHz. Toute demande hors de la plage retenue est refusée explicitement par le pilote, plutôt que de conduire à un verrouillage silencieusement défaillant.
+
+La séquence de configuration place d'abord le convertisseur en veille, ce qui gèle ses horloges avant toute réécriture. Elle désactive ensuite la détection automatique et lui ordonne d'ignorer la broche d'horloge système, cet ordre venant en premier afin que l'automatisme ne vienne pas contredire les diviseurs programmés ensuite. La référence de la boucle est alors basculée sur l'horloge de bit, les coefficients et les diviseurs sont écrits, et le circuit est enfin réveillé. Chaque écriture est relue et vérifiée.
+
+\subsection{Dimensionnement des tampons de transfert}
+
+Le micro-contrôleur ne dépose pas les échantillons un à un sur le bus. Un contrôleur d'accès direct à la mémoire, ou \gls{dma}, s'en charge en puisant dans une file circulaire de tampons que la tâche audio remplit à l'avance. Chaque tampon est désigné par un descripteur, et les descripteurs sont chaînés en anneau. Le contrôleur passe au suivant dès qu'il a épuisé le précédent, pendant que la tâche audio réapprovisionne ceux qui viennent d'être libérés.
+
+Cette file constitue un coussin temporel. Tant qu'elle contient des trames, la restitution se poursuit même si la tâche audio prend du retard. Or celle-ci dépend de la carte SD, dont le temps de réponse n'est pas borné, sa gestion interne d'usure pouvant occasionnellement retarder un accès de plusieurs dizaines de millisecondes. Si le coussin est plus court que ce retard, la file se vide, le contrôleur n'a plus rien à émettre et la restitution est interrompue de manière audible.
+
+La configuration par défaut du pilote offre six descripteurs de 240~trames, soit 1440~trames au total. La durée du coussin s'obtient en divisant ce nombre par le débit de trames, lequel est égal à la fréquence d'échantillonnage. À 192~kHz, la fréquence la plus élevée que le lecteur accepte, cela donne
+
+\[ t_{\text{def}} = \frac{6 \times 240}{192\,000} = \frac{1440}{192\,000} \approx 7{,}5~\text{ms} \]
+
+soit une valeur très inférieure au retard qu'une carte SD peut occasionnellement introduire, ce qui explique les interruptions observées avec cette configuration.
+
+Le dimensionnement retenu porte l'anneau à douze descripteurs de 511~trames. Cette dernière valeur est un plafond matériel et non un réglage. Un descripteur ne peut en effet décrire plus de 4092~octets, et une trame stéréo dont chaque canal occupe 32~bits pèse 8~octets, d'où
+
+\[ n_{\max} = \left\lfloor \frac{4092}{8} \right\rfloor = \lfloor 511{,}5 \rfloor = 511~\text{trames} \]
+
+Une cinq cent douzième trame déborderait le descripteur de quatre octets. Chaque descripteur est donc rempli au maximum de ce que le matériel autorise, et la seule variable restante est leur nombre.
+
+Douze descripteurs représentent 6132~trames, ce qui porte le coussin à
+
+\[ t_{192} = \frac{12 \times 511}{192\,000} = \frac{6132}{192\,000} \approx 32~\text{ms} \qquad\text{et}\qquad t_{44,1} = \frac{6132}{44\,100} \approx 139~\text{ms} \]
+
+Le coussin est donc d'autant plus long que la fréquence d'échantillonnage est basse, le cas le plus contraignant étant celui du 192~kHz, où le contrôleur consomme les trames le plus rapidement. C'est cette valeur de 32~ms qui a servi de critère de dimensionnement.
+
+Ce coussin se paie en mémoire. Les douze tampons occupent
+
+\[ M = 6132 \times 8 = 49\,056~\text{octets} \approx 48~\text{kio} \]
+
+et cette mémoire doit impérativement être de la RAM interne, le contrôleur d'accès direct à la mémoire de l'ESP32 ne pouvant pas adresser la PSRAM. Elle est donc prélevée sur la ressource la plus rare du micro-contrôleur. Cette dépense n'a été possible que parce que le tampon d'affichage, qui n'est lui pas soumis à cette contrainte, a été déporté en PSRAM, comme décrit à la section~\ref{sec:ui}. Le budget de mémoire interne se raisonne à l'échelle du système et non composant par composant.
+
+Un anneau plus profond aurait par ailleurs une contrepartie. Les trames qu'il contient sont jouées jusqu'à leur terme, si bien que l'effet d'une commande d'arrêt ou de changement de piste n'est perceptible qu'après leur écoulement, soit jusqu'à 139~ms à 44,1~kHz. La profondeur retenue maintient ce délai en deçà du seuil de gêne pour un lecteur de musique, alors qu'elle serait rédhibitoire pour un instrument. Le réglage du volume échappe à cette latence, celui-ci étant appliqué dans les registres du convertisseur et non dans les échantillons déjà transmis.
+
+\subsection{Réglage du volume}
+
+Le réglage du volume s'effectue au moyen d'un potentiomètre rotatif dont la position est lue par le convertisseur analogique-numérique du micro-contrôleur. Le potentiomètre n'est donc pas inséré dans le chemin du signal audio, il n'en est qu'un capteur de position. Sa lecture est moyennée sur seize échantillons afin d'atténuer le bruit de conversion, puis convertie en tension au moyen de la calibration d'usine du micro-contrôleur. Les bornes de la course sont des constantes relevées sur la carte, l'excursion réelle du potentiomètre ne couvrant pas toute la plage du convertisseur. Cette lecture appartient à la tâche de maintenance, décrite à la section~\ref{sec:archi}, la position d'un potentiomètre ne pouvant faire l'objet d'aucune interruption.
+
+La fraction de course ainsi obtenue est projetée linéairement sur une plage exprimée en décibels et non sur une plage d'amplitude. La perception de l'intensité sonore étant approximativement logarithmique, une progression linéaire en amplitude concentrerait la quasi-totalité de la dynamique utile dans les derniers degrés de rotation. Le convertisseur exposant un registre de volume par pas de 0,5~dB depuis un maximum de $+24$~dB, la conversion depuis la valeur en décibels vers l'octet de registre est immédiate.
+
+Le plafond de cette plage est fixé à $-20$~dB sous le niveau nominal du convertisseur, et non à son maximum, pour deux raisons distinctes.
+
+La première interdit tout gain numérique positif. Le registre de volume accepte des valeurs allant jusqu'à $+24$~dB, appliquées dans le domaine numérique. Les appliquer à un contenu déjà proche de la pleine échelle produirait un écrêtage numérique, c'est-à-dire une saturation par débordement de la représentation, sans aucun rapport avec les limites analogiques de la chaîne. Le plafond doit donc en tout état de cause rester inférieur ou égal à 0~dB.
+
+La seconde impose une marge analogique. Le convertisseur délivre 4,2~Vrms en différentiel à pleine échelle, et l'amplificateur, dont le gain vaut 0,5, en produirait alors 2,1~Vrms. Or l'excursion de sortie spécifiée de cet amplificateur sous une alimentation de 3,3~V s'établit à 2,15~Vrms, mesurée à 1~kHz sur une charge de 600~$\Omega$ pour une distorsion inférieure à 0,1~\%. La marge disponible se réduit donc à 0,2~dB, ce qui revient à faire fonctionner l'amplificateur exactement au bord de sa plage linéaire. Le plafond de $-20$~dB ramène la sortie à 0,21~Vrms, soit environ un cinquième de l'excursion disponible, ce qui maintient l'amplificateur loin de sa limite tout en conservant un niveau d'écoute au casque largement suffisant. Ce plafond a été retenu à l'issue d'essais d'écoute et se trouve corroboré par le calcul ci-dessus.
+
+L'atténuation est appliquée dans le cœur numérique du convertisseur, en amont de la conversion, et non par un étage analogique. Il en découle qu'elle n'est pas soumise à la latence de l'anneau de tampons décrite plus haut, celle-ci ne concernant que les échantillons déjà transmis sur le bus.
+
+Le service de volume est le seul module autorisé à écrire ces registres, ce qui garantit qu'aucun autre ne peut contredire le réglage courant. Il n'émet une transaction sur le bus I\textsuperscript{2}C que lorsque la valeur de l'octet de registre change réellement. Cette bande morte absorbe les fluctuations résiduelles de la conversion analogique-numérique, sans lesquelles la moindre variation d'un bit de poids faible engendrerait un trafic permanent sur le bus. Le service connaît enfin la sortie active et route son écriture vers le convertisseur ou vers le Bluetooth selon le cas, ces deux sorties ne partageant ni la même échelle ni le même mécanisme de réglage, comme l'expose la section~\ref{sec:soft_bluetooth}.
+
+Les deux canaux disposent de registres de volume indépendants. Le convertisseur permettrait d'asservir le canal droit au canal gauche, mais cette indépendance est conservée car elle expose au réglage une balance gauche-droite au pas de 0,5~dB, accessible depuis les réglages audio.
+
+\subsection{Séquencement de la mise en route}
+
+L'ordre d'activation des étages conditionne l'absence de bruit parasite au casque. Un convertisseur qui sort de veille, une boucle à verrouillage de phase qui se cale, un registre de volume qui prend sa valeur, autant de transitoires qui, si l'amplificateur est déjà actif, se retrouvent intégralement restitués dans le casque.
+
+La séquence retenue programme d'abord la fréquence d'échantillonnage, puis le volume, sort ensuite le convertisseur de veille, lève sa mise en sourdine numérique, relâche sa broche de sourdine matérielle, observe une temporisation, et n'active l'amplificateur qu'en dernier. L'amplificateur joue ainsi le rôle d'une porte fermée pendant toute la durée d'établissement de la chaîne amont, et ne s'ouvre qu'une fois celle-ci stabilisée.
+
+L'extinction suit exactement l'ordre inverse, l'amplificateur étant coupé avant le convertisseur. Elle est déclenchée par un point d'accroche que le service d'énergie appelle avant de relâcher l'alimentation. Ce mécanisme relève d'une inversion de dépendance, la chaîne audio enregistrant elle-même sa procédure d'extinction auprès du service d'énergie, lequel n'a donc besoin d'aucune connaissance de l'audio pour l'invoquer. La règle de dépendance descendante posée à la section~\ref{sec:archi} est ainsi respectée.
+
+Le même encadrement protège les changements de fréquence d'échantillonnage en cours de session. La reprogrammation de la boucle du convertisseur lui fait nécessairement perdre son verrouillage, ce qui produirait un bruit franc si la sortie demeurait active. La mise en sourdine est donc établie avant la reconfiguration et levée après elle, la broche de sourdine matérielle coupant simultanément le convertisseur et l'amplificateur.
+
+\subsection{Validation}
+
+Le verrouillage de la boucle du convertisseur est contrôlé à l'exécution par la relecture de son registre d'état d'horloge, dont la valeur attendue sur cette carte traduit une boucle verrouillée et l'absence délibérée d'horloge système. Cette lecture a servi à valider chacune des dix lignes de la table de coefficients, une entrée erronée se traduisant par une absence de verrouillage et non par une dégradation discrète. Chaque écriture de configuration du convertisseur est par ailleurs relue et comparée à la valeur écrite, ce qui rend toute erreur de transaction sur le bus I\textsuperscript{2}C immédiatement détectable.
+
+Le rejet des fréquences d'échantillonnage hors de la plage supportée a été vérifié en soumettant au pilote des fichiers hors bornes, celui-ci retournant une erreur explicite plutôt que de tenter une configuration impossible.
+
+Le dimensionnement de l'anneau de tampons a été validé en sollicitant la carte SD pendant la lecture, la restitution demeurant exempte de coupure là où la configuration par défaut en produisait.
+
+Le séquencement anti-pop a été validé à l'écoute, casque branché, sur les trois transitions concernées, à savoir la mise sous tension, l'extinction et le changement de piste vers une fréquence d'échantillonnage différente.
+
+Les mesures de niveau de sortie, de distorsion et de rapport signal sur bruit de la chaîne complète sont rassemblées au chapitre~\ref{chap:results}.

@@ -4,15 +4,78 @@
     name=HEIG-VD,
     description={Haute École d'Ingénierie et de Gestion du canton de Vaud}
 }
+
 \newglossaryentry{hes-so}{
     name=HES-SO,
     description={Haute École Supérieure de Suisse Occidentale}
 }
+
 \newglossaryentry{latex}{
     name=latex,
     description={Un langage et un système de composition de documents}
 }
+
 \newglossaryentry{maths}{
     name=mathematics,
     description={Les mathematiques sont ce que les mathématiciens fonts}
+}
+
+\newglossaryentry{DAC}{
+    name=DAC,
+    description={Convertisseur numérique-analogique}
+}
+
+\newglossaryentry{i2s}{
+    name={I\textsuperscript{2}S},
+    description={Inter-IC Sound. Bus numérique série dédié au transport d'audio entre circuits intégrés. Il transmet les échantillons sur trois signaux, une horloge de bit, une horloge de mot et une ligne de données, sans protocole d'adressage}
+}
+
+\newglossaryentry{bck}{
+    name={BCK},
+    description={Bit Clock. Horloge du bus I\textsuperscript{2}S qui cadence la transmission de chaque bit. Sa fréquence vaut le produit de la fréquence d'échantillonnage, du nombre de canaux et de la largeur d'un slot}
+}
+
+\newglossaryentry{lrck}{
+    name={LRCK},
+    description={Left Right Clock. Horloge du bus I\textsuperscript{2}S qui désigne le canal auquel appartient le bit courant, l'état bas correspondant au canal gauche et l'état haut au canal droit. Elle bat une fois par échantillon stéréo, donc à la fréquence d'échantillonnage}
+}
+
+\newglossaryentry{mclk}{
+    name={MCLK},
+    description={Master Clock. Horloge haute fréquence fournie optionnellement à un convertisseur pour cadencer son électronique interne. Lorsqu'elle n'est pas câblée, le convertisseur doit la reconstruire à partir de l'horloge de bit au moyen d'une boucle à verrouillage de phase}
+}
+
+\newglossaryentry{trame}{
+    name={trame audio},
+    description={Ensemble des échantillons correspondant à un même instant sur tous les canaux. Une trame stéréo dont chaque canal occupe 32 bits pèse ainsi 8 octets. Le débit du bus se mesure en trames par seconde, valeur égale à la fréquence d'échantillonnage}
+}
+
+\newglossaryentry{slot}{
+    name={slot},
+    description={Intervalle de temps réservé à un canal dans une trame du bus I\textsuperscript{2}S. Sa largeur, exprimée en bits, est indépendante de la résolution réelle des échantillons transmis, les bits inutilisés étant remplis de zéros}
+}
+
+\newglossaryentry{msbjust}{
+    name={justification MSB},
+    description={Placement d'un échantillon en tête de slot, bit de poids fort en premier, les bits de poids faible restants étant complétés par des zéros. Cette convention permet de transmettre un échantillon de résolution quelconque dans un slot de largeur fixe}
+}
+
+\newglossaryentry{pll}{
+    name={PLL},
+    description={Phase-Locked Loop, ou boucle à verrouillage de phase. Circuit asservi qui synthétise une horloge de sortie dont la fréquence est un multiple rationnel de celle d'une horloge de référence}
+}
+
+\newglossaryentry{apll}{
+    name={APLL},
+    description={Audio PLL. Seconde boucle à verrouillage de phase de l'ESP32, dont la fréquence de sortie est finement programmable. Elle permet de synthétiser exactement les horloges des familles de fréquences audio, que la boucle principale du micro-contrôleur ne peut atteindre par division entière}
+}
+
+\newglossaryentry{dma}{
+    name={DMA},
+    description={Direct Memory Access. Mécanisme permettant à un périphérique de lire ou d'écrire en mémoire sans intervention du processeur. Les zones concernées sont décrites par des descripteurs chaînés, chacun désignant un tampon de taille bornée}
+}
+
+\newglossaryentry{sink}{
+    name={sink audio},
+    description={Interface abstraite représentant une destination de flux audio dans le firmware. Elle expose trois opérations, l'ouverture dans un format donné, l'écriture d'un bloc d'échantillons et la fermeture, ce qui rend le producteur d'échantillons indépendant de la sortie réellement utilisée}
 }
