@@ -1,0 +1,67 @@
+<mxfile host="app.diagrams.net" agent="claude">
+  <diagram id="trame-i2s" name="Trame I2S">
+    <mxGraphModel dx="2934" dy="1159" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="640" pageHeight="360" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lbl-lrck" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontFamily=Helvetica;" value="LRCK" vertex="1">
+          <mxGeometry height="20" width="60" x="20" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="lrck-low" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="85" as="sourcePoint" />
+            <mxPoint x="330" y="85" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lrck-edge" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="85" as="sourcePoint" />
+            <mxPoint x="330" y="45" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lrck-high" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=2;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="330" y="45" as="sourcePoint" />
+            <mxPoint x="570" y="45" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl-data" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontFamily=Helvetica;" value="DATA" vertex="1">
+          <mxGeometry height="20" width="60" x="20" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="l-useful" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#000000;fontSize=12;fontFamily=Helvetica;" value="16 bits utiles&lt;br&gt;MSB en tête" vertex="1">
+          <mxGeometry height="50" width="120" x="90" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="l-zeros" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#000000;fontSize=12;fontFamily=Helvetica;" value="zéros" vertex="1">
+          <mxGeometry height="50" width="120" x="210" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r-useful" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#000000;fontSize=12;fontFamily=Helvetica;" value="16 bits utiles&lt;br&gt;MSB en tête" vertex="1">
+          <mxGeometry height="50" width="120" x="330" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="r-zeros" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#000000;fontSize=12;fontFamily=Helvetica;" value="zéros" vertex="1">
+          <mxGeometry height="50" width="120" x="450" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-slot-l" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontFamily=Helvetica;" value="slot canal gauche, 32 bits" vertex="1">
+          <mxGeometry height="20" width="240" x="90" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-slot-r" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=12;fontFamily=Helvetica;" value="slot canal droit, 32 bits" vertex="1">
+          <mxGeometry height="20" width="240" x="330" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="frame-arrow" edge="1" parent="1" style="endArrow=classic;startArrow=classic;html=1;strokeWidth=1;strokeColor=#000000;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="222" as="sourcePoint" />
+            <mxPoint x="570" y="222" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lbl-frame" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontFamily=Helvetica;fontStyle=1" value="1 trame = 1 échantillon stéréo = 64 périodes de BCK" vertex="1">
+          <mxGeometry height="20" width="480" x="90" y="234" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-bck" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=13;fontFamily=Helvetica;" value="BCK = 64 × fS" vertex="1">
+          <mxGeometry height="20" width="480" x="90" y="256" as="geometry" />
+        </mxCell>
+        <mxCell id="lbl-note" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontFamily=Helvetica;fontColor=#666666;" value="Un fichier 24 bits occupe les 24 premiers bits du slot et laisse 8 zéros en queue." vertex="1">
+          <mxGeometry height="20" width="540" x="60" y="290" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
