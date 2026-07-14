@@ -1,0 +1,26 @@
+\chapter{Coefficients d'horloge du PCM5242}
+\label{ann:horloges}
+
+Le convertisseur ne recevant aucune horloge maître, l'intégralité de son arbre d'horloge est programmée par le firmware, comme exposé à la section~\ref{sec:horloges_dac}. Les coefficients ci-dessous sont indexés par la fréquence d'échantillonnage. Les lignes de 44,1, 48, 96 et 192~kHz proviennent de la fiche technique du convertisseur, les autres en ont été dérivées en conservant l'oscillateur de leur famille et en recalculant le produit $J \times R = f_{\text{VCO}} / (64 \cdot f_S)$. Les diviseurs NDAC et NCP sont maintenus respectivement à 16 et à 4 pour toutes les fréquences.
+
+\begin{table}[H]
+    \centering
+    \caption{Coefficients d'horloge du PCM5242 par fréquence d'échantillonnage}
+    \label{tab:horloges_dac}
+    \begin{tabular}{c c c c c c c}
+        \hline
+        $f_S$ [kHz] & J  & R & NMAC & DOSR & IDAC & Oscillateur [MHz] \\
+        \hline
+        16          & 48 & 2 & 6    & 24   & 1024 & 98,304            \\
+        22,05       & 32 & 2 & 4    & 16   & 1024 & 90,3168           \\
+        24          & 32 & 2 & 4    & 16   & 1024 & 98,304            \\
+        32          & 24 & 2 & 3    & 12   & 1024 & 98,304            \\
+        44,1        & 16 & 2 & 2    & 8    & 1024 & 90,3168           \\
+        48          & 16 & 2 & 2    & 8    & 1024 & 98,304            \\
+        88,2        & 8  & 2 & 2    & 4    & 512  & 90,3168           \\
+        96          & 8  & 2 & 2    & 4    & 512  & 98,304            \\
+        176,4       & 4  & 2 & 2    & 2    & 256  & 90,3168           \\
+        192         & 4  & 2 & 2    & 2    & 256  & 98,304            \\
+        \hline
+    \end{tabular}
+\end{table}
