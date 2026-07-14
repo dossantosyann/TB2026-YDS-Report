@@ -5,7 +5,7 @@ Ce chapitre justifie la sélection des principaux composants du système. Chaque
 
 La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format BGA ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie.
 
-Toutes les références de prix ont été prises sur DigiKey.
+Toutes les références de prix ont été prises sur DigiKey~\cite{digikey}.
 
 
 
@@ -19,25 +19,25 @@ Le micro-contrôleur constitue le cœur du système : il orchestre le décodage 
 
 \subsubsection{Le critère décisif : le Bluetooth Classic et le profil A2DP}
 
-La diffusion audio vers une enceinte ou un casque Bluetooth repose sur le profil \textit{Advanced Audio Distribution Profile} (A2DP). Ce profil fait partie du Bluetooth Classic et non du Bluetooth à basse consommation (BLE) : un micro-contrôleur ne disposant que d'une radio BLE est donc incapable de transmettre un flux A2DP, quelle que soit sa puissance de calcul.
+La diffusion audio vers une enceinte ou un casque Bluetooth repose sur le profil \textit{Advanced Audio Distribution Profile} (A2DP). Ce profil fait partie du Bluetooth Classic et non du Bluetooth à basse consommation (BLE)~\cite{bluetooth_sig_a2dp} : un micro-contrôleur ne disposant que d'une radio BLE est donc incapable de transmettre un flux A2DP, quelle que soit sa puissance de calcul.
 
-Cette contrainte élimine d'emblée la grande majorité des micro-contrôleurs sans fil du marché. Les familles nRF52 et nRF53 de Nordic Semiconductor, les STM32WB de STMicroelectronics, ainsi que les variantes récentes de l'ESP32 lui-même (S3, C3, C6) n'intègrent qu'une radio BLE. L'ESP32 d'origine est l'un des rares micro-contrôleurs à la fois largement disponibles, peu coûteux et bien documentés à combiner le Bluetooth Classic avec le support de l'A2DP en mode source, via la pile Bluedroid de son environnement de développement.
+Cette contrainte élimine d'emblée la grande majorité des micro-contrôleurs sans fil du marché. Les familles nRF52 et nRF53 de Nordic Semiconductor~\cite{nordic_nRF52840}, les STM32WB de STMicroelectronics~\cite{stm_STM32WB55}, ainsi que les variantes récentes de l'ESP32 lui-même (S3, C3, C6)~\cite{espressif_soc_comparison} n'intègrent qu'une radio BLE. L'ESP32 d'origine est l'un des rares micro-contrôleurs à la fois largement disponibles, peu coûteux et bien documentés à combiner le Bluetooth Classic avec le support de l'A2DP en mode source, via la pile Bluedroid de son environnement de développement~\cite{ESP32_IDF_guide}.
 
 Une architecture alternative aurait consisté à associer un micro-contrôleur généraliste, un STM32, par exemple, à un circuit Bluetooth audio dédié, externe au MCU. Cette solution a été écartée car elle multiplie les contraintes sans bénéfice pour le cahier des charges. Elle impose deux circuits au lieu d'un, reliés par une interface audio (I\textsuperscript{2}S) et un canal de contrôle, ce qui alourdit le routage, la BOM et l'encombrement, à l'inverse d'un appareil portable compact. Le circuit Bluetooth dédié nécessiterait par ailleurs son propre étage radiofréquence certifié, ramenant au problème que le module ESP32 résout d'emblée. Une telle partition ne se justifierait que pour exploiter des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure, deux besoins absents de ce projet. Réunir le micro-contrôleur, le Bluetooth Classic et le profil A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste.
 
 \subsubsection{Atouts complémentaires de l'ESP32}
 
-Au-delà de ce critère éliminatoire, l'ESP32 réunit les ressources matérielles nécessaires à l'ensemble du système. Son architecture à double cœur offre la possibilité de répartir les traitements sur deux cœurs, par exemple en isolant le traitement audio, sensible au temps, du reste des opérations. Ses périphériques couvrent par ailleurs les besoins d'un tel système : une interface I\textsuperscript{2}S pour la transmission audio numérique vers un convertisseur, plusieurs contrôleurs SPI permettant de dédier un bus à l'affichage et un autre au stockage, un bus I\textsuperscript{2}C pour d'éventuels circuits de configuration et de gestion, ainsi qu'un convertisseur analogique-numérique pour des entrées analogiques telles qu'un potentiomètre de volume. L'ESP32 s'appuie enfin sur un écosystème mature et une large communauté d'utilisateurs, gage de documentation et de ressources abondantes tout au long du projet.
+Au-delà de ce critère éliminatoire, l'ESP32 réunit les ressources matérielles nécessaires à l'ensemble du système. Son architecture à double cœur offre la possibilité de répartir les traitements sur deux cœurs, par exemple en isolant le traitement audio, sensible au temps, du reste des opérations. Ses périphériques couvrent par ailleurs les besoins d'un tel système : une interface I\textsuperscript{2}S pour la transmission audio numérique vers un convertisseur, plusieurs contrôleurs SPI permettant de dédier un bus à l'affichage et un autre au stockage, un bus I\textsuperscript{2}C pour d'éventuels circuits de configuration et de gestion, ainsi qu'un convertisseur analogique-numérique pour des entrées analogiques telles qu'un potentiomètre de volume~\cite{ESP32_Datasheet}. L'ESP32 s'appuie enfin sur un écosystème mature et une large communauté d'utilisateurs, gage de documentation et de ressources abondantes tout au long du projet.
 
 \subsubsection{Choix de la variante : ESP32-WROVER-E}
 
-Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseudo-statique (PSRAM) intégrée. Celle-ci offre une marge de mémoire vive appréciable pour les tampons audio que la variante WROOM, dépourvue de PSRAM, ne procure pas.
+Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseudo-statique (PSRAM) intégrée~\cite{ESP32_WROVER-E_Datasheet}. Celle-ci offre une marge de mémoire vive appréciable pour les tampons audio que la variante WROOM, dépourvue de PSRAM, ne procure pas.
 
 \subsubsection{Module plutôt que puce nue}
 
 L'ESP32 est disponible aussi bien sous forme de puce nue que de module pré-assemblé. Concevoir une carte autour de la puce nue imposerait de réaliser soi-même tout l'étage radiofréquence, antenne, ligne d'adaptation d'impédance à 50\,$\Omega$, réseau d'adaptation, en plus d'ajouter la mémoire flash, le quartz et le découplage associés. Cet étage RF est la partie la plus délicate de la conception : une antenne mal adaptée ou mal placée dégrade directement la portée et la fiabilité de la liaison Bluetooth, et sa mise au point exige une expertise et une instrumentation spécifique. À cela s'ajouterait, dans une perspective de mise sur le marché, l'obtention des certifications radio (FCC, CE, IC), bien que cet aspect sorte du cadre d'un prototype de travail de bachelor, il illustre la complexité que représente la conception d'un module radio à partir d'une puce nue.
 
-Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, flash, quartz et découplage, sur un circuit certifié fonctionnel. Il supprime ainsi la partie la plus risquée de la conception et simplifie considérablement le routage de la carte principale. Pour un prototype mono-carte réalisé dans un temps contraint, cet avantage est décisif et justifie le recours au module plutôt qu'à la puce nue.
+Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, flash, quartz et découplage, sur un circuit certifié fonctionnel~\cite{ESP32_WROVER-E_Datasheet}. Il supprime ainsi la partie la plus risquée de la conception et simplifie considérablement le routage de la carte principale. Pour un prototype mono-carte réalisé dans un temps contraint, cet avantage est décisif et justifie le recours au module plutôt qu'à la puce nue.
 
 Le choix de l'ESP32 fixe enfin la tension d'alimentation logique du système à 3,3~V. Tous les composants retenus par la suite devront donc être compatibles avec ce rail, contrainte commune à l'ensemble des choix présentés dans ce chapitre.
 
@@ -57,7 +57,7 @@ Deux contraintes ont guidé le choix de la dalle. La première est la taille : p
 
 \subsubsection{Composant retenu}
 
-Le choix s'est porté sur le NHD-1.91-176176UB de Newhaven Display, et plus précisément sur sa déclinaison NHD-1.91-176176UBC3. Cet écran de 1,91~pouce affiche une résolution de 176$\times$176~pixels, soit un rapport d'aspect de 1:1 idéalement adapté à l'interface visée, et se situe dans la plage de tailles ciblée. Son contrôleur SSD1333 est intégré à la dalle.
+Le choix s'est porté sur le NHD-1.91-176176UB de Newhaven Display, et plus précisément sur sa déclinaison NHD-1.91-176176UBC3. Cet écran de 1,91~pouce affiche une résolution de 176$\times$176~pixels, soit un rapport d'aspect de 1:1 idéalement adapté à l'interface visée, et se situe dans la plage de tailles ciblée. Son contrôleur SSD1333 est intégré à la dalle~\cite{NHD-1.91-176176UBC3}.
 
 La déclinaison UBC3 présente l'avantage déterminant d'embarquer l'ensemble des composants nécessaires au pilotage de l'écran sur un petit circuit imprimé. Elle se commande directement en SPI et ne requiert qu'une alimentation unique de 3,3~volts, sans étage élévateur ni circuiterie de pilotage à concevoir : l'architecture d'alimentation s'en trouve simplifiée. Cette intégration se paie par un encombrement plus important, l'écran se présentant sous la forme d'un PCB à monter sur la carte principale au moyen de connecteurs au pas classique de 2,54~mm, ce qui ajoute de la hauteur à l'ensemble. Pour un prototype, ce compromis est largement favorable : il échange un surcroît d'encombrement contre une mise en œuvre nettement plus simple et plus fiable.
 
@@ -75,7 +75,7 @@ Le convertisseur numérique-analogique transforme le flux audio numérique issu 
 
 \subsubsection{Architecture : DAC seul ou DAC avec amplificateur intégré}
 
-Deux architectures étaient envisageables. La première réunit le convertisseur et l'amplificateur casque dans un même boîtier, ce qui réduit le nombre de composants et permet d'attaquer directement un casque. Cette solution avait initialement la préférence, et le TAD5212 en constituait le candidat. L'étude de sa fiche technique a toutefois révélé qu'il s'agit d'un codec audio complet, intégrant notamment des entrées microphone et un chemin de capture sans utilité pour un appareil dédié à la seule restitution. Sa configuration s'en trouve nettement alourdie, sans contrepartie pour l'application visée.
+Deux architectures étaient envisageables. La première réunit le convertisseur et l'amplificateur casque dans un même boîtier, ce qui réduit le nombre de composants et permet d'attaquer directement un casque. Cette solution avait initialement la préférence, et le TAD5212 en constituait le candidat. L'étude de sa fiche technique a toutefois révélé qu'il s'agit d'un codec audio complet, intégrant notamment des entrées microphone et un chemin de capture sans utilité pour un appareil dédié à la seule restitution~\cite{TI_TAD5212}. Sa configuration s'en trouve nettement alourdie, sans contrepartie pour l'application visée.
 
 La seconde architecture, retenue, sépare le convertisseur de l'amplificateur. Elle demande un composant de plus, mais ce choix se justifie au-delà du simple refus d'un codec surdimensionné. En isolant les deux étages, on peut configurer, mesurer et déboguer chacun indépendamment, ce qui est déterminant lors de la mise en route d'une carte à signaux mixtes. Chaque maillon reste simple à valider et le comportement de la chaîne analogique demeure maîtrisable et compréhensible, qualité essentielle pour un prototype. La priorité donnée à la qualité audio ne se résume donc pas à retenir le composant aux meilleurs chiffres sur le papier, mais à construire une chaîne dont chaque étage est choisi, contrôlé et mesurable.
 
@@ -94,28 +94,28 @@ La comparaison s'est restreinte à la famille Burr-Brown PCM de Texas Instrument
     %\footnotesize
     \begin{tabular}{l c c >{\columncolor{teal!12}}c}
         \hline
-                                & \textbf{PCM5102A} & \textbf{PCM5122}   & \textbf{PCM5242} \\
-        Fabricant               & TI                & TI                 & TI               \\
+                                & \makecell{\textbf{PCM5102A}                                       \\\cite{TI_PCM5102A}} & \makecell{\textbf{PCM5122}\\\cite{TI_PCM5122}} & \makecell{\textbf{PCM5242}\\\cite{TI_PCM5242}} \\
+        Fabricant               & TI                          & TI                 & TI             \\
         \hline
-        \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                           \\
+        \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                   \\
         \hline
-        $V_{IN}$ [V]            & 3,0 - 3,46        & 3,0 - 3,46         & 3,0 - 3,46       \\
-        $I_{IN}$ max [mA]       & 45                & 48                 & 48               \\
+        $V_{IN}$ [V]            & 3,0 - 3,46                  & 3,0 - 3,46         & 3,0 - 3,46     \\
+        $I_{IN}$ max [mA]       & 45                          & 48                 & 48             \\
         \hline
-        \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                 \\
+        \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                         \\
         \hline
-        Type de sortie          & Single-ended      & Single-ended       & Différentielle   \\
-        Niveau de sortie [Vrms] & 2,1               & 2,1                & 4,2              \\
-        SNR [dB]                & 112               & 112                & 114              \\
-        THD+N [dB]              & $-93$             & $-93$              & $-100$           \\
-        Résolution max [bits]   & 32                & 32                 & 32               \\
-        $F_s$ max [kHz]         & 384               & 384                & 384              \\
-        DSP                     & Non               & Oui ($\leq$48~kHz) & miniDSP          \\
+        Type de sortie          & Single-ended                & Single-ended       & Différentielle \\
+        Niveau de sortie [Vrms] & 2,1                         & 2,1                & 4,2            \\
+        SNR [dB]                & 112                         & 112                & 114            \\
+        THD+N [dB]              & $-93$                       & $-93$              & $-100$         \\
+        Résolution max [bits]   & 32                          & 32                 & 32             \\
+        $F_s$ max [kHz]         & 384                         & 384                & 384            \\
+        DSP                     & Non                         & Oui ($\leq$48~kHz) & miniDSP        \\
         \hline
-        \multicolumn{4}{c}{\textbf{Boîtier et prix}}                                        \\
+        \multicolumn{4}{c}{\textbf{Boîtier et prix}}                                                \\
         \hline
-        Boîtier                 & TSSOP-20          & TSSOP-28           & VQFN-32          \\
-        Prix unitaire [CHF]     & 2,97              & 2,62               & 8,06             \\
+        Boîtier                 & TSSOP-20                    & TSSOP-28           & VQFN-32        \\
+        Prix unitaire [CHF]     & 2,97                        & 2,62               & 8,06           \\
         \hline
     \end{tabular}
 \end{table}
@@ -155,28 +155,28 @@ Trois amplificateurs, issus de trois fabricants différents, ont été comparés
     %\footnotesize
     \begin{tabular}{l c c >{\columncolor{teal!12}}c}
         \hline
-                                                & \textbf{PAM8908}     & \textbf{TPA6132A2}   & \textbf{MAX97220A} \\
-        Fabricant                               & Diodes Inc.          & Texas Instruments    & Analog Devices     \\
+                                                & \makecell{\textbf{PAM8908}                                         \\\cite{diodes_inc_PAM8908}} & \makecell{\textbf{TPA6132A2}\\\cite{TI_TPA6132A2}} & \makecell{\textbf{MAX97220A}\\\cite{analog_MAX97220A}} \\
+        Fabricant                               & Diodes Inc.                & Texas Instruments    & Analog Devices \\
         \hline
-        \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                                  \\
+        \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                                    \\
         \hline
-        $V_{IN}$ [V]                            & 2,5 - 5,5            & 2,3 - 5,5            & 2,5 - 5,5          \\
-        $I_{repos}$ max [mA]                    & 4                    & 2,1                  & 5,5                \\
+        $V_{IN}$ [V]                            & 2,5 - 5,5                  & 2,3 - 5,5            & 2,5 - 5,5      \\
+        $I_{repos}$ max [mA]                    & 4                          & 2,1                  & 5,5            \\
         \hline
-        \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                                        \\
+        \multicolumn{4}{c}{\textbf{Caractéristiques audio}}                                                          \\
         \hline
-        Type d'entrées                          & Single-ended + diff. & Single-ended + diff. & Différentielle     \\
-        SNR [dB]                                & 100                  & 100                  & 112,5              \\
-        THD+N [dB]                              & $-70{,}5$            & $-74$                & $-89$              \\
-        $P_{out}$ max (32~$\Omega$, 3,3~V) [mW] & 30                   & 22                   & 50                 \\
-        Bruit de sortie pondéré A [$\mu$Vrms]   & 10                   & 5,5                  & 7                  \\
-        PSRR [dB]                               & 80 @ 1~kHz           & 90 @ 10~kHz          & 80 @ 1~kHz         \\
-        Diaphonie @ 1~kHz [dB]                  & $-80$ @ 15~mW        & $-80$ @ 20~mW        & $-102$ @ 20~mW     \\
+        Type d'entrées                          & Single-ended + diff.       & Single-ended + diff. & Différentielle \\
+        SNR [dB]                                & 100                        & 100                  & 112,5          \\
+        THD+N [dB]                              & $-70{,}5$                  & $-74$                & $-89$          \\
+        $P_{out}$ max (32~$\Omega$, 3,3~V) [mW] & 30                         & 22                   & 50             \\
+        Bruit de sortie pondéré A [$\mu$Vrms]   & 10                         & 5,5                  & 7              \\
+        PSRR [dB]                               & 80 @ 1~kHz                 & 90 @ 10~kHz          & 80 @ 1~kHz     \\
+        Diaphonie @ 1~kHz [dB]                  & $-80$ @ 15~mW              & $-80$ @ 20~mW        & $-102$ @ 20~mW \\
         \hline
-        \multicolumn{4}{c}{\textbf{Boîtier et prix}}                                                               \\
+        \multicolumn{4}{c}{\textbf{Boîtier et prix}}                                                                 \\
         \hline
-        Boîtier                                 & QFN-16               & QFN-16               & QFN-16             \\
-        Prix unitaire [CHF]                     & 0,68                 & 0,86                 & 1,82               \\
+        Boîtier                                 & QFN-16                     & QFN-16               & QFN-16         \\
+        Prix unitaire [CHF]                     & 0,68                       & 0,86                 & 1,82           \\
         \hline
     \end{tabular}
 \end{table}
@@ -216,24 +216,24 @@ Les candidats envisagés sont des expanseurs 8 bits commandés en I\textsuperscr
     %\footnotesize
     \begin{tabular}{l >{\columncolor{teal!12}}c c c c}
         \hline
-                              & \textbf{PI4IOE5V9554} & \textbf{TCA9554}  & \textbf{PCA6408A} & \textbf{FXL6408}   \\
-        Fabricant             & Diodes Inc.           & Texas Instruments & NXP               & onsemi             \\
+                              & \makecell{\textbf{PI4IOE5V9554}                                                      \\\cite{diodes_inc_PI4IOE5V9554}} & \makecell{\textbf{TCA9554}\\\cite{TI_TCA9554}} & \makecell{\textbf{PCA6408A}\\\cite{nxp_PCA6408A}} & \makecell{\textbf{FXL6408}\\\cite{onsemi_FXL6408}} \\
+        Fabricant             & Diodes Inc.                     & Texas Instruments & NXP       & onsemi             \\
         \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                  \\
+        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                    \\
         \hline
-        $V_{IN}$ [V]          & 2,3--5,5              & 1,65--5,5         & 1,65--5,5         & 1,65--3,6          \\
-        $I_{IN}$ max [$\mu$A] & 60                    & 34                & 25                & 300                \\
+        $V_{IN}$ [V]          & 2,3--5,5                        & 1,65--5,5         & 1,65--5,5 & 1,65--3,6          \\
+        $I_{IN}$ max [$\mu$A] & 60                              & 34                & 25        & 300                \\
         \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques fonctionnelles}}                                               \\
+        \multicolumn{5}{c}{\textbf{Caractéristiques fonctionnelles}}                                                 \\
         \hline
-        Type de sortie        & Push-pull             & Push-pull         & Push-pull         & Push-pull + High-Z \\
-        Pull-up/down internes & Non                   & Non               & Non               & Oui, configurables \\
-        Sortie d'interruption & Oui                   & Oui               & Oui               & Oui                \\
+        Type de sortie        & Push-pull                       & Push-pull         & Push-pull & Push-pull + High-Z \\
+        Pull-up/down internes & Non                             & Non               & Non       & Oui, configurables \\
+        Sortie d'interruption & Oui                             & Oui               & Oui       & Oui                \\
         \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                               \\
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                 \\
         \hline
-        Boîtier               & TSSOP-16              & TSSOP-16          & TSSOP-16          & UQFN-16            \\
-        Prix unitaire [CHF]   & 0,89                  & 1,18              & 0,84              & 0,44               \\
+        Boîtier               & TSSOP-16                        & TSSOP-16          & TSSOP-16  & UQFN-16            \\
+        Prix unitaire [CHF]   & 0,89                            & 1,18              & 0,84      & 0,44               \\
         \hline
     \end{tabular}
 \end{table}
@@ -257,7 +257,7 @@ Les quatre composants couvrent le besoin de manière équivalente. Le choix s'es
 
 Pour choisir correctement le régulateur de tension 3,3\,V du système, il est nécessaire de connaître la consommation de chaque composant alimenté par cette tension. Le composant le plus énergivore étant le micro-contrôleur ESP32, notamment lors du streaming Bluetooth, une mesure a été réalisée pour estimer sa consommation réelle dans les conditions d'utilisation du projet.
 
-Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant moyen de 137\,mA et un pic de 321\,mA en transmission Bluetooth. Cette dernière valeur est arrondie à 350\,mA pour aligner la marge sur le pire cas spécifié par la datasheet (pic Wi-Fi TX 802.11b). Le tableau~\ref{tab:conso_totale} recense l'ensemble des composants du rail 3,3\,V, en retenant pour chacun sa valeur maximale afin de dimensionner dans le pire cas.
+Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant moyen de 137\,mA et un pic de 321\,mA en transmission Bluetooth. Cette dernière valeur est arrondie à 350\,mA pour aligner la marge sur le pire cas spécifié par la datasheet (pic Wi-Fi TX 802.11b)~\cite{ESP32_Datasheet}. Le tableau~\ref{tab:conso_totale} recense l'ensemble des composants du rail 3,3\,V, en retenant pour chacun sa valeur maximale afin de dimensionner dans le pire cas.
 
 \begin{table}[H]
     \centering
@@ -265,32 +265,32 @@ Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant
     \label{tab:conso_totale}
     \begin{tabular}{p{0.30\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} p{0.36\linewidth}}
         \hline
-        \textbf{Composant}                 & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                        \\
+        \textbf{Composant}                                        & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                        \\
         \hline
-        ESP32-WROVER-E                     & 137                              & 350                              & Mesuré + marge datasheet                                 \\
-        Écran OLED NHD-1.91-176176UBC3     & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés        \\
-        \gls{DAC} PCM5242                  & 37                               & 47                               & AVDD + CPVDD + DVDD à 192\,kHz                           \\
-        Amplificateur MAX97220A            & ---                              & 50                               & Estimation en fonction de la puissance de sortie @ 3,3 V \\
-        Carte microSD                      & ---                              & 100                              & Pire cas, dépend de la carte                             \\
-        Divers (expanseur, pull-ups, etc.) & ---                              & 15                               & Estimation                                               \\
+        ESP32-WROVER-E~\cite{ESP32_WROVER-E_Datasheet}            & 137                              & 350                              & Mesuré + marge datasheet                                 \\
+        Écran OLED NHD-1.91-176176UBC3~\cite{NHD-1.91-176176UBC3} & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés        \\
+        \gls{DAC} PCM5242~\cite{TI_PCM5242}                       & 37                               & 47                               & AVDD + CPVDD + DVDD à 192\,kHz                           \\
+        Amplificateur MAX97220A~\cite{analog_MAX97220A}           & ---                              & 50                               & Estimation en fonction de la puissance de sortie @ 3,3 V \\
+        Carte microSD                                             & ---                              & 100                              & Pire cas, dépend de la carte                             \\
+        Divers (expanseur, pull-ups, etc.)                        & ---                              & 15                               & Estimation                                               \\
         \hline
-        \textbf{Total}                     &                                  & \textbf{$\sim$\,875}             & Somme des pires cas                                      \\
+        \textbf{Total}                                            &                                  & \textbf{$\sim$\,875}             & Somme des pires cas                                      \\
         \hline
     \end{tabular}
 \end{table}
 
 La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontairement pessimiste, ces maxima ne survenant jamais simultanément et un des composants dominants, l'écran à 100\,\% de pixels blancs, ne correspond d'ailleurs pas à un choix d'affichage pertinent : sur un écran OLED, les pixels noirs sont éteints et ne consomment rien, et afficher une interface entièrement blanche irait à l'encontre de l'intérêt même de cette technologie. Le régulateur devra néanmoins être capable de fournir un courant continu de cet ordre, soit au minimum 1\,A pour conserver une marge, avec des transitoires de quelques centaines de microsecondes liés aux salves radio de l'ESP32.
 
-\clearpage
+
 \subsubsection{Choix de la topologie : buck plutôt que LDO}
 
 Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'à 3,2\,V, seuil de coupure imposé par le superviseur de tension. Deux topologies permettent d'obtenir le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck).
 
 Le rendement d'un LDO étant borné par le rapport $V_{OUT}/V_{IN}$, il plafonne à $3{,}3/4{,}2 \approx 80\,\%$ : les 20\,\% restants sont dissipés en chaleur. Dans un appareil portable à boîtier compact, cette dissipation est problématique à la fois pour l'autonomie et pour la thermique. Un buck maintient au contraire un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée, ce qui prolonge sensiblement l'autonomie, l'un des objectifs centraux pour un lecteur audio nomade.
 
-Le principal inconvénient théorique d'un buck en fin de décharge de la batterie est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation. La topologie buck est donc retenue.
+Le principal inconvénient théorique d'un buck en fin de décharge de la batterie est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation~\cite{TI_PCM5242, analog_MAX97220A}. La topologie buck est donc retenue.
 
-\clearpage
+
 \subsubsection{Comparaison des composants candidats}
 
 Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo_buck}). Le courant de sortie maximal étant identique, la sélection s'opère sur le rendement, la consommation à vide, le boîtier et le prix.
@@ -302,30 +302,30 @@ Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo
     %\footnotesize
     \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
         \hline
-                                           & \textbf{TLV62568} & \textbf{TPS62A01} & \textbf{MAX17624} & \textbf{AP61102} \\
-        Fabricant                          & TI                & TI                & Analog Devices    & Diodes Inc.      \\
+                                           & \makecell{\textbf{TLV62568}                                             \\\cite{TI_TLV62568}} & \makecell{\textbf{TPS62A01}\\\cite{TI_TPS62A01}} & \makecell{\textbf{MAX17624}\\\cite{analog_MAX17624}} & \makecell{\textbf{AP61102}\\\cite{diodes_inc_AP61102}} \\
+        Fabricant                          & TI                          & TI        & Analog Devices  & Diodes Inc. \\
         \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
+        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                    \\
         \hline
-        $V_{IN}$ [V]                       & 2,5--5,5          & 2,5--5,5          & 2,9--5,5          & 2,3--5,5         \\
-        $I_{OUT}$ max [A]                  & 1                 & 1                 & 1                 & 1                \\
-        $f_{SW}$ [MHz]                     & 1,5               & 2,4               & 4                 & 2,2              \\
-        $I_Q$ à vide [$\mu$A]              & 35                & 23                & 40                & 15               \\
-        $R_{DS(on)}$ côté haut [m$\Omega$] & 150               & 100               & 160               & 110              \\
-        $R_{DS(on)}$ côté bas [m$\Omega$]  & 100               & 67                & 130               & 80               \\
-        Rendement (3,3\,V, 1\,A) [\%]      & $\sim$95          & $\sim$95          & $\sim$92          & $\sim$92         \\
+        $V_{IN}$ [V]                       & 2,5--5,5                    & 2,5--5,5  & 2,9--5,5        & 2,3--5,5    \\
+        $I_{OUT}$ max [A]                  & 1                           & 1         & 1               & 1           \\
+        $f_{SW}$ [MHz]                     & 1,5                         & 2,4       & 4               & 2,2         \\
+        $I_Q$ à vide [$\mu$A]              & 35                          & 23        & 40              & 15          \\
+        $R_{DS(on)}$ côté haut [m$\Omega$] & 150                         & 100       & 160             & 110         \\
+        $R_{DS(on)}$ côté bas [m$\Omega$]  & 100                         & 67        & 130             & 80          \\
+        Rendement (3,3\,V, 1\,A) [\%]      & $\sim$95                    & $\sim$95  & $\sim$92        & $\sim$92    \\
         \hline
-        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
+        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                 \\
         \hline
-        Mode light-load                    & Auto.             & Auto.             & Auto.             & Auto.            \\
-        100\,\% duty cycle                 & Oui               & Oui               & Oui               & Oui              \\
-        Over Current Protection            & Oui               & Oui               & Oui               & Oui              \\
-        Soft-start                         & Oui               & Oui               & Oui               & Oui              \\
+        Mode light-load                    & Auto.                       & Auto.     & Auto.           & Auto.       \\
+        100\,\% duty cycle                 & Oui                         & Oui       & Oui             & Oui         \\
+        Over Current Protection            & Oui                         & Oui       & Oui             & Oui         \\
+        Soft-start                         & Oui                         & Oui       & Oui             & Oui         \\
         \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                 \\
         \hline
-        Boîtier                            & SOT-23 / SOT-563  & SOT-563-6         & TDFN 2$\times$2   & SOT-563          \\
-        Prix unitaire [CHF]                & 0,21              & 0,15              & 1,31              & 0,16             \\
+        Boîtier                            & SOT-23 / SOT-563            & SOT-563-6 & TDFN 2$\times$2 & SOT-563     \\
+        Prix unitaire [CHF]                & 0,21                        & 0,15      & 1,31            & 0,16        \\
         \hline
     \end{tabular}
 \end{table}
@@ -348,7 +348,7 @@ Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pou
 
 \subsection{Superviseur de tension}
 
-Le superviseur de tension protège la cellule lithium-ion contre la décharge profonde, qui endommagerait irréversiblement la batterie. Il surveille en permanence la tension de la cellule et déclenche un verrouillage dès qu'elle descend sous un seuil de sécurité. Ce seuil est fixé ici à 3,2~V.
+Le superviseur de tension protège la cellule lithium-ion contre la décharge profonde, qui endommagerait irréversiblement la batterie. Il surveille en permanence la tension de la cellule et déclenche un verrouillage dès qu'elle descend sous un seuil de sécurité. Ce seuil est fixé ici à 3,2~V, valeur obtenue par le XC6120 de Torex~\cite{torex_XC6120}.
 
 Sa fonction première, et la principale, est de préserver la durée de vie de la batterie en interrompant la décharge avant que la cellule n'atteigne une tension nuisible. Ce choix présente un avantage secondaire pour la chaîne audio. Comme vu précédemment, lorsque la tension de la batterie s'approche de 3,3~V, le convertisseur abaisseur passe en conduction permanente et le rail de sortie suit alors la tension de la cellule, diminuée de la faible chute du régulateur. En coupant à 3,2~V, on maintient ce rail au-dessus des tensions minimales de fonctionnement de la chaîne audio filaire. Abaisser le seuil n'apporterait par ailleurs qu'un gain d'autonomie négligeable, la courbe de décharge d'une cellule lithium-ion s'effondrant rapidement sous cette tension, tout en rapprochant le rail de la limite basse des composants.
 
@@ -375,7 +375,7 @@ TODO, parler de l'USB splitter pertinent ? ça a juste aidé le routage
 
 \subsection{Chargeur de batterie}
 
-Le chargeur de batterie gère la recharge de la cellule lithium-ion depuis l'entrée USB. Le critère déterminant pour ce composant est sa capacité à adapter le courant prélevé à la source connectée. Une source USB peut en effet fournir des courants très différents : un port USB d'ordinateur portable est limité à environ 0,5~A, tandis qu'un chargeur secteur dédié peut en délivrer jusqu'à 3~A. Le chargeur doit donc identifier la capacité de la source et ajuster son courant d'entrée en conséquence, afin de charger le plus rapidement possible sans jamais excéder ce que la source peut fournir.
+Le chargeur de batterie gère la recharge de la cellule lithium-ion depuis l'entrée USB. Le critère déterminant pour ce composant est sa capacité à adapter le courant prélevé à la source connectée. Une source USB peut en effet fournir des courants très différents : un port USB d'ordinateur portable est limité à environ 0,5~A~\cite{usb_bc12}, tandis qu'un chargeur secteur dédié peut en délivrer jusqu'à 3~A~\cite{usb_implementers_forum_inc_universal_2026}. Le chargeur doit donc identifier la capacité de la source et ajuster son courant d'entrée en conséquence, afin de charger le plus rapidement possible sans jamais excéder ce que la source peut fournir.
 
 \subsubsection{Composant retenu}
 
@@ -388,25 +388,25 @@ Quatre circuits de charge ont été comparés (tableau~\ref{tab:comparo_chargeur
     %\footnotesize
     \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
         \hline
-                                  & \textbf{BQ25890}      & \textbf{BQ25629}      & \textbf{MAX77757} & \textbf{MCP73871} \\
-        Fabricant                 & Texas Instr.          & Texas Instr.          & Analog Devices    & Microchip         \\
+                                  & \makecell{\textbf{BQ25890}                                                       \\\cite{TI_BQ25890}} & \makecell{\textbf{BQ25629}\\\cite{TI_BQ25629}} & \makecell{\textbf{MAX77757}\\\cite{analog_MAX77757}} & \makecell{\textbf{MCP73871}\\\cite{microchip_MCP73871}} \\
+        Fabricant                 & Texas Instr.               & Texas Instr.          & Analog Devices & Microchip  \\
         \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                         \\
+        \multicolumn{5}{c}{\textbf{Caractéristiques électriques}}                                                    \\
         \hline
-        $I_{charge}$ max [A]      & 5                     & 2                     & 3,15              & 0,5               \\
-        Plage $V_{IN}$ [V]        & 3,9--14               & 3,9--18               & 4,5--13,7         & 4,4--6            \\
+        $I_{charge}$ max [A]      & 5                          & 2                     & 3,15           & 0,5        \\
+        Plage $V_{IN}$ [V]        & 3,9--14                    & 3,9--18               & 4,5--13,7      & 4,4--6     \\
         \hline
-        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                      \\
+        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                 \\
         \hline
-        Interface                 & I\textsuperscript{2}C & I\textsuperscript{2}C & Matérielle        & Matérielle        \\
-        Détection BC1.2           & Oui                   & Oui                   & Oui               & Non               \\
-        Détection USB Type-C (CC) & Non                   & Non                   & Oui               & Non               \\
-        Power Path                & Oui                   & Oui                   & Oui               & Non               \\
+        Interface                 & I\textsuperscript{2}C      & I\textsuperscript{2}C & Matérielle     & Matérielle \\
+        Détection BC1.2           & Oui                        & Oui                   & Oui            & Non        \\
+        Détection USB Type-C (CC) & Non                        & Non                   & Oui            & Non        \\
+        Power Path                & Oui                        & Oui                   & Oui            & Non        \\
         \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                      \\
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                 \\
         \hline
-        Boîtier                   & QFN-24                & QFN-28                & QFN-24            & QFN-20            \\
-        Prix unitaire [CHF]       & 2,61                  & 3,05                  & 3,52              & 1,89              \\
+        Boîtier                   & QFN-24                     & QFN-28                & QFN-24         & QFN-20     \\
+        Prix unitaire [CHF]       & 2,61                       & 3,05                  & 3,52           & 1,89       \\
         \hline
     \end{tabular}
 \end{table}
@@ -438,7 +438,7 @@ La jauge de batterie estime l'état de charge de la cellule. L'objectif principa
 
 Une jauge à comptage de coulomb mesure le courant au moyen d'une résistance de mesure, intégrée au composant ou externe. Les jauges à résistance intégrée auraient évité ce composant supplémentaire, mais elles ne sont proposées qu'en boîtier BGA, écarté pour ce projet. La recherche s'est donc orientée vers des jauges à résistance de mesure externe, seules à offrir le comptage de coulomb dans un boîtier compatible avec l'assemblage du prototype.
 
-\clearpage
+
 Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}).
 
 \begin{table}[H]
@@ -448,40 +448,40 @@ Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}).
     %\footnotesize
     \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
         \hline
-                                     & \textbf{MAX17048}     & \textbf{MAX17260}     & \textbf{BQ27441-G1}   & \textbf{STC3100}      \\
-        Fabricant                    & Analog Devices        & Analog Devices        & Texas Instr.          & STMicroelectronics    \\
+                                     & \makecell{\textbf{MAX17048}                                                                         \\\cite{analog_MAX17048}} & \makecell{\textbf{MAX17260}\\\cite{analog_MAX17260}} & \makecell{\textbf{BQ27441-G1}\\\cite{TI_BQ27441-G1}} & \makecell{\textbf{STC3100}\\\cite{stm_STC3100}} \\
+        Fabricant                    & Analog Devices              & Analog Devices        & Texas Instr.          & STMicroelectronics    \\
         \hline
-        \multicolumn{5}{c}{\textbf{Caractéristiques}}                                                                                \\
+        \multicolumn{5}{c}{\textbf{Caractéristiques}}                                                                                      \\
         \hline
-        Compteur de coulomb          & Non                   & Oui                   & Oui                   & Oui                   \\
-        $R_{sense}$ externe          & Non                   & Oui                   & Oui                   & Oui                   \\
-        Interface                    & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C \\
-        Courant actif max [$\mu$A]   & 40                    & 30                    & 93                    & 100                   \\
-        Courant hibernation [$\mu$A] & 5                     & 5,1                   & 9                     & 2                     \\
+        Compteur de coulomb          & Non                         & Oui                   & Oui                   & Oui                   \\
+        $R_{sense}$ externe          & Non                         & Oui                   & Oui                   & Oui                   \\
+        Interface                    & I\textsuperscript{2}C       & I\textsuperscript{2}C & I\textsuperscript{2}C & I\textsuperscript{2}C \\
+        Courant actif max [$\mu$A]   & 40                          & 30                    & 93                    & 100                   \\
+        Courant hibernation [$\mu$A] & 5                           & 5,1                   & 9                     & 2                     \\
         \hline
-        \multicolumn{5}{c}{\textbf{Données fournies}}                                                                                \\
+        \multicolumn{5}{c}{\textbf{Données fournies}}                                                                                      \\
         \hline
-        Tension                      & Oui                   & Oui                   & Oui                   & Oui                   \\
-        État de charge (SOC)         & Oui                   & Oui                   & Oui                   & Non                   \\
-        Capacité restante            & Non                   & Oui                   & Oui                   & Non                   \\
-        Courant instantané           & Non                   & Oui                   & Oui                   & Oui                   \\
-        Température                  & Non                   & Oui                   & Oui                   & Oui                   \\
-        Time-to-empty                & Oui                   & Oui                   & Non                   & Non                   \\
-        Time-to-full                 & Oui                   & Oui                   & Non                   & Non                   \\
-        State-of-Health              & Non                   & Oui                   & Oui                   & Non                   \\
-        Cycles                       & Non                   & Oui                   & Non                   & Non                   \\
+        Tension                      & Oui                         & Oui                   & Oui                   & Oui                   \\
+        État de charge (SOC)         & Oui                         & Oui                   & Oui                   & Non                   \\
+        Capacité restante            & Non                         & Oui                   & Oui                   & Non                   \\
+        Courant instantané           & Non                         & Oui                   & Oui                   & Oui                   \\
+        Température                  & Non                         & Oui                   & Oui                   & Oui                   \\
+        Time-to-empty                & Oui                         & Oui                   & Non                   & Non                   \\
+        Time-to-full                 & Oui                         & Oui                   & Non                   & Non                   \\
+        State-of-Health              & Non                         & Oui                   & Oui                   & Non                   \\
+        Cycles                       & Non                         & Oui                   & Non                   & Non                   \\
         \hline
-        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                                 \\
+        \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                                       \\
         \hline
-        Boîtier                      & TDFN-14               & TDFN-14               & VSON-12               & MiniSO-8              \\
-        Prix unitaire [CHF]          & 3,22                  & 2,72                  & 3,10                  & 3,07                  \\
+        Boîtier                      & TDFN-14                     & TDFN-14               & VSON-12               & MiniSO-8              \\
+        Prix unitaire [CHF]          & 3,22                        & 2,72                  & 3,10                  & 3,07                  \\
         \hline
     \end{tabular}
 \end{table}
 
 Le STC3100 est écarté en premier : il ne calcule pas l'état de charge, se limitant à fournir la tension, le courant, la température et la charge brute accumulée. Il ne remplit donc même pas l'objectif principal, l'obtention d'un état de charge exploitable supposant d'en implémenter l'estimation dans le firmware, alors que les autres candidats le fournissent directement. Le MAX17048 repose quant à lui sur une estimation fondée uniquement sur la tension : sans compteur de coulomb, il ne fournit ni la capacité restante, ni le courant, ni la température, ni l'état de santé ou le nombre de cycles, et son estimation se dégrade sous charge variable. Le BQ27441-G1 constitue un candidat sérieux, doté d'un compteur de coulomb et de données complètes, mais il ne renseigne ni l'autonomie estimée (time-to-empty et time-to-full), ni le nombre de cycles.
 
-\clearpage
+
 Le MAX17260 répond pleinement aux deux objectifs et a donc été retenu, pour les raisons suivantes :
 
 \begin{itemize}
@@ -503,11 +503,11 @@ Comme expliqué plus haut, le MAX17260 nécessite une résistance de mesure exte
 
 La programmation du micro-contrôleur et l'accès à la console série s'effectuent depuis un ordinateur par l'USB. Un pont USB-UART assure la conversion entre le bus USB de l'hôte et l'interface UART du micro-contrôleur.
 
-Au-delà de cette conversion, le composant doit permettre le passage automatique en mode programmation. Ce mécanisme repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART, indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset : la puce démarre alors en mode téléchargement plutôt que depuis la mémoire flash. Le pont exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN (reset) et GPIO0 pour faire entrer automatiquement la puce en mode téléchargement, sans manipulation manuelle.
+Au-delà de cette conversion, le composant doit permettre le passage automatique en mode programmation. Ce mécanisme repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART, indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset : la puce démarre alors en mode téléchargement plutôt que depuis la mémoire flash~\cite{ESP32_Datasheet}. Le pont exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN (reset) et GPIO0 pour faire entrer automatiquement la puce en mode téléchargement, sans manipulation manuelle.
 
 \subsubsection{Composant retenu}
 
-Le choix s'est porté sur le CP2102N de Silicon Labs. La raison déterminante est qu'il s'agit du pont USB-UART retenu par Espressif lui-même dans sa carte de développement officielle, l'ESP32-DevKitC~\cite{ESP32_DevKitC_Doc}. Son association avec l'ESP32, circuit de flash automatique compris, est donc validée et documentée par le concepteur même du micro-contrôleur, ce qui élimine tout risque de compatibilité.
+Le choix s'est porté sur le CP2102N de Silicon Labs~\cite{silabs_CP2102N}. La raison déterminante est qu'il s'agit du pont USB-UART retenu par Espressif lui-même dans sa carte de développement officielle, l'ESP32-DevKitC~\cite{ESP32_DevKitC_Doc}. Son association avec l'ESP32, circuit de flash automatique compris, est donc validée et documentée par le concepteur même du micro-contrôleur, ce qui élimine tout risque de compatibilité.
 
 À cette garantie s'ajoutent des qualités propres au composant :
 
@@ -528,7 +528,4 @@ D'autres ponts existent, comme le CH340 ou les circuits FTDI, mais reprendre la 
 
 Le réglage du volume s'effectue au moyen d'un potentiomètre rotatif, dont la position est lue par l'ADC de l'ESP32. À ce stade de la conception, l'appareil est envisagé sous la forme d'un boîtier de type Game Boy. Placer un potentiomètre plat sur le côté du boîtier est un choix de design assumé, à la fois esthétique et pratique à l'usage. Ce parti pris impose une contrainte avant tout mécanique : il faut un modèle plat, montable directement en surface sur le bord du circuit imprimé et actionnable au pouce, plutôt qu'un potentiomètre de panneau classique, plus volumineux et destiné à traverser un châssis. Ce format s'est révélé difficile à trouver, la plupart des potentiomètres du marché étant prévus pour un montage traversant sur panneau.
 
-Le RK10J11R0A0L d'Alps Alpine répond à cette contrainte. Il s'agit d'un potentiomètre rotatif de 10~mm, à montage en surface, qui se place au bord de la carte et s'actionne au pouce. D'une résistance totale de 10~k$\Omega$ à variation linéaire, il fournit la position du réglage sans être inséré dans le chemin du signal audio.
-
-
-
+Le RK10J11R0A0L d'Alps Alpine répond à cette contrainte~\cite{alps_RK10J11R0A0L}. Il s'agit d'un potentiomètre rotatif de 10~mm, à montage en surface, qui se place au bord de la carte et s'actionne au pouce. D'une résistance totale de 10~k$\Omega$ à variation linéaire, il fournit la position du réglage sans être inséré dans le chemin du signal audio.
