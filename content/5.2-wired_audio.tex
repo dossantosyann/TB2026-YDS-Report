@@ -1,4 +1,5 @@
 \section{Chaîne audio filaire}
+\label{sec:audio_filaire}
 
 Les deux sorties du lecteur, la prise casque et le Bluetooth, sont exposées au reste du firmware derrière une interface unique, le \gls{sink}, qui se réduit à ouvrir une sortie dans un format donné, y écrire un bloc d'échantillons, puis la fermer. Le transport de lecture ignore ainsi vers quelle sortie part le son, et la bascule de l'une à l'autre en cours de lecture n'impose aucune duplication du pipeline. Cette section décrit l'implémentation filaire de ce sink, la variante Bluetooth étant traitée à la section~\ref{sec:soft_bluetooth}.
 

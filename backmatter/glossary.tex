@@ -79,3 +79,37 @@
     name={sink audio},
     description={Interface abstraite représentant une destination de flux audio dans le firmware. Elle expose trois opérations, l'ouverture dans un format donné, l'écriture d'un bloc d'échantillons et la fermeture, ce qui rend le producteur d'échantillons indépendant de la sortie réellement utilisée}
 }
+\newglossaryentry{sd}{
+    name={SD},
+    description={Secure Digital. Format de carte mémoire amovible de grande capacité. Le lecteur y accède en mode SPI, dont le câblage est plus simple que celui du mode natif au prix d'un débit moindre, sans conséquence pour la lecture audio}
+}
+
+\newglossaryentry{psram}{
+    name={PSRAM},
+    description={Pseudo-Static RAM. Mémoire vive de grande capacité intégrée au module mais externe au micro-contrôleur. Elle accueille les données volumineuses du firmware, à l'exception des tampons manipulés par le contrôleur d'accès direct à la mémoire, qui ne peut pas l'adresser}
+}
+
+\newglossaryentry{spi}{
+    name={SPI},
+    description={Serial Peripheral Interface. Bus série synchrone reliant un contrôleur maître à un ou plusieurs périphériques, chacun sélectionné par une ligne dédiée. Le micro-contrôleur en expose plusieurs instances matérielles indépendantes}
+}
+
+\newglossaryentry{pcm}{
+    name={PCM},
+    description={Pulse-Code Modulation. Représentation numérique directe d'un signal audio par une suite d'échantillons d'amplitude prélevés à intervalle régulier, sans compression. C'est sous ce format que circulent les échantillons entre les décodeurs et le sink}
+}
+
+\newglossaryentry{mp3}{
+    name={MP3},
+    description={MPEG-1 Audio Layer III. Format de compression audio avec pertes, à débit constant ou variable, décodé par le firmware vers la représentation PCM interne}
+}
+
+\newglossaryentry{wav}{
+    name={WAV},
+    description={Waveform Audio File Format. Format de fichier encapsulant des échantillons PCM non compressés, précédés d'un en-tête qui déclare leur fréquence d'échantillonnage, leur résolution et leur nombre de canaux}
+}
+
+\newglossaryentry{fatfs}{
+    name={FATFS},
+    description={Implémentation du système de fichiers FAT destinée aux systèmes embarqués et intégrée à ESP-IDF, par laquelle le firmware accède aux fichiers de la carte SD}
+}

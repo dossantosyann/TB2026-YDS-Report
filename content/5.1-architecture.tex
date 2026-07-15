@@ -1,4 +1,5 @@
 \section{Architecture générale}
+\label{sec:archi}
 
 Le firmware est organisé en couches à responsabilité unique, dont la règle de dépendance est stricte : une couche ne peut dépendre que de couches situées en dessous d'elle, jamais l'inverse~\cite{martin_clean_architecture}. Cette règle est matérialisée par le découpage en composants ESP-IDF, chaque composant déclarant explicitement ses dépendances dans son \texttt{CMakeLists.txt}~\cite{ESP32_IDF_guide}. La figure~\ref{Architecture_logicielle.drawio} présente cette organisation.
 
