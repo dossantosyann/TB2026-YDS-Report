@@ -1,0 +1,44 @@
+\chapter{Fiabilisation du firmware : incidents notables et résolutions}
+\label{annexe:fiabilisation}
+
+Cette annexe rassemble les incidents les plus instructifs rencontrés au cours du développement du firmware et la manière dont ils ont été résolus. Chacun est présenté par son symptôme observé, sa cause racine une fois identifiée, puis la correction retenue. Le corps des chapitres décrit les mécanismes tels qu'ils existent aujourd'hui, tandis que cette annexe explique pourquoi ils ont pris cette forme.
+
+\section{Chaîne audio et bus}
+
+La lecture au double de la vitesse est apparue au passage à la version~6 d'ESP-IDF, un fichier de 16~bits étant restitué environ deux fois trop vite. La cause tient à un changement de contrat de l'interface d'écriture du bus, qui a cessé d'élargir automatiquement les échantillons vers la largeur du \gls{slot} matériel~\cite{ESP32_IDF_migration_v6}. Deux échantillons de 16~bits consécutifs étaient dès lors consommés par un même slot, si bien qu'une trame sur deux seulement était réellement émise. La correction a consisté à fixer la représentation interne à 32~bits en toutes circonstances et à confier l'élargissement explicitement aux décodeurs, choix détaillé à la section~\ref{sec:audio_filaire}.
+
+Les premiers essais de lecture sur matériel produisaient des coupures audibles dès que la carte \gls{sd} tardait à répondre. La configuration par défaut de l'anneau de tampons du contrôleur d'accès direct à la mémoire, six descripteurs de 240~trames, n'offre qu'environ 7,5~ms de coussin à 192~kHz~\cite{ESP32_IDF_i2s}, insuffisant devant le temps de réponse non borné de la carte. L'anneau a été porté à douze descripteurs de 511~trames, cette dernière valeur étant un plafond matériel, ce qui porte le coussin à environ 32~ms au cas dimensionnant. Le raisonnement complet figure à la section~\ref{sec:audio_filaire}.
+
+Le démontage de la carte SD figeait par intermittence l'affichage, l'interface restant bloquée. L'écran et la carte disposent chacun de leur hôte \gls{spi}, mais les contrôleurs SPI de ce micro-contrôleur ne possèdent pas chacun un accès indépendant au contrôleur d'accès direct à la mémoire, un même bit d'horloge étant partagé et compté par référence entre eux~\cite{ESP32_Technical_Reference_Manual}. Libérer entièrement le bus de la carte suspendait de ce fait un transfert d'affichage en cours. La correction a consisté à ne retirer que le périphérique associé à la carte sans jamais libérer le bus, démontage partiel suffisant à gérer l'insertion et le retrait, comme décrit à la section~\ref{sec:transport}.
+
+\section{Bluetooth}
+
+Le streaming Bluetooth prolongé provoquait un débordement de la pile de la tâche initiale. Cette tâche portait alors la boucle d'interface avec une pile dimensionnée pour l'amorçage du système, insuffisante dès que le flux continu s'ajoutait au chemin de rendu le plus profond. La correction a créé une tâche d'interface dédiée sur le cœur~1, dotée de 8~kio, et migré sur ce même cœur les interruptions de l'écran et des boutons, la tâche initiale se terminant une fois le système assemblé. Le dimensionnement retenu a ensuite été confirmé par la campagne d'endurance (section~\ref{sec:archi_validation}).
+
+Les changements de piste en Bluetooth souffraient d'une latence et d'à-coups occasionnels. Chaque fin de piste suspendait le flux média puis le relançait aussitôt pour la piste suivante, deux commandes dont l'ordre pouvait s'inverser dans la pile. La résolution a rendu la session média persistante, en différant la suspension de trois secondes et en l'annulant dès qu'un nouveau démarrage survient, de sorte qu'un enchaînement de pistes ne suspend jamais réellement le flux. Seule une pause véritable, sans reprise dans ce délai, aboutit à la suspension. Le délai de trois secondes est un réglage empirique et non une valeur déduite.
+
+Une tentative de connexion pouvait échouer en laissant la pile dans un état intermédiaire qu'aucune interface propre ne permettait de dénouer, et une perte de lien en cours de lecture aurait autrement interrompu la restitution. Le repli automatique sur la sortie filaire répond au second cas, la lecture reprenant sur la prise casque sans intervention. Le premier est traité par un redémarrage complet de la radio, confié à une tâche éphémère, qui ramène la pile à un état exploitable avant qu'une nouvelle connexion ne soit proposée. Ces deux mécanismes sont décrits à la section~\ref{sec:soft_bluetooth}.
+
+\section{Robustesse système}
+
+Un incident d'extinction inexpliqué a révélé un angle mort du diagnostic. Le firmware maintient lui-même son propre rail d'alimentation, si bien que toute réinitialisation fait tomber ce rail et que le démarrage suivant lit invariablement une mise sous tension, ce qui rend un plantage indistinguable d'une extinction volontaire ou d'une coupure d'alimentation. La résolution repose sur des traces persistées avant la chute du rail, un marqueur d'extinction propre écrit en \gls{nvs} juste avant de relâcher le rail, et un vidage mémoire déposé dans une partition de flash dédiée en cas de panique. Le démarrage suivant lit ces traces et classe la fin de la session précédente en extinction propre, plantage ou coupure selon la logique suivante :
+
+\begin{table}[H]
+    \centering
+    \caption{Classification de la fin de session au boot}
+    \label{tab:verdict_extinction}
+    {\renewcommand{\arraystretch}{1.1}
+        \setlength{\tabcolsep}{4pt}
+        \begin{tabular}{@{}c c c >{\raggedright\arraybackslash}p{0.48\linewidth}@{}}
+            \hline
+            Marqueur NVS & Coredump flash & Verdict    & Interprétation                          \\
+            \hline
+            présent      & absent         & clean      & \texttt{power\_shutdown()} a été appelé \\
+            absent       & présent        & crash      & panic CPU / watchdog                    \\
+            absent       & absent         & power loss & coupure d'alimentation innatendue       \\
+            \hline
+        \end{tabular}}
+\end{table}
+
+
+Certains fichiers MP3 porteurs de pochettes volumineuses échouaient au décodage ou voyaient leurs trames mal détectées. Les images encapsulées dans les étiquettes du fichier contiennent des motifs d'octets ressemblant aux amorces de trame recherchées par le décodeur, qui s'y arrêtait à tort. La résolution saute explicitement l'étiquette d'après la taille qu'elle déclare, puis valide chaque amorce candidate avant de l'accepter et reprend un octet plus loin en cas d'échec~\cite{helix_mp3_decoder}. Ce traitement a de surcroît rétabli la lecture de la durée pour ces mêmes fichiers, décrite à la section~\ref{sec:transport}.

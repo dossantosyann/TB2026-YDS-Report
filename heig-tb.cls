@@ -353,7 +353,12 @@
     patterns,
     arrows,
     calc,
-    decorations.pathmorphing
+    decorations.pathmorphing,
+    shapes.geometric,
+    arrows.meta,
+    positioning,
+    fit,
+    backgrounds
 }
 
 \usemintedstyle{colorful}
