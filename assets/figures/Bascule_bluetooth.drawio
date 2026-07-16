@@ -41,7 +41,7 @@
           <mxGeometry height="150" width="170" x="460" y="235" as="geometry" />
         </mxCell>
         <mxCell id="guard" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="Garde anti-saturation : aucun échantillon émis avant l&#39;acquittement" vertex="1">
-          <mxGeometry height="50" width="170" x="460" y="515" as="geometry" />
+          <mxGeometry height="45" width="180" x="460" y="517.5" as="geometry" />
         </mxCell>
         <mxCell id="e12" edge="1" parent="1" source="n1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;" target="n2">
           <mxGeometry relative="1" as="geometry" />
