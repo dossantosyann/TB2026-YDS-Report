@@ -1,0 +1,63 @@
+<mxfile host="app.diagrams.net" type="device">
+  <diagram name="Chemins de sortie audio" id="chemins-sortie">
+    <mxGraphModel dx="900" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="p1" value="Pipeline&#10;(tâche audio)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="40" y="190" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fn" value="Format interne :&#10;32 bits justifiés à gauche" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="25" y="262" width="165" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="bn" value="Aucun accès DMA : PSRAM possible" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="245" y="8" width="175" height="38" as="geometry" />
+        </mxCell>
+        <mxCell id="b1" value="Tampon de découplage&#10;(PSRAM)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="60" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b2" value="Pile Bluetooth&#10;encodage SBC (16 bits)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="470" y="60" width="185" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b3" value="Récepteur" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="705" y="60" width="100" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="w1" value="Anneau de tampons&#10;(RAM interne, DMA)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="245" y="300" width="175" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="w2" value="PCM5242 → MAX97220A&#10;(32 bits)" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="470" y="300" width="185" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="w3" value="Jack 3,5 mm" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="705" y="300" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="wn" value="Accès DMA : RAM interne obligatoire" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;fontSize=10;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="245" y="372" width="175" height="38" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_pb1" value="écrit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="p1" target="b1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_b1b2" value="la pile tire (pull)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="b1" target="b2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_b2b3" value="liaison radio" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="b2" target="b3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_pw1" value="pousse (push)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="p1" target="w1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_w1w2" value="DMA → I²S" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="w1" target="w2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_w2w3" value="analogique" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" edge="1" parent="1" source="w2" target="w3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
