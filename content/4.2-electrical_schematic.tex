@@ -11,9 +11,9 @@ Le schéma est hiérarchique. Une feuille de plus haut niveau relie six feuilles
 
 Le choix de l'ESP32 ayant fixé la tension logique à 3,3~V, un unique rail alimente l'ensemble des circuits numériques et la chaîne audio, ce qui supprime toute adaptation de niveau entre composants. Les liaisons entre feuilles se font par étiquettes de réseau nommées d'après leur fonction, et les broches de configuration des composants autonomes sont câblées à demeure plutôt que pilotées par le micro-contrôleur, ce qui rend leur comportement indépendant du firmware. Les bus partagés, l'I\textsuperscript{2}C de configuration et de télémétrie ainsi que les deux bus SPI dédiés respectivement à l'écran et à la carte \gls{sd}, sont regroupés autour du micro-contrôleur, seul maître de ces échanges.
 
-La figure~\ref{fig:archi_elec} résume cette architecture en séparant le cheminement de l'énergie de celui du signal audio.
+La figure~\ref{archi_elec.drawio} résume cette architecture en séparant le cheminement de l'énergie de celui du signal audio.
 
-\fig[H, width=0.95\linewidth]{Architecture électrique du lecteur, cheminement de l'énergie et du signal audio}{archi_elec}
+\fig[H, width=0.95\linewidth]{Architecture électrique du lecteur, cheminement de l'énergie et du signal audio}{archi_elec.drawio}
 
 
 \subsection{Distribution de l'alimentation et chaîne de charge}
