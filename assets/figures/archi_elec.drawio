@@ -1,0 +1,119 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="archi_elec" id="archi_elec">
+    <mxGraphModel dx="1677" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="lblE" parent="1" style="text;html=1;align=left;fontStyle=2;fontSize=12;fontColor=#666666;" value="Cheminement de l&#39;énergie" vertex="1">
+          <mxGeometry height="20" width="240" x="40" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lblS" parent="1" style="text;html=1;align=left;fontStyle=2;fontSize=12;fontColor=#666666;" value="Cheminement du signal audio" vertex="1">
+          <mxGeometry height="20" width="260" x="40" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="usb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Connecteur&#xa;USB-C" vertex="1">
+          <mxGeometry height="60" width="100" x="40" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="mux" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Mux données&#xa;PI3USB221A" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bridge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Pont USB-UART&#xa;CP2102N" vertex="1">
+          <mxGeometry height="60" width="120" x="420" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="charger" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Chargeur&#xa;MAX77757&#xa;(power path)" vertex="1">
+          <mxGeometry height="70" width="120" x="220" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="batt" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Batterie&#xa;Li-ion" vertex="1">
+          <mxGeometry height="50" width="100" x="40" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="gauge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Jauge&#xa;MAX17260&#xa;(R_sense)" vertex="1">
+          <mxGeometry height="60" width="120" x="220" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="buck" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Buck 3,3 V&#xa;TPS62A01" vertex="1">
+          <mxGeometry height="60" width="120" x="440" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="sup" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Superviseur&#xa;XC6120&#xa;(seuil 3,2 V)" vertex="1">
+          <mxGeometry height="60" width="120" x="440" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="rail" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Rail 3,3 V" vertex="1">
+          <mxGeometry height="50" width="90" x="640" y="185" as="geometry" />
+        </mxCell>
+        <mxCell id="esp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" value="ESP32-WROVER-E" vertex="1">
+          <mxGeometry height="70" width="150" x="800" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="dac" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="DAC&#xa;PCM5242" vertex="1">
+          <mxGeometry height="60" width="110" x="220" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="filt" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Filtre RC&#xa;différentiel&#xa;(anti-images)" vertex="1">
+          <mxGeometry height="60" width="120" x="380" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="amp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Ampli casque&#xa;MAX97220A&#xa;(gain 0,5)" vertex="1">
+          <mxGeometry height="60" width="120" x="550" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="jack" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Prise jack&#xa;3,5 mm" vertex="1">
+          <mxGeometry height="60" width="100" x="720" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="exp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Expanseur I/O&#xa;PI4IOE5V9554" vertex="1">
+          <mxGeometry height="60" width="150" x="800" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="usb" style="endArrow=classic;html=1;fontSize=10;" target="mux">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="usb" style="endArrow=classic;html=1;fontSize=10;" target="charger">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="mux" style="endArrow=classic;html=1;fontSize=10;" target="bridge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="mux" style="endArrow=classic;html=1;dashed=1;html=1;fontSize=10;" target="charger">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="bridge" style="endArrow=classic;html=1;fontSize=10;" target="esp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="875" y="90" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="batt" style="endArrow=classic;startArrow=classic;html=1;fontSize=10;" target="charger">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="batt" style="endArrow=classic;html=1;fontSize=10;" target="gauge">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="charger" style="endArrow=classic;html=1;fontSize=10;" target="buck">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="buck" style="endArrow=classic;html=1;fontSize=10;" target="rail">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="sup" style="endArrow=classic;html=1;fontSize=10;" target="buck">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="rail" style="endArrow=classic;html=1;fontSize=10;" target="esp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" edge="1" parent="1" source="esp" style="endArrow=classic;html=1;fontSize=10;" target="dac">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" edge="1" parent="1" source="dac" style="endArrow=classic;html=1;fontSize=10;" target="filt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" edge="1" parent="1" source="filt" style="endArrow=classic;html=1;fontSize=10;" target="amp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" edge="1" parent="1" source="amp" style="endArrow=classic;html=1;fontSize=10;" target="jack">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" edge="1" parent="1" source="esp" style="endArrow=classic;startArrow=classic;html=1;dashed=1;fontSize=10;" target="exp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" edge="1" parent="1" source="exp" style="endArrow=classic;html=1;dashed=1;fontSize=10;" target="dac">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" edge="1" parent="1" source="exp" style="endArrow=classic;html=1;dashed=1;fontSize=10;" target="amp">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
