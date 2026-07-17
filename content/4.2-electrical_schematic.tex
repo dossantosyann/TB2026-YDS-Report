@@ -1,50 +1,92 @@
 \clearpage
 \section{Schéma électrique}
+\label{sec:schema}
 
-\subsection{Audio filaire}
+Le schéma électrique réunit les composants retenus au chapitre précédent et fixe leurs interconnexions, des étages de puissance jusqu'aux protections. Cette section en décrit d'abord l'organisation, puis les sous-circuits qui demandent une explication propre, protections comprises. Elle ne reprend ni la justification des composants, traitée à la section~\ref{sec:choix_composants}, ni le routage, abordé à la section~\ref{sec:layout}. Les feuilles complètes du schéma figurent en annexe~\ref{annexe:schema} et font foi en cas d'écart avec le texte.
+
+
+\subsection{Organisation du schéma}
+
+Le schéma est hiérarchique. Une feuille de plus haut niveau relie six feuilles fonctionnelles, chacune dédiée à un sous-ensemble du système, à savoir l'alimentation, le micro-contrôleur, l'écran, l'interface à boutons, le pont USB-UART et la chaîne audio filaire. Ce découpage suit les frontières naturelles du système et permet de vérifier chaque sous-ensemble isolément, ce qui rejoint la démarche de mise au point maillon par maillon adoptée pour la chaîne audio. Un diagramme de blocs accompagne le schéma et résume les liaisons principales entre ces feuilles.
+
+Le choix de l'ESP32 ayant fixé la tension logique à 3,3~V, un unique rail alimente l'ensemble des circuits numériques et la chaîne audio, ce qui supprime toute adaptation de niveau entre composants. Les liaisons entre feuilles se font par étiquettes de réseau nommées d'après leur fonction, et les broches de configuration des composants autonomes sont câblées à demeure plutôt que pilotées par le micro-contrôleur, ce qui rend leur comportement indépendant du firmware. Les bus partagés, l'I\textsuperscript{2}C de configuration et de télémétrie ainsi que les deux bus SPI dédiés respectivement à l'écran et à la carte \gls{sd}, sont regroupés autour du micro-contrôleur, seul maître de ces échanges.
+
+La figure~\ref{fig:archi_elec} résume cette architecture en séparant le cheminement de l'énergie de celui du signal audio.
+
+\fig[H, width=0.95\linewidth]{Architecture électrique du lecteur, cheminement de l'énergie et du signal audio}{archi_elec}
+
+
+\subsection{Distribution de l'alimentation et chaîne de charge}
+
+L'énergie entre par le connecteur USB-C. Les deux lignes de configuration CC1 et CC2 sont dirigées vers le chargeur MAX77757, qui lit sur elles le courant annoncé par une source Type-C et n'exige aucune résistance de terminaison externe, celles-ci étant intégrées au chargeur. La tension d'entrée VBUS rejoint directement le chargeur, indépendamment du reste, tandis que les deux lignes de données D+ et D$-$ passent d'abord par un multiplexeur analogique.
+
+Ce multiplexeur, un PI3USB221A, aiguille la paire de données vers l'une de deux destinations selon un signal de commande issu du micro-contrôleur. Au repos, une résistance de rappel le place du côté du pont USB-UART, ce qui permet de programmer la puce et d'accéder à la console série dès la mise sous tension. Sur commande, il bascule la paire vers le chargeur, qui peut alors mener sa détection BC1.2 sur D+ et D$-$ afin de reconnaître un chargeur mural classique. Un seul port physique dessert ainsi tour à tour la programmation et la négociation de charge, sans jamais connecter les deux fonctions en même temps.
+
+Le MAX77757 répartit ensuite l'énergie entre l'entrée, le système et la batterie au moyen de son sélecteur de puissance intégré. Lorsqu'une source est présente, le système est alimenté par l'USB et l'excédent recharge la cellule. En l'absence de source, la batterie alimente seule le système, la bascule entre les deux régimes étant transparente. Le chargeur fonctionne de façon autonome, sa configuration étant fixée par résistances, dont celle qui règle le courant de charge rapide, et son état rapporté par des broches matérielles, sans recours à l'I\textsuperscript{2}C~\cite{analog_MAX77757}.
+
+La jauge MAX17260 s'insère sur ce chemin pour suivre l'état de la batterie. Elle mesure le courant échangé aux bornes d'une résistance de mesure externe de faible valeur placée en série avec la cellule, et lit la tension de cette dernière, l'ensemble étant transmis au micro-contrôleur par l'I\textsuperscript{2}C. Une broche d'alerte signale par ailleurs au firmware le passage sous un seuil bas de charge.
+
+Le rail logique de 3,3~V est produit à partir de la tension système par le convertisseur abaisseur TPS62A01. Sa tension de sortie est fixée par un pont de retour et affinée par un condensateur de compensation, valeurs déduites des abaques de sa fiche technique~\cite{TI_TPS62A01}. En fin de décharge, lorsque la tension système s'approche de 3,3~V, le convertisseur passe en conduction permanente et se comporte en régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable.
+
+L'entrée d'activation du convertisseur est pilotée par une logique câblée qui combine trois sources de mise en marche, à savoir l'appui sur le bouton de démarrage, la présence de l'USB et une commande de maintien du firmware, l'ensemble étant validé par le superviseur de tension. Ce superviseur, un XC6120, surveille en permanence la tension système et relâche cette activation dès qu'elle descend sous 3,2~V. Sa sortie étant reliée directement à l'entrée d'activation du convertisseur, le franchissement du seuil coupe le rail logique, ce qui protège la cellule de la décharge profonde et maintient la chaîne audio filaire au-dessus de sa tension minimale de fonctionnement. Un filtre RC sur son entrée de mesure écarte enfin les faux déclenchements dus au bruit~\cite{torex_XC6120}.
+
+
+\subsection{Chaîne audio filaire}
+
+La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque. Le \gls{DAC} PCM5242 reçoit l'audio sur le bus I\textsuperscript{2}S et en restitue une image analogique différentielle, laquelle traverse un filtre passif avant d'attaquer l'amplificateur MAX97220A qui pilote la prise jack. Le convertisseur reconstruit lui-même son horloge interne à partir de l'horloge de bit, aucune horloge maître n'étant câblée, conformément au choix établi au chapitre précédent.
+
+\subsubsection{Filtre de sortie}
+
+Chaque ligne de sortie du convertisseur porte deux résistances série de 5,1~k$\Omega$ encadrant un condensateur de 100~pF monté entre les deux lignes différentielles. Cet ensemble forme un filtre passe-bas dont la fréquence de coupure se situe autour de 156~kHz. Son rôle n'est pas de lisser un signal en escalier, car le PCM5242 est un convertisseur delta-sigma à suréchantillonnage dont le filtre d'interpolation numérique interne assure déjà la reconstruction. Le filtre analogique se borne à atténuer le bruit résiduel hors bande et les images spectrales, déjà rejetées loin au-delà de la bande audio par le suréchantillonnage~\cite{TI_PCM5242}. Les mêmes résistances remplissent une seconde fonction, puisqu'elles constituent la résistance d'entrée qui fixe le gain de l'amplificateur décrit ci-après.
 
 \subsubsection{Adaptation de niveau et choix du gain}
 
-Le DAC retenu, le PCM5242, délivre une tension différentielle de pleine
-échelle $V_{\text{DAC}} \approx 4.2\,\text{V}_{\text{RMS}}$ (à
-$0\,\text{dBFS}$). Or, sous une alimentation de $3.3\,\text{V}$, l'excursion
-maximale en sortie de l'amplificateur (\emph{output voltage swing}) est
-limitée à $V_{\text{swing}} \approx 2.1\text{--}2.2\,\text{V}_{\text{RMS}}$.
-Transmettre directement les $4.2\,\text{V}_{\text{RMS}}$ du DAC, c'est-à-dire
-appliquer un gain unitaire, reviendrait à demander à l'étage de sortie une
-tension supérieure à ce qu'il peut reproduire. Une adaptation de niveau est
-donc nécessaire entre les deux étages.
+Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, l'excursion maximale en sortie de l'amplificateur est limitée à $V_{\text{swing}} \approx 2{,}1\,\text{V}_{\text{RMS}}$~\cite{analog_MAX97220A}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
 
-Le gain de l'amplificateur est fixé par le rapport des résistances externes
-selon
+Le gain de l'amplificateur est fixé par le rapport des résistances externes selon
 \begin{equation}
     A_v = \frac{R_f}{R_{in}}.
 \end{equation}
-Il est ici choisi de manière à ramener la pleine échelle du DAC au niveau du
-swing maximal de l'amplificateur~:
+La résistance de contre-réaction vaut $R_f = 5{,}1\,\text{k}\Omega$, tandis que la résistance d'entrée est formée des deux résistances série de la ligne, soit $R_{in} = 5{,}1\,\text{k}\Omega + 5{,}1\,\text{k}\Omega = 10{,}2\,\text{k}\Omega$. Le gain retenu ramène ainsi la pleine échelle du convertisseur au niveau de l'excursion maximale de l'amplificateur,
 \begin{equation}
-    A_v = \frac{5.1\,\text{k}\Omega}{10.2\,\text{k}\Omega} = 0.5
-    \quad (\approx -6\,\text{dB}),
+    A_v = \frac{5{,}1\,\text{k}\Omega}{10{,}2\,\text{k}\Omega} = 0{,}5 \quad (\approx -6\,\text{dB}),
 \end{equation}
 ce qui donne en sortie
 \begin{equation}
-    V_{\text{out,max}} = A_v \cdot V_{\text{DAC}}
-    = 0.5 \times 4.2\,\text{V}_{\text{RMS}}
-    = 2.1\,\text{V}_{\text{RMS}}
-    \le V_{\text{swing}}.
+    V_{\text{out,max}} = A_v \cdot V_{\text{DAC}} = 0{,}5 \times 4{,}2\,\text{V}_{\text{RMS}} = 2{,}1\,\text{V}_{\text{RMS}} \le V_{\text{swing}}.
 \end{equation}
-La pleine échelle numérique du DAC est ainsi calée exactement sur l'excursion
-maximale de l'amplificateur~: toute la dynamique disponible est exploitée sans
-jamais atteindre la zone d'écrêtage. \\
+La pleine échelle numérique du convertisseur est de la sorte calée exactement sur l'excursion maximale de l'amplificateur, toute la dynamique disponible étant exploitée sans jamais atteindre la zone d'écrêtage.
 
 \subsubsection{Conséquence d'un gain inadapté}
 
-Il importe de souligner que la saturation n'est pas déterminée par le gain
-seul, mais par le produit du gain et du niveau d'entrée instantané. Le DAC
-n'atteint $4.2\,\text{V}_{\text{RMS}}$ qu'à pleine échelle numérique~; un gain
-unitaire ne provoquerait donc pas une distorsion permanente, mais un
-écrêtage limité aux crêtes du signal proches de $0\,\text{dBFS}$. Ce
-comportement constitue le cas le plus défavorable du point de vue perceptif~:
-le signal demeure propre à faible niveau, puis se dégrade brutalement sur les
-passages de forte amplitude. Le choix d'un gain de $0.5$ écarte entièrement
-ce risque.
+La saturation n'est pas déterminée par le gain seul, mais par le produit du gain et du niveau d'entrée instantané. Le convertisseur n'atteignant sa pleine échelle qu'aux plus fortes amplitudes numériques, un gain unitaire ne provoquerait pas une distorsion permanente mais un écrêtage limité aux crêtes proches de $0\,\text{dBFS}$. Ce comportement est le plus défavorable à l'oreille, le signal demeurant propre à faible niveau puis se dégradant brutalement sur les passages de forte amplitude. Le gain de $0{,}5$ écarte entièrement ce risque.
+
+\subsubsection{Coupure du signal}
+
+Deux commandes permettent de rendre la chaîne silencieuse. La broche de sourdine du convertisseur interrompt la sortie audio, tandis que la broche de mise en veille de l'amplificateur coupe son étage de sortie. Ces deux lignes sont pilotées par l'expanseur d'entrées-sorties plutôt que directement par le micro-contrôleur, ce qui regroupe les commandes lentes de la chaîne sur un même circuit. Leur emploi conjoint à la mise sous tension et à l'extinction évite les bruits de commutation audibles dans le casque.
+
+
+\subsection{Programmation automatique}
+\label{sec:autoflash}
+
+Le passage automatique en mode programmation repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset, la puce démarrant alors en mode téléchargement plutôt que depuis la mémoire flash~\cite{ESP32_Datasheet}. Le CP2102N exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN et GPIO0 par l'intermédiaire de deux transistors, de sorte à faire entrer automatiquement la puce en mode téléchargement sans manipulation manuelle. Un réseau RC retarde légèrement l'établissement de GPIO0 par rapport à EN afin que la séquence de reset soit correctement ordonnée. Ce circuit reprend celui de la carte de développement officielle d'Espressif, ce qui en garantit le fonctionnement~\cite{ESP32_DevKitC_Doc}.
+
+
+\subsection{Protections électriques}
+
+La carte étant exposée aux manipulations, aux câbles externes et aux variations de la source USB, plusieurs protections sont réparties aux points sensibles.
+
+Les cinq lignes exposées du connecteur USB, à savoir VBUS, les deux lignes de données et les deux lignes de configuration, sont chacune protégées par une diode TVS qui reste inactive en fonctionnement normal et écrête toute surtension transitoire vers la masse avant qu'elle n'atteigne les circuits. Ces diodes défendent en premier lieu les broches directement reliées au connecteur contre les décharges électrostatiques~\cite{texas_instruments_system-level_2025}.
+
+La sortie casque reçoit une protection analogue, complétée d'un filtrage. Chaque canal traverse une perle de ferrite associée à un condensateur, ce qui bloque les perturbations radiofréquence susceptibles d'être captées par le câble du casque puis réinjectées dans l'amplificateur, et une diode de protection écrête les décharges appliquées sur la prise~\cite{microchip_technology_inc_an1767_2014}. L'amplificateur retenu intégrant une protection permanente contre les courts-circuits, aucune résistance série n'est ajoutée sur le chemin du signal.
+
+Les contacts de la carte microSD, accessibles à l'utilisateur, sont eux aussi protégés par un réseau de diodes qui écarte les décharges lors de l'insertion.
+
+Les protections liées à l'énergie sont pour l'essentiel assurées de façon autonome par le chargeur, qui surveille la surtension d'entrée et régule la charge en fonction de la température de la cellule lue sur une thermistance. Un fusible réarmable placé en série avec la batterie complète ce dispositif en cas de surintensité. La protection contre la décharge profonde est quant à elle assurée par le superviseur de tension décrit plus haut.
+
+Enfin, chaque broche d'alimentation des circuits actifs reçoit un découplage local, conforme aux schémas de référence des fiches techniques, afin de fournir les appels de courant rapides au plus près des composants et de contenir le bruit de commutation~\cite{prof_bogatin_rules_2013}.
+
+
+\subsection{Validation}
+
+La cohérence du schéma a été vérifiée avant le routage. Le contrôle des règles électriques de l'outil de conception n'a signalé ni broche laissée en l'air ni conflit de sortie, et chaque sous-circuit a été relu broche à broche contre le schéma de référence de la fiche technique du composant concerné. Les chemins d'alimentation ont été suivis depuis le connecteur USB jusqu'à chaque rail afin de confirmer que la logique d'activation, le passage sur batterie et le verrouillage sous-tension se comportent comme prévu. Les points de protection ont été passés en revue pour s'assurer qu'aucune ligne exposée ne rejoint un composant actif sans écrêtage. Les vérifications chiffrées relevant de la mesure, elles sont reportées au chapitre des résultats.

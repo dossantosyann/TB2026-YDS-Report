@@ -1,5 +1,5 @@
 \section{Choix des composants}
-
+\label{sec:choix_composants}
 
 Ce chapitre justifie la sélection des principaux composants du système. Chaque choix découle des spécifications établies précédemment et résulte d'une comparaison entre plusieurs candidats évalués selon un ensemble de critères communs : adéquation fonctionnelle aux besoins du projet, performances techniques relevées dans les datasheets, consommation énergétique, format du boîtier, ainsi que le coût et la disponibilité des composants.
 
@@ -483,9 +483,7 @@ Comme expliqué plus haut, le MAX17260 nécessite une résistance de mesure exte
 
 \subsection{Pont USB-UART}
 
-La programmation du micro-contrôleur et l'accès à la console série s'effectuent depuis un ordinateur par l'USB. Un pont USB-UART assure la conversion entre le bus USB de l'hôte et l'interface UART du micro-contrôleur.
-
-Au-delà de cette conversion, le composant doit permettre le passage automatique en mode programmation. Ce mécanisme repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART, indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset : la puce démarre alors en mode téléchargement plutôt que depuis la mémoire flash~\cite{ESP32_Datasheet}. Le pont exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN (reset) et GPIO0 pour faire entrer automatiquement la puce en mode téléchargement, sans manipulation manuelle.
+La programmation du micro-contrôleur et l'accès à la console série s'effectuent depuis un ordinateur par l'USB. Un pont USB-UART assure la conversion entre le bus USB de l'hôte et l'interface UART du micro-contrôleur. Au-delà de cette conversion, le composant doit piloter le passage automatique de la puce en mode programmation au moyen de ses lignes de contrôle, dont le circuit est détaillé à la section~\ref{sec:autoflash}.
 
 \subsubsection{Composant retenu}
 
