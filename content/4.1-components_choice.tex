@@ -5,7 +5,7 @@ Ce chapitre justifie la sélection des principaux composants du système. Chaque
 
 La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format BGA ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie.
 
-Toutes les références de prix ont été prises sur DigiKey~\cite{digikey}.
+Toutes les références de prix ont été prises sur DigiKey~\cite{digikey}. Les écarts de prix entre les candidats retenus se sont révélés marginaux à l'échelle de la BOM complète de la carte. Le prix n'a donc jamais constitué un critère décisif, ni été opposé à la priorité donnée à la qualité audio.
 
 
 
@@ -15,31 +15,21 @@ Toutes les références de prix ont été prises sur DigiKey~\cite{digikey}.
 
 \subsection{Micro-contrôleur}
 
-Le micro-contrôleur constitue le cœur du système : il orchestre le décodage audio, le pilotage de l'écran et de la carte microSD, la gestion de l'interface utilisateur et, surtout, la diffusion sans fil de la musique. C'est ce dernier besoin qui s'est révélé le critère déterminant du choix.
+Le micro-contrôleur constitue le cœur du système : il orchestre le décodage audio, le pilotage de l'écran et de la carte microSD, la gestion de l'interface utilisateur et, surtout, la diffusion sans fil de la musique. C'est ce dernier besoin qui a déterminé le choix.
 
 \subsubsection{Le critère décisif : le Bluetooth Classic et le profil A2DP}
 
-La diffusion audio vers une enceinte ou un casque Bluetooth repose sur le profil \textit{Advanced Audio Distribution Profile} (A2DP). Ce profil fait partie du Bluetooth Classic et non du Bluetooth à basse consommation (BLE)~\cite{bluetooth_sig_a2dp} : un micro-contrôleur ne disposant que d'une radio BLE est donc incapable de transmettre un flux A2DP, quelle que soit sa puissance de calcul.
+La diffusion audio vers une enceinte ou un casque Bluetooth repose sur le profil \textit{Advanced Audio Distribution Profile} (A2DP), qui relève du Bluetooth Classic et non du Bluetooth à basse consommation (BLE)~\cite{bluetooth_sig_a2dp}. Un micro-contrôleur ne disposant que d'une radio BLE est donc incapable de transmettre un flux A2DP, quelle que soit sa puissance de calcul. Cette contrainte élimine la grande majorité des micro-contrôleurs sans fil du marché : les familles nRF52 et nRF53 de Nordic Semiconductor~\cite{nordic_nRF52840}, les STM32WB de STMicroelectronics~\cite{stm_STM32WB55} et les variantes récentes de l'ESP32 lui-même (S3, C3, C6)~\cite{espressif_soc_comparison} n'intègrent qu'une radio BLE. L'ESP32 d'origine est l'un des rares composants à la fois disponibles, peu coûteux et bien documentés à combiner le Bluetooth Classic et l'A2DP en mode source, via la pile Bluedroid de son environnement de développement~\cite{ESP32_IDF_guide}.
 
-Cette contrainte élimine d'emblée la grande majorité des micro-contrôleurs sans fil du marché. Les familles nRF52 et nRF53 de Nordic Semiconductor~\cite{nordic_nRF52840}, les STM32WB de STMicroelectronics~\cite{stm_STM32WB55}, ainsi que les variantes récentes de l'ESP32 lui-même (S3, C3, C6)~\cite{espressif_soc_comparison} n'intègrent qu'une radio BLE. L'ESP32 d'origine est l'un des rares micro-contrôleurs à la fois largement disponibles, peu coûteux et bien documentés à combiner le Bluetooth Classic avec le support de l'A2DP en mode source, via la pile Bluedroid de son environnement de développement~\cite{ESP32_IDF_guide}.
+L'architecture alternative envisagée aurait consisté à associer un micro-contrôleur généraliste, un STM32 par exemple, à un circuit Bluetooth audio dédié. Cette partition impose deux circuits au lieu d'un, un étage radiofréquence certifié supplémentaire et un routage plus lourd, sans bénéfice pour le cahier des charges. Elle ne se justifierait que pour des besoins absents de ce projet, tels que des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure. Réunir le micro-contrôleur, le Bluetooth Classic et l'A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste.
 
-Une architecture alternative aurait consisté à associer un micro-contrôleur généraliste, un STM32, par exemple, à un circuit Bluetooth audio dédié, externe au MCU. Cette solution a été écartée car elle multiplie les contraintes sans bénéfice pour le cahier des charges. Elle impose deux circuits au lieu d'un, reliés par une interface audio (I\textsuperscript{2}S) et un canal de contrôle, ce qui alourdit le routage, la BOM et l'encombrement, à l'inverse d'un appareil portable compact. Le circuit Bluetooth dédié nécessiterait par ailleurs son propre étage radiofréquence certifié, ramenant au problème que le module ESP32 résout d'emblée. Une telle partition ne se justifierait que pour exploiter des codecs haut de gamme (aptX, LDAC) ou une puissance applicative très supérieure, deux besoins absents de ce projet. Réunir le micro-contrôleur, le Bluetooth Classic et le profil A2DP dans un seul module pré-certifié demeure donc la solution la plus simple et la plus robuste.
+\subsubsection{Ressources, variante et intégration}
 
-\subsubsection{Atouts complémentaires de l'ESP32}
+Au-delà de ce critère éliminatoire, l'ESP32 réunit les ressources nécessaires à l'ensemble du système. Son architecture double cœur permet d'isoler le traitement audio, sensible au temps, du reste des opérations, et ses périphériques couvrent tous les besoins : une interface I\textsuperscript{2}S vers le convertisseur, plusieurs contrôleurs SPI pour dédier un bus à l'affichage et un autre au stockage, un bus I\textsuperscript{2}C pour les circuits de configuration et un convertisseur analogique-numérique pour le potentiomètre de volume~\cite{ESP32_Datasheet}. Il bénéficie enfin d'un écosystème mature, gage de documentation abondante tout au long du projet.
 
-Au-delà de ce critère éliminatoire, l'ESP32 réunit les ressources matérielles nécessaires à l'ensemble du système. Son architecture à double cœur offre la possibilité de répartir les traitements sur deux cœurs, par exemple en isolant le traitement audio, sensible au temps, du reste des opérations. Ses périphériques couvrent par ailleurs les besoins d'un tel système : une interface I\textsuperscript{2}S pour la transmission audio numérique vers un convertisseur, plusieurs contrôleurs SPI permettant de dédier un bus à l'affichage et un autre au stockage, un bus I\textsuperscript{2}C pour d'éventuels circuits de configuration et de gestion, ainsi qu'un convertisseur analogique-numérique pour des entrées analogiques telles qu'un potentiomètre de volume~\cite{ESP32_Datasheet}. L'ESP32 s'appuie enfin sur un écosystème mature et une large communauté d'utilisateurs, gage de documentation et de ressources abondantes tout au long du projet.
+Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseudo-statique (PSRAM) intégrée, absente de la variante WROOM, qui offre une marge de mémoire vive appréciable pour les tampons audio~\cite{ESP32_WROVER-E_Datasheet}. Le recours à un module plutôt qu'à la puce nue évite par ailleurs de concevoir soi-même l'étage radiofréquence (antenne, adaptation d'impédance à 50~$\Omega$, réseau d'adaptation) ainsi que la flash, le quartz et le découplage associés. Cet étage est la partie la plus délicate d'une telle carte, où une antenne mal adaptée dégrade directement la portée et la fiabilité de la liaison. Le module WROVER-E intègre tous ces éléments sur un circuit déjà certifié, supprimant la partie la plus risquée de la conception et simplifiant le routage, un avantage décisif pour un prototype mono-carte réalisé dans un temps contraint.
 
-\subsubsection{Choix de la variante : ESP32-WROVER-E}
-
-Parmi les modules de la gamme, le WROVER-E a été retenu pour sa mémoire pseudo-statique (PSRAM) intégrée~\cite{ESP32_WROVER-E_Datasheet}. Celle-ci offre une marge de mémoire vive appréciable pour les tampons audio que la variante WROOM, dépourvue de PSRAM, ne procure pas.
-
-\subsubsection{Module plutôt que puce nue}
-
-L'ESP32 est disponible aussi bien sous forme de puce nue que de module pré-assemblé. Concevoir une carte autour de la puce nue imposerait de réaliser soi-même tout l'étage radiofréquence, antenne, ligne d'adaptation d'impédance à 50\,$\Omega$, réseau d'adaptation, en plus d'ajouter la mémoire flash, le quartz et le découplage associés. Cet étage RF est la partie la plus délicate de la conception : une antenne mal adaptée ou mal placée dégrade directement la portée et la fiabilité de la liaison Bluetooth, et sa mise au point exige une expertise et une instrumentation spécifique. À cela s'ajouterait, dans une perspective de mise sur le marché, l'obtention des certifications radio (FCC, CE, IC), bien que cet aspect sorte du cadre d'un prototype de travail de bachelor, il illustre la complexité que représente la conception d'un module radio à partir d'une puce nue.
-
-Le module WROVER-E intègre l'ensemble de ces éléments, antenne embarquée, flash, quartz et découplage, sur un circuit certifié fonctionnel~\cite{ESP32_WROVER-E_Datasheet}. Il supprime ainsi la partie la plus risquée de la conception et simplifie considérablement le routage de la carte principale. Pour un prototype mono-carte réalisé dans un temps contraint, cet avantage est décisif et justifie le recours au module plutôt qu'à la puce nue.
-
-Le choix de l'ESP32 fixe enfin la tension d'alimentation logique du système à 3,3~V. Tous les composants retenus par la suite devront donc être compatibles avec ce rail, contrainte commune à l'ensemble des choix présentés dans ce chapitre.
+Le choix de l'ESP32 fixe enfin la tension d'alimentation logique à 3,3~V, contrainte commune à l'ensemble des composants retenus par la suite.
 
 
 
@@ -89,9 +79,10 @@ La comparaison s'est restreinte à la famille Burr-Brown PCM de Texas Instrument
 
 \begin{table}[H]
     \centering
+    \renewcommand{\arraystretch}{1.25}
     \caption{Comparaison des convertisseurs numérique-analogique candidats}
     \label{tab:comparo_dac}
-    %\footnotesize
+    \footnotesize
     \begin{tabular}{l c c >{\columncolor{teal!12}}c}
         \hline
                                 & \makecell{\textbf{PCM5102A}                                       \\\cite{TI_PCM5102A}} & \makecell{\textbf{PCM5122}\\\cite{TI_PCM5122}} & \makecell{\textbf{PCM5242}\\\cite{TI_PCM5242}} \\
@@ -132,7 +123,7 @@ Il intègre par ailleurs un miniDSP programmable. Celui-ci n'a pas constitué un
 
 Sur le plan de l'intégration, la famille PCM peut en outre dériver son horloge de la ligne BCK au moyen d'une PLL interne, sans horloge maître dédiée, ce qui simplifie le câblage de l'interface I\textsuperscript{2}S avec le micro-contrôleur.
 
-Le PCM5242 est le plus cher des trois candidats (8,06~CHF). Cet écart reste néanmoins marginal à l'échelle de la BOM complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio.
+Le PCM5242 est le plus cher des trois candidats (8,06~CHF), seul écart de prix notable du chapitre, mais négligeable au regard du gain de qualité audio.
 
 
 
@@ -150,9 +141,10 @@ Trois amplificateurs, issus de trois fabricants différents, ont été comparés
 
 \begin{table}[H]
     \centering
+    \renewcommand{\arraystretch}{1.25}
     \caption{Comparaison des amplificateurs casque candidats}
     \label{tab:comparo_ampli}
-    %\footnotesize
+    \footnotesize
     \begin{tabular}{l c c >{\columncolor{teal!12}}c}
         \hline
                                                 & \makecell{\textbf{PAM8908}                                         \\\cite{diodes_inc_PAM8908}} & \makecell{\textbf{TPA6132A2}\\\cite{TI_TPA6132A2}} & \makecell{\textbf{MAX97220A}\\\cite{analog_MAX97220A}} \\
@@ -192,9 +184,6 @@ Le MAX97220A se détache nettement sur les critères qui gouvernent la qualité 
 
 En contrepartie, son bruit de sortie (7~$\mu$Vrms) et son courant de repos (5,5~mA) sont légèrement supérieurs à ceux du TPA6132A2, mais demeurent faibles et sans incidence pratique.
 
-Le MAX97220A est le plus cher des trois candidats (1,82~CHF). Comme pour le convertisseur, cet écart reste marginal à l'échelle de la BOM complète de la carte, et se justifie pleinement par la priorité donnée à la qualité audio.
-
-
 
 
 % ---------------------------------------
@@ -211,9 +200,10 @@ Les candidats envisagés sont des expanseurs 8 bits commandés en I\textsuperscr
 
 \begin{table}[H]
     \centering
+    \renewcommand{\arraystretch}{1.25}
     \caption{Comparaison des expanseurs d'entrées-sorties candidats}
     \label{tab:comparo_exp}
-    %\footnotesize
+    \footnotesize
     \begin{tabular}{l >{\columncolor{teal!12}}c c c c}
         \hline
                               & \makecell{\textbf{PI4IOE5V9554}                                                      \\\cite{diodes_inc_PI4IOE5V9554}} & \makecell{\textbf{TCA9554}\\\cite{TI_TCA9554}} & \makecell{\textbf{PCA6408A}\\\cite{nxp_PCA6408A}} & \makecell{\textbf{FXL6408}\\\cite{onsemi_FXL6408}} \\
@@ -227,7 +217,7 @@ Les candidats envisagés sont des expanseurs 8 bits commandés en I\textsuperscr
         \multicolumn{5}{c}{\textbf{Caractéristiques fonctionnelles}}                                                 \\
         \hline
         Type de sortie        & Push-pull                       & Push-pull         & Push-pull & Push-pull + High-Z \\
-        Pull-up/down internes & Non                             & Non               & Non       & Oui, configurables \\
+        Pull-up/down internes & Non                             & Non               & Non       & Oui                \\
         Sortie d'interruption & Oui                             & Oui               & Oui       & Oui                \\
         \hline
         \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                 \\
@@ -261,8 +251,10 @@ Cette mesure, détaillée à l'annexe~\ref{annexe:conso_esp32}, donne un courant
 
 \begin{table}[H]
     \centering
+    \renewcommand{\arraystretch}{1.25}
     \caption{Bilan de consommation sur le rail 3,3\,V}
     \label{tab:conso_totale}
+    \footnotesize
     \begin{tabular}{p{0.30\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} >{\centering\arraybackslash}p{0.12\linewidth} p{0.36\linewidth}}
         \hline
         \textbf{Composant}                                        & \textbf{$I_{typ}$ \newline [mA]} & \textbf{$I_{max}$ \newline [mA]} & \textbf{Remarque}                                        \\
@@ -284,22 +276,21 @@ La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontai
 
 \subsubsection{Choix de la topologie : buck plutôt que LDO}
 
-Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'à 3,2\,V, seuil de coupure imposé par le superviseur de tension. Deux topologies permettent d'obtenir le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck).
+Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'au seuil de coupure de 3,2\,V imposé par le superviseur. Deux topologies permettent d'en tirer le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck). Le rendement d'un LDO est borné par le rapport $V_{OUT}/V_{IN}$, soit au mieux $3{,}3/4{,}2 \approx 80\,\%$, le reste étant dissipé en chaleur, ce qui pèse sur l'autonomie et la thermique d'un boîtier compact. Un buck conserve à l'inverse un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée~\cite{TI_TPS62A01}, avantage décisif pour un lecteur audio nomade.
 
-Le rendement d'un LDO étant borné par le rapport $V_{OUT}/V_{IN}$, il plafonne à $3{,}3/4{,}2 \approx 80\,\%$ : les 20\,\% restants sont dissipés en chaleur. Dans un appareil portable à boîtier compact, cette dissipation est problématique à la fois pour l'autonomie et pour la thermique. Un buck maintient au contraire un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée, ce qui prolonge sensiblement l'autonomie, l'un des objectifs centraux pour un lecteur audio nomade.
-
-Le principal inconvénient théorique d'un buck en fin de décharge de la batterie est levé par la capacité de fonctionnement à 100\,\% de rapport cyclique. Lorsque la tension batterie s'approche de la tension de sortie, le transistor haut passe en conduction permanente et le convertisseur se comporte comme un régulateur à très faible chute : le bas de la plage batterie reste exploitable, sans le compromis habituel du buck. Quant à l'ondulation de commutation, propre à toute topologie à découpage, une fréquence élevée la repousse loin de la bande audio et la rend aisée à filtrer. Le PCM5242 et le MAX97220 disposent par ailleurs d'un bon taux de réjection d'alimentation~\cite{TI_PCM5242, analog_MAX97220A}. La topologie buck est donc retenue.
+Deux réserves habituelles à l'égard d'un buck sont levées ici. En fin de décharge, lorsque la tension batterie s'approche de la sortie, le transistor haut passe en conduction permanente (100\,\% de rapport cyclique) et le convertisseur se comporte comme un régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable. Quant à l'ondulation de commutation, une fréquence élevée la repousse hors de la bande audio et la rend aisée à filtrer, tandis que le PCM5242 et le MAX97220 offrent un bon taux de réjection d'alimentation~\cite{TI_PCM5242, analog_MAX97220A}. La topologie buck est donc retenue.
 
 
 \subsubsection{Comparaison des composants candidats}
 
-Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo_buck}). Le courant de sortie maximal étant identique, la sélection s'opère sur le rendement, la consommation à vide, le boîtier et le prix.
+Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo_buck}). Les quatre partagent les fonctions attendues d'un buck moderne, à savoir le mode light-load automatique, le fonctionnement à 100\,\% de rapport cyclique, la protection contre les surintensités et le démarrage progressif (soft-start). Ces fonctions ne les départageant pas, la sélection s'opère sur le rendement, la consommation à vide, le boîtier et le prix. maximal étant identique, la sélection s'opère sur le rendement, la consommation à vide, le boîtier et le prix.
 
 \begin{table}[H]
     \centering
+    \renewcommand{\arraystretch}{1.25}
     \caption{Comparaison des convertisseurs buck candidats}
     \label{tab:comparo_buck}
-    %\footnotesize
+    \footnotesize
     \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
         \hline
                                            & \makecell{\textbf{TLV62568}                                             \\\cite{TI_TLV62568}} & \makecell{\textbf{TPS62A01}\\\cite{TI_TPS62A01}} & \makecell{\textbf{MAX17624}\\\cite{analog_MAX17624}} & \makecell{\textbf{AP61102}\\\cite{diodes_inc_AP61102}} \\
@@ -314,13 +305,6 @@ Quatre convertisseurs buck de 1\,A ont été comparés (tableau~\ref{tab:comparo
         $R_{DS(on)}$ côté haut [m$\Omega$] & 150                         & 100       & 160             & 110         \\
         $R_{DS(on)}$ côté bas [m$\Omega$]  & 100                         & 67        & 130             & 80          \\
         Rendement (3,3\,V, 1\,A) [\%]      & $\sim$95                    & $\sim$95  & $\sim$92        & $\sim$92    \\
-        \hline
-        \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                 \\
-        \hline
-        Mode light-load                    & Auto.                       & Auto.     & Auto.           & Auto.       \\
-        100\,\% duty cycle                 & Oui                         & Oui       & Oui             & Oui         \\
-        Over Current Protection            & Oui                         & Oui       & Oui             & Oui         \\
-        Soft-start                         & Oui                         & Oui       & Oui             & Oui         \\
         \hline
         \multicolumn{5}{c}{\textbf{Boîtier et prix}}                                                                 \\
         \hline
@@ -361,10 +345,6 @@ Sa fonction première, et la principale, est de préserver la durée de vie de l
 \clearpage
 \subsection{Batterie}
 À faire lorsque la mesure de courant du système sera faite
-
-\subsection{USB Splitter}
-TODO, parler de l'USB splitter pertinent ? ça a juste aidé le routage
-
 \clearpage
 
 
@@ -383,9 +363,10 @@ Quatre circuits de charge ont été comparés (tableau~\ref{tab:comparo_chargeur
 
 \begin{table}[H]
     \centering
+    \renewcommand{\arraystretch}{1.25}
     \caption{Comparaison des chargeurs de batterie candidats}
     \label{tab:comparo_chargeur}
-    %\footnotesize
+    \footnotesize
     \begin{tabular}{l c c >{\columncolor{teal!12}}c c}
         \hline
                                   & \makecell{\textbf{BQ25890}                                                       \\\cite{TI_BQ25890}} & \makecell{\textbf{BQ25629}\\\cite{TI_BQ25629}} & \makecell{\textbf{MAX77757}\\\cite{analog_MAX77757}} & \makecell{\textbf{MCP73871}\\\cite{microchip_MCP73871}} \\
@@ -422,7 +403,7 @@ Le MCP73871 est d'emblée écarté. Dépourvu de détection de source et limité
 
 Les BQ25890 et BQ25629, bien que performants, ne disposent pas de la détection Type-C par les broches CC et requièrent une configuration par I\textsuperscript{2}C, donc une intervention du firmware pour piloter la charge.
 
-Le MAX77757 est le plus cher des quatre candidats (3,52~CHF). Comme pour les composants précédents, cet écart reste marginal à l'échelle de la BOM complète de la carte, et se justifie par sa parfaite adéquation avec une entrée USB-C et un fonctionnement autonome.
+Le MAX77757 est le plus cher des quatre candidats (3,52~CHF), sans incidence au regard de son adéquation avec l'USB-C et de son fonctionnement autonome.
 
 
 
@@ -443,9 +424,10 @@ Quatre jauges ont été comparées (tableau~\ref{tab:comparo_jauge}).
 
 \begin{table}[H]
     \centering
+    \renewcommand{\arraystretch}{1.25}
     \caption{Comparaison des jauges de batterie candidates}
     \label{tab:comparo_jauge}
-    %\footnotesize
+    \footnotesize
     \begin{tabular}{l c >{\columncolor{teal!12}}c c c}
         \hline
                                      & \makecell{\textbf{MAX17048}                                                                         \\\cite{analog_MAX17048}} & \makecell{\textbf{MAX17260}\\\cite{analog_MAX17260}} & \makecell{\textbf{BQ27441-G1}\\\cite{TI_BQ27441-G1}} & \makecell{\textbf{STC3100}\\\cite{stm_STC3100}} \\
