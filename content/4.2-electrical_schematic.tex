@@ -1,4 +1,3 @@
-\clearpage
 \section{Schéma électrique}
 \label{sec:schema}
 
@@ -7,13 +6,9 @@ Le schéma électrique réunit les composants retenus au chapitre précédent et
 
 \subsection{Organisation du schéma}
 
-Le schéma est hiérarchique. Une feuille de plus haut niveau relie six feuilles fonctionnelles, chacune dédiée à un sous-ensemble du système, à savoir l'alimentation, le micro-contrôleur, l'écran, l'interface à boutons, le pont USB-UART et la chaîne audio filaire. Ce découpage suit les frontières naturelles du système et permet de vérifier chaque sous-ensemble isolément, ce qui rejoint la démarche de mise au point maillon par maillon adoptée pour la chaîne audio. Un diagramme de blocs accompagne le schéma et résume les liaisons principales entre ces feuilles.
+Le schéma est hiérarchique. Une feuille de plus haut niveau relie six feuilles fonctionnelles, chacune dédiée à un sous-ensemble du système, à savoir l'alimentation, le micro-contrôleur, l'écran, l'interface à boutons, le pont USB-UART et la chaîne audio filaire. Ce découpage suit les frontières naturelles du système et permet de vérifier chaque sous-ensemble isolément, ce qui rejoint la démarche de mise au point maillon par maillon adoptée pour la chaîne audio. Un diagramme de blocs accompagne le schéma et résume les liaisons principales entre ces feuilles, reprenant l'analyse fonctionnelle établie à la figure~\ref{Analyse_Fonctionnelle-Niv2.drawio}.
 
 Le choix de l'ESP32 ayant fixé la tension logique à 3,3~V, un unique rail alimente l'ensemble des circuits numériques et la chaîne audio, ce qui supprime toute adaptation de niveau entre composants. Les liaisons entre feuilles se font par étiquettes de réseau nommées d'après leur fonction, et les broches de configuration des composants autonomes sont câblées à demeure plutôt que pilotées par le micro-contrôleur, ce qui rend leur comportement indépendant du firmware. Les bus partagés, l'I\textsuperscript{2}C de configuration et de télémétrie ainsi que les deux bus SPI dédiés respectivement à l'écran et à la carte \gls{sd}, sont regroupés autour du micro-contrôleur, seul maître de ces échanges.
-
-La figure~\ref{archi_elec.drawio} résume cette architecture en séparant le cheminement de l'énergie de celui du signal audio.
-
-\fig[H, width=0.95\linewidth]{Architecture électrique du lecteur, cheminement de l'énergie et du signal audio}{archi_elec.drawio}
 
 
 \subsection{Distribution de l'alimentation et chaîne de charge}
@@ -28,12 +23,18 @@ La jauge MAX17260 s'insère sur ce chemin pour suivre l'état de la batterie. El
 
 Le rail logique de 3,3~V est produit à partir de la tension système par le convertisseur abaisseur TPS62A01. Sa tension de sortie est fixée par un pont de retour et affinée par un condensateur de compensation, valeurs déduites des abaques de sa fiche technique~\cite{TI_TPS62A01}. En fin de décharge, lorsque la tension système s'approche de 3,3~V, le convertisseur passe en conduction permanente et se comporte en régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable.
 
-L'entrée d'activation du convertisseur est pilotée par une logique câblée qui combine trois sources de mise en marche, à savoir l'appui sur le bouton de démarrage, la présence de l'USB et une commande de maintien du firmware, l'ensemble étant validé par le superviseur de tension. Ce superviseur, un XC6120, surveille en permanence la tension système et relâche cette activation dès qu'elle descend sous 3,2~V. Sa sortie étant reliée directement à l'entrée d'activation du convertisseur, le franchissement du seuil coupe le rail logique, ce qui protège la cellule de la décharge profonde et maintient la chaîne audio filaire au-dessus de sa tension minimale de fonctionnement. Un filtre RC sur son entrée de mesure écarte enfin les faux déclenchements dus au bruit~\cite{torex_XC6120}.
+\fig[H, width=0.62\linewidth]{Arbre d'alimentation, de l'entrée USB au rail logique}{arbre_alim.drawio}
+
+L'entrée d'activation du convertisseur est pilotée par une logique câblée, détaillée à la figure~\ref{extrain_enable.png}, qui combine trois sources de mise en marche validées par le superviseur de tension.
+
+\fig[H, width=0.9\linewidth]{Extrait du schéma, logique d'activation du convertisseur et superviseur de tension}{extrain_enable.png}
 
 
 \subsection{Chaîne audio filaire}
 
-La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque. Le \gls{DAC} PCM5242 reçoit l'audio sur le bus I\textsuperscript{2}S et en restitue une image analogique différentielle, laquelle traverse un filtre passif avant d'attaquer l'amplificateur MAX97220A qui pilote la prise jack. Le convertisseur reconstruit lui-même son horloge interne à partir de l'horloge de bit, aucune horloge maître n'étant câblée, conformément au choix établi au chapitre précédent.
+La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque, selon le détail donné à la figure~\ref{extrait_audio.png}. Le convertisseur reconstruit lui-même son horloge interne à partir de l'horloge de bit, aucune horloge maître n'étant câblée, conformément au choix établi au chapitre précédent.
+
+\fig[H, width=0.95\linewidth]{Extrait du schéma, sorties différentielles du convertisseur, filtre passif et entrées de l'amplificateur}{extrait_audio.png}
 
 \subsubsection{Filtre de sortie}
 
@@ -69,7 +70,9 @@ Deux commandes permettent de rendre la chaîne silencieuse. La broche de sourdin
 \subsection{Programmation automatique}
 \label{sec:autoflash}
 
-Le passage automatique en mode programmation repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset, la puce démarrant alors en mode téléchargement plutôt que depuis la mémoire flash~\cite{ESP32_Datasheet}. Le CP2102N exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN et GPIO0 par l'intermédiaire de deux transistors, de sorte à faire entrer automatiquement la puce en mode téléchargement sans manipulation manuelle. Un réseau RC retarde légèrement l'établissement de GPIO0 par rapport à EN afin que la séquence de reset soit correctement ordonnée. Ce circuit reprend celui de la carte de développement officielle d'Espressif, ce qui en garantit le fonctionnement~\cite{ESP32_DevKitC_Doc}.
+Le passage automatique en mode programmation repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset, la puce démarrant alors en mode téléchargement plutôt que depuis la mémoire flash~\cite{ESP32_Datasheet}. Le CP2102N exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN et GPIO0 par l'intermédiaire de deux transistors, selon le circuit reproduit à la figure~\ref{extrait_autoflash.png}. Un réseau RC retarde légèrement l'établissement de GPIO0 par rapport à EN afin que la séquence de reset soit correctement ordonnée. Ce circuit reprend celui de la carte de développement officielle d'Espressif, ce qui en garantit le fonctionnement~\cite{ESP32_DevKitC_Doc}.
+
+\fig[H, width=0.85\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
 
 
 \subsection{Protections électriques}
