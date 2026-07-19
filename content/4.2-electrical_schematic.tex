@@ -23,18 +23,18 @@ La jauge MAX17260 s'insère sur ce chemin pour suivre l'état de la batterie. El
 
 Le rail logique de 3,3~V est produit à partir de la tension système par le convertisseur abaisseur TPS62A01. Sa tension de sortie est fixée par un pont de retour et affinée par un condensateur de compensation, valeurs déduites des abaques de sa fiche technique~\cite{TI_TPS62A01}. En fin de décharge, lorsque la tension système s'approche de 3,3~V, le convertisseur passe en conduction permanente et se comporte en régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable.
 
-\fig[H, width=0.62\linewidth]{Arbre d'alimentation, de l'entrée USB au rail logique}{arbre_alim.drawio}
+\fig[H, width=0.8\linewidth]{Arbre d'alimentation, de l'entrée USB au rail logique}{arbre_alim.drawio}
 
 L'entrée d'activation du convertisseur est pilotée par une logique câblée, détaillée à la figure~\ref{extrain_enable.png}, qui combine trois sources de mise en marche validées par le superviseur de tension.
 
-\fig[H, width=0.9\linewidth]{Extrait du schéma, logique d'activation du convertisseur et superviseur de tension}{extrain_enable.png}
+\fig[H, width=1\linewidth]{Extrait du schéma, logique d'activation du convertisseur et superviseur de tension}{extrain_enable.png}
 
 
 \subsection{Chaîne audio filaire}
 
 La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque, selon le détail donné à la figure~\ref{extrait_audio.png}. Le convertisseur reconstruit lui-même son horloge interne à partir de l'horloge de bit, aucune horloge maître n'étant câblée, conformément au choix établi au chapitre précédent.
 
-\fig[H, width=0.95\linewidth]{Extrait du schéma, sorties différentielles du convertisseur, filtre passif et entrées de l'amplificateur}{extrait_audio.png}
+\fig[H, width=1\linewidth]{Extrait du schéma, sorties différentielles du convertisseur, filtre passif et entrées de l'amplificateur}{extrait_audio.png}
 
 \subsubsection{Filtre de sortie}
 
@@ -72,7 +72,7 @@ Deux commandes permettent de rendre la chaîne silencieuse. La broche de sourdin
 
 Le passage automatique en mode programmation repose sur le bootloader de premier niveau gravé dans la ROM de l'ESP32. Présent en silicium sur tout ESP32, le module WROVER-E compris, ce bootloader prend en charge le protocole de téléchargement par UART indépendamment du contenu de la mémoire flash. Il s'active lorsque la broche GPIO0 est maintenue à l'état bas au moment du reset, la puce démarrant alors en mode téléchargement plutôt que depuis la mémoire flash~\cite{ESP32_Datasheet}. Le CP2102N exploite ce mécanisme grâce à ses lignes de contrôle DTR et RTS, qui pilotent les broches EN et GPIO0 par l'intermédiaire de deux transistors, selon le circuit reproduit à la figure~\ref{extrait_autoflash.png}. Un réseau RC retarde légèrement l'établissement de GPIO0 par rapport à EN afin que la séquence de reset soit correctement ordonnée. Ce circuit reprend celui de la carte de développement officielle d'Espressif, ce qui en garantit le fonctionnement~\cite{ESP32_DevKitC_Doc}.
 
-\fig[H, width=0.85\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
+\fig[H, width=0.70\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
 
 
 \subsection{Protections électriques}
