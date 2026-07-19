@@ -1,118 +1,254 @@
-<mxfile host="app.diagrams.net">
+<mxfile host="app.diagrams.net" type="device">
   <diagram name="archi_elec" id="archi_elec">
-    <mxGraphModel dx="1677" dy="662" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="700" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="840" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="lblE" parent="1" style="text;html=1;align=left;fontStyle=2;fontSize=12;fontColor=#666666;" value="Cheminement de l&#39;énergie" vertex="1">
-          <mxGeometry height="20" width="240" x="40" y="20" as="geometry" />
+
+        <mxCell id="bandE" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="20" y="20" width="1460" height="310" as="geometry" />
         </mxCell>
-        <mxCell id="lblS" parent="1" style="text;html=1;align=left;fontStyle=2;fontSize=12;fontColor=#666666;" value="Cheminement du signal audio" vertex="1">
-          <mxGeometry height="20" width="260" x="40" y="400" as="geometry" />
+        <mxCell id="bandD" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="20" y="345" width="1460" height="180" as="geometry" />
         </mxCell>
-        <mxCell id="usb" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Connecteur&#xa;USB-C" vertex="1">
-          <mxGeometry height="60" width="100" x="40" y="140" as="geometry" />
+        <mxCell id="bandA" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="20" y="540" width="1460" height="280" as="geometry" />
         </mxCell>
-        <mxCell id="mux" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Mux données&#xa;PI3USB221A" vertex="1">
-          <mxGeometry height="60" width="120" x="220" y="60" as="geometry" />
+
+        <mxCell id="tE" value="Énergie" style="text;html=1;align=left;fontStyle=1;fontSize=13;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="35" y="25" width="200" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="bridge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Pont USB-UART&#xa;CP2102N" vertex="1">
-          <mxGeometry height="60" width="120" x="420" y="60" as="geometry" />
+        <mxCell id="tD" value="Données USB et programmation" style="text;html=1;align=left;fontStyle=1;fontSize=13;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="35" y="350" width="320" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="charger" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Chargeur&#xa;MAX77757&#xa;(power path)" vertex="1">
-          <mxGeometry height="70" width="120" x="220" y="180" as="geometry" />
+        <mxCell id="tA" value="Signal audio filaire" style="text;html=1;align=left;fontStyle=1;fontSize=13;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="35" y="545" width="260" height="20" as="geometry" />
         </mxCell>
-        <mxCell id="batt" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Batterie&#xa;Li-ion" vertex="1">
-          <mxGeometry height="50" width="100" x="40" y="290" as="geometry" />
+
+        <mxCell id="usb" value="Connecteur&#10;USB-C" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="110" width="120" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="gauge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Jauge&#xa;MAX17260&#xa;(R_sense)" vertex="1">
-          <mxGeometry height="60" width="120" x="220" y="290" as="geometry" />
+        <mxCell id="charger" value="Chargeur&#10;MAX77757&#10;(power path)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="250" y="50" width="150" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="buck" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Buck 3,3 V&#xa;TPS62A01" vertex="1">
-          <mxGeometry height="60" width="120" x="440" y="180" as="geometry" />
+        <mxCell id="batt" value="Batterie&#10;Li-ion" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="240" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="sup" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Superviseur&#xa;XC6120&#xa;(seuil 3,2 V)" vertex="1">
-          <mxGeometry height="60" width="120" x="440" y="290" as="geometry" />
+        <mxCell id="gauge" value="Jauge&#10;MAX17260" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="250" y="240" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="rail" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" value="Rail 3,3 V" vertex="1">
-          <mxGeometry height="50" width="90" x="640" y="185" as="geometry" />
+        <mxCell id="buck" value="Convertisseur&#10;abaisseur&#10;TPS62A01" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="490" y="50" width="150" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="esp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" value="ESP32-WROVER-E" vertex="1">
-          <mxGeometry height="70" width="150" x="800" y="255" as="geometry" />
+        <mxCell id="sup" value="Superviseur&#10;XC6120" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="490" y="240" width="150" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="dac" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="DAC&#xa;PCM5242" vertex="1">
-          <mxGeometry height="60" width="110" x="220" y="460" as="geometry" />
+        <mxCell id="rail" value="Rail 3,3 V" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="55" width="130" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="filt" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Filtre RC&#xa;différentiel&#xa;(anti-images)" vertex="1">
-          <mxGeometry height="60" width="120" x="380" y="460" as="geometry" />
+        <mxCell id="loads" value="Circuits alimentés&#10;écran, carte SD, DAC,&#10;amplificateur, expanseur" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#999999;dashed=1;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="990" y="50" width="220" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="amp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Ampli casque&#xa;MAX97220A&#xa;(gain 0,5)" vertex="1">
-          <mxGeometry height="60" width="120" x="550" y="460" as="geometry" />
+
+        <mxCell id="mux" value="Multiplexeur&#10;PI3USB221A" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="250" y="400" width="150" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="jack" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Prise jack&#xa;3,5 mm" vertex="1">
-          <mxGeometry height="60" width="100" x="720" y="460" as="geometry" />
+        <mxCell id="bridge" value="Pont USB-UART&#10;CP2102N" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="490" y="400" width="150" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="exp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Expanseur I/O&#xa;PI4IOE5V9554" vertex="1">
-          <mxGeometry height="60" width="150" x="800" y="470" as="geometry" />
+        <mxCell id="esp" value="ESP32-WROVER-E" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="740" y="390" width="190" height="110" as="geometry" />
         </mxCell>
-        <mxCell id="e1" edge="1" parent="1" source="usb" style="endArrow=classic;html=1;fontSize=10;" target="mux">
+
+        <mxCell id="exp" value="Expanseur&#10;PI4IOE5V9554" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="490" y="610" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dac" value="DAC&#10;PCM5242" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="740" y="610" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="filt" value="Filtre RC&#10;différentiel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="950" y="610" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="amp" value="Amplificateur&#10;MAX97220A&#10;Av = 0,5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1150" y="605" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="jack" value="Prise jack&#10;3,5 mm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="610" width="110" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="usb" target="charger">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" edge="1" parent="1" source="usb" style="endArrow=classic;html=1;fontSize=10;" target="charger">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e1l" value="VBUS, CC1 et CC2" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e1">
+          <mxGeometry x="-0.1" relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" edge="1" parent="1" source="mux" style="endArrow=classic;html=1;fontSize=10;" target="bridge">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e4" edge="1" parent="1" source="mux" style="endArrow=classic;html=1;dashed=1;html=1;fontSize=10;" target="charger">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e5" edge="1" parent="1" source="bridge" style="endArrow=classic;html=1;fontSize=10;" target="esp">
+
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="usb" target="mux">
           <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="875" y="90" />
-            </Array>
+            <Array as="points"><mxPoint x="100" y="435" /></Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e6" edge="1" parent="1" source="batt" style="endArrow=classic;startArrow=classic;html=1;fontSize=10;" target="charger">
+        <mxCell id="e2l" value="D+ et D−" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e2">
+          <mxGeometry x="0.2" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;startArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="batt" target="charger">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e7" edge="1" parent="1" source="batt" style="endArrow=classic;html=1;fontSize=10;" target="gauge">
+        <mxCell id="e3l" value="charge et décharge" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e3">
+          <mxGeometry x="0.1" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="batt" target="gauge">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e8" edge="1" parent="1" source="charger" style="endArrow=classic;html=1;fontSize=10;" target="buck">
+        <mxCell id="e4l" value="mesure sur R_sense" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e4">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="charger" target="buck">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e9" edge="1" parent="1" source="buck" style="endArrow=classic;html=1;fontSize=10;" target="rail">
+        <mxCell id="e5l" value="V_sys, batterie ou USB" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e5">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;strokeColor=#d79b00;" edge="1" parent="1" source="sup" target="buck">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e10" edge="1" parent="1" source="sup" style="endArrow=classic;html=1;fontSize=10;" target="buck">
+        <mxCell id="e6l" value="EN, verrouillage sous 3,2 V" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;fontColor=#a06800;" vertex="1" connectable="0" parent="e6">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="buck" target="rail">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e11" edge="1" parent="1" source="rail" style="endArrow=classic;html=1;fontSize=10;" target="esp">
+        <mxCell id="e7l" value="3,3 V régulés" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e7">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="rail" target="loads">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s1" edge="1" parent="1" source="esp" style="endArrow=classic;html=1;fontSize=10;" target="dac">
+        <mxCell id="e8l" value="alimentation" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e8">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e8b" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="rail" target="esp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="805" y="360" /><mxPoint x="835" y="360" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8bl" value="alimentation 3,3 V" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e8b">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="mux" target="bridge">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s2" edge="1" parent="1" source="dac" style="endArrow=classic;html=1;fontSize=10;" target="filt">
+        <mxCell id="e9l" value="position au repos&#10;(programmation)" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e9">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;dashed=1;strokeWidth=1.6;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="mux" target="charger">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s3" edge="1" parent="1" source="filt" style="endArrow=classic;html=1;fontSize=10;" target="amp">
+        <mxCell id="e10l" value="position commandée&#10;(détection BC1.2)" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e10">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="bridge" target="esp">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s4" edge="1" parent="1" source="amp" style="endArrow=classic;html=1;fontSize=10;" target="jack">
+        <mxCell id="e11l" value="UART, EN et GPIO0&#10;(auto-flash)" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e11">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;dashed=1;strokeWidth=1.6;exitX=0;exitY=0.15;entryX=1;entryY=0.15;" edge="1" parent="1" source="esp" target="mux">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="700" y="375" /><mxPoint x="430" y="375" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12l" value="USB_DIR, choix de la destination" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e12">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;exitX=0.75;exitY=1;entryX=0.75;entryY=0;" edge="1" parent="1" source="esp" target="dac">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s5" edge="1" parent="1" source="esp" style="endArrow=classic;startArrow=classic;html=1;dashed=1;fontSize=10;" target="exp">
+        <mxCell id="e13l" value="I2S : LRCK, BCK, SD" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e13">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;startArrow=classic;dashed=1;strokeWidth=1.4;exitX=0.3;exitY=1;entryX=0.3;entryY=0;" edge="1" parent="1" source="esp" target="dac">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s6" edge="1" parent="1" source="exp" style="endArrow=classic;html=1;dashed=1;fontSize=10;" target="dac">
+        <mxCell id="e20l" value="I2C : configuration,&#10;volume numérique" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e20">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="dac" target="filt">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="s7" edge="1" parent="1" source="exp" style="endArrow=classic;html=1;dashed=1;fontSize=10;" target="amp">
+        <mxCell id="e14l" value="sorties différentielles" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e14">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="filt" target="amp">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="e15l" value="signal hors bande atténué" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e15">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.6;" edge="1" parent="1" source="amp" target="jack">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e16l" value="sortie casque" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e16">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;startArrow=classic;dashed=1;strokeWidth=1.4;exitX=0;exitY=0.85;entryX=0.5;entryY=0;" edge="1" parent="1" source="esp" target="exp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="700" y="565" /><mxPoint x="565" y="565" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e17l" value="I2C : boutons et commandes" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e17">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;dashed=1;strokeWidth=1.4;" edge="1" parent="1" source="exp" target="dac">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18l" value="sourdine" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e18">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;dashed=1;strokeWidth=1.4;exitX=0.5;exitY=1;entryX=0.5;entryY=1;" edge="1" parent="1" source="exp" target="amp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="565" y="750" /><mxPoint x="1225" y="750" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e19l" value="mise en veille de l'étage de sortie" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e19">
+          <mxGeometry x="0" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;startArrow=classic;dashed=1;strokeWidth=1.4;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="gauge" target="esp">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points"><mxPoint x="690" y="270" /><mxPoint x="690" y="445" /></Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e21l" value="I2C : tension et état de charge" style="edgeLabel;html=1;fontSize=11;labelBackgroundColor=#ffffff;" vertex="1" connectable="0" parent="e21">
+          <mxGeometry x="-0.4" relative="1" as="geometry" />
+        </mxCell>
+
+        <mxCell id="lg1" value="Trait plein : énergie ou signal utile" style="text;html=1;align=left;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="760" width="260" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="lg2" value="Trait pointillé : commande ou télémétrie" style="text;html=1;align=left;fontSize=11;fontColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="780" width="280" height="20" as="geometry" />
+        </mxCell>
+
       </root>
     </mxGraphModel>
   </diagram>
