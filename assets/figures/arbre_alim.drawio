@@ -27,6 +27,14 @@
         <mxCell id="buck" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;spacing=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=default;" value="&lt;div&gt;Régulateur&amp;nbsp;&lt;/div&gt;&lt;div&gt;TPS62A01&lt;/div&gt;" vertex="1">
           <mxGeometry height="40" width="110" x="255" y="188.10000000000002" as="geometry" />
         </mxCell>
+        <mxCell id="jA-DruGJwxyD-Wq_NjG8-23" edge="1" parent="1" source="sup" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="buck">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="jA-DruGJwxyD-Wq_NjG8-24" connectable="0" parent="jA-DruGJwxyD-Wq_NjG8-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;div&gt;EN&lt;/div&gt;Extinction sous 3.2 V" vertex="1">
+          <mxGeometry relative="1" x="0.2147" as="geometry">
+            <mxPoint x="14" y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="sup" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;spacing=2;fontColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;" value="&lt;div&gt;Superviseur&amp;nbsp;&lt;/div&gt;&lt;div&gt;XC6120&lt;/div&gt;" vertex="1">
           <mxGeometry height="35" width="90" x="520" y="190.60000000000002" as="geometry" />
         </mxCell>
@@ -60,14 +68,6 @@
         <mxCell id="jA-DruGJwxyD-Wq_NjG8-6" connectable="0" parent="e4" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;div&gt;VSys&lt;/div&gt;&lt;div&gt;3.2 V à 4.2 V&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.1129" y="1" as="geometry">
             <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e5" edge="1" parent="1" source="sup" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=classic;strokeWidth=1.5;strokeColor=light-dark(#D79B00,#FFFFFF);exitX=0;exitY=0.5;entryX=1;entryY=0.5;" target="buck">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="jA-DruGJwxyD-Wq_NjG8-5" connectable="0" parent="e5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;div&gt;EN&lt;/div&gt;Extinction sous 3.2 V" vertex="1">
-          <mxGeometry relative="1" x="-0.1486" y="-3" as="geometry">
-            <mxPoint x="-2" y="-13" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="jA-DruGJwxyD-Wq_NjG8-19" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;spacing=2;align=center;verticalAlign=middle;fontFamily=Helvetica;fontColor=default;fontStyle=1;" value="Rail 3.3 V" vertex="1">
