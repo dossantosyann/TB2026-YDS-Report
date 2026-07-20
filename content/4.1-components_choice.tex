@@ -3,7 +3,7 @@
 
 Cette section justifie la sélection des principaux composants du système. Chaque choix découle des spécifications établies précédemment et résulte d'une comparaison entre plusieurs candidats évalués selon un ensemble de critères communs : adéquation fonctionnelle aux besoins du projet, performances techniques relevées dans les datasheets, consommation énergétique, format du boîtier, ainsi que le coût et la disponibilité des composants.
 
-La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format BGA ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie.
+La démarche de recherche a consisté à examiner les catalogues de plusieurs grands fabricants de semi-conducteurs, puis à retenir le ou les meilleurs candidats de chacun avant de les comparer entre eux. Seuls des composants en stock et au statut actif ont été considérés : tout composant en fin de vie ou indisponible était écarté d'emblée, afin de garantir la reproductibilité et la pérennité de la conception. Les composants au format \gls{bga} ont également été écartés en raison de leur complexité de montage pour un prototype et de leur impact sur les coûts de fabrication du PCB. Les sections suivantes détaillent, composant par composant, le raisonnement ayant conduit à la solution choisie.
 
 Toutes les références de prix ont été prises sur DigiKey~\cite{digikey}. Les écarts de prix entre les candidats retenus se sont révélés marginaux à l'échelle de la BOM complète de la carte. Le prix n'a donc jamais constitué un critère décisif, ni été opposé à la priorité donnée à la qualité audio.
 
@@ -61,7 +61,7 @@ Enfin, cet écran est en couleur. Cet aspect n'a pas constitué un critère de s
 
 \subsection{Convertisseur numérique-analogique, DAC}
 
-Le convertisseur numérique-analogique transforme le flux audio numérique issu du micro-contrôleur en un signal analogique destiné à l'étage d'amplification. Son choix repose sur plusieurs critères : la résolution, exprimée en bits, la fréquence d'échantillonnage maximale, le rapport signal sur bruit (SNR) et la distorsion harmonique totale plus bruit (THD+N), qui déterminent la qualité audio restituée, ainsi que l'architecture du composant. L'objectif premier du projet étant d'offrir la meilleure qualité audio possible, ces critères sont examinés pour chacun des composants candidats.
+Le convertisseur numérique-analogique transforme le flux audio numérique issu du micro-contrôleur en un signal analogique destiné à l'étage d'amplification. Son choix repose sur plusieurs critères : la résolution, exprimée en bits, la fréquence d'échantillonnage maximale, le rapport signal sur bruit (\gls{snr}) et la distorsion harmonique totale plus bruit (\gls{thdn}), qui déterminent la qualité audio restituée, ainsi que l'architecture du composant. L'objectif premier du projet étant d'offrir la meilleure qualité audio possible, ces critères sont examinés pour chacun des composants candidats.
 
 \subsubsection{Architecture : DAC seul ou DAC avec amplificateur intégré}
 
@@ -133,7 +133,7 @@ Le PCM5242 est le plus cher des trois candidats (8,06~CHF), seul écart de prix 
 
 \subsection{Amplificateur audio}
 
-L'amplificateur reçoit le signal analogique du convertisseur et le porte au niveau nécessaire pour attaquer un casque par la prise jack. Le convertisseur retenu, le PCM5242, présentant une sortie différentielle, l'amplificateur doit en accepter une en entrée afin de préserver la réjection du bruit de mode commun mise en place précédemment. Au-delà de ce prérequis, le choix repose sur les caractéristiques qui gouvernent la qualité de restitution : le SNR, le THD+N, le bruit de sortie, la diaphonie, le PSRR et la puissance de sortie disponible sur une charge de casque typique. Conformément à la priorité du projet, la qualité audio prime.
+L'amplificateur reçoit le signal analogique du convertisseur et le porte au niveau nécessaire pour attaquer un casque par la prise jack. Le convertisseur retenu, le PCM5242, présentant une sortie différentielle, l'amplificateur doit en accepter une en entrée afin de préserver la réjection du bruit de mode commun mise en place précédemment. Au-delà de ce prérequis, le choix repose sur les caractéristiques qui gouvernent la qualité de restitution : le SNR, le THD+N, le bruit de sortie, la diaphonie, le \gls{psrr} et la puissance de sortie disponible sur une charge de casque typique. Conformément à la priorité du projet, la qualité audio prime.
 
 \subsubsection{Composant retenu}
 
@@ -192,7 +192,7 @@ En contrepartie, son bruit de sortie (7~$\mu$Vrms) et son courant de repos (5,5~
 
 \subsection{Expanseur d'entrées-sorties}
 
-Lors de la conception du schéma électrique, il est apparu qu'une fois tous les bus de communication câblés (I\textsuperscript{2}S, double liaison SPI, I\textsuperscript{2}C et l'entrée ADC), le nombre de GPIO restant sur le micro-contrôleur devenait insuffisant pour piloter l'ensemble des entrées-sorties restantes du système. Un expanseur d'entrées-sorties commandé en I\textsuperscript{2}C a donc été ajouté. Raccordé au bus déjà présent, il étend le nombre de lignes disponibles sans mobiliser de broches supplémentaires sur le micro-contrôleur.
+Lors de la conception du schéma électrique, il est apparu qu'une fois tous les bus de communication câblés (I\textsuperscript{2}S, double liaison SPI, I\textsuperscript{2}C et l'entrée \gls{adc}), le nombre de GPIO restant sur le micro-contrôleur devenait insuffisant pour piloter l'ensemble des entrées-sorties restantes du système. Un expanseur d'entrées-sorties commandé en I\textsuperscript{2}C a donc été ajouté. Raccordé au bus déjà présent, il étend le nombre de lignes disponibles sans mobiliser de broches supplémentaires sur le micro-contrôleur.
 
 \subsubsection{Composant retenu}
 
@@ -381,7 +381,7 @@ Quatre circuits de charge ont été comparés (tableau~\ref{tab:comparo_chargeur
         \multicolumn{5}{c}{\textbf{Fonctionnalités}}                                                                 \\
         \hline
         Interface                 & I\textsuperscript{2}C      & I\textsuperscript{2}C & Matérielle     & Matérielle \\
-        Détection BC1.2           & Oui                        & Oui                   & Oui            & Non        \\
+        Détection \gls{bc12}      & Oui                        & Oui                   & Oui            & Non        \\
         Détection USB Type-C (CC) & Non                        & Non                   & Oui            & Non        \\
         Power Path                & Oui                        & Oui                   & Oui            & Non        \\
         \hline
@@ -397,7 +397,7 @@ Le MCP73871 est d'emblée écarté. Dépourvu de détection de source et limité
 
 \begin{itemize}
     \item Il est le seul à offrir la détection USB Type-C par les broches CC, en complément de la détection BC1.2 des sources USB classiques. Sur un appareil à connecteur USB-C, c'est le moyen natif de lire le courant annoncé par la source et de s'y adapter automatiquement, sans intervention logicielle.
-    \item Il met en œuvre une régulation adaptative du courant d'entrée (AICL), qui réduit ce courant si la tension d'un adaptateur faible commence à s'effondrer. Le chargeur prélève ainsi le maximum que la source peut soutenir sans la faire chuter.
+    \item Il met en œuvre une régulation adaptative du courant d'entrée (\gls{aicl}), qui réduit ce courant si la tension d'un adaptateur faible commence à s'effondrer. Le chargeur prélève ainsi le maximum que la source peut soutenir sans la faire chuter.
     \item Il fonctionne de manière autonome, configuré par résistances et renseignant son état par des broches matérielles, sans recourir à l'I\textsuperscript{2}C. La charge est entièrement gérée par le circuit, indépendamment du firmware, ce qui simplifie le logiciel et rend la recharge robuste.
     \item Il intègre un Power Path, permettant d'alimenter le système directement depuis l'USB pendant la charge, y compris lorsque la batterie est très déchargée.
 \end{itemize}
@@ -414,7 +414,7 @@ Le MAX77757 est le plus cher des quatre candidats (3,52~CHF), sans incidence au 
 
 \subsection{Jauge de batterie}
 
-La jauge de batterie estime l'état de charge de la cellule. L'objectif principal est d'afficher à l'utilisateur le pourcentage de charge restant (SOC). Un objectif secondaire consiste à rapporter le plus de grandeurs annexes possible (tension, courant, température, autonomie estimée, état de santé, entre autres), utiles au suivi de la batterie sans être indispensables. Le choix se joue donc sur deux critères : la précision de l'estimation de l'état de charge et la richesse des données fournies. Deux approches existent pour cette estimation : la mesure de la seule tension de la cellule, simple mais sensible aux variations de charge, et le comptage de coulomb, qui intègre le courant réellement échangé pour un suivi plus fidèle.
+La jauge de batterie estime l'état de charge de la cellule. L'objectif principal est d'afficher à l'utilisateur le pourcentage de charge restant (\gls{soc}). Un objectif secondaire consiste à rapporter le plus de grandeurs annexes possible (tension, courant, température, autonomie estimée, état de santé, entre autres), utiles au suivi de la batterie sans être indispensables. Le choix se joue donc sur deux critères : la précision de l'estimation de l'état de charge et la richesse des données fournies. Deux approches existent pour cette estimation : la mesure de la seule tension de la cellule, simple mais sensible aux variations de charge, et le comptage de coulomb, qui intègre le courant réellement échangé pour un suivi plus fidèle.
 
 \subsubsection{Composant retenu}
 
