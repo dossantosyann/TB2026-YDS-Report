@@ -18,7 +18,7 @@ Le MAX77757 répartit ensuite l'énergie entre l'entrée, le système et la batt
 
 La jauge MAX17260 s'insère sur ce chemin pour suivre l'état de la batterie. Elle combine deux grandeurs, la tension de la cellule et la charge échangée, obtenue par intégration du courant mesuré aux bornes d'une résistance de mesure de faible valeur placée en série avec la batterie. Cette résistance est placée du côté haut, entre le pôle positif de la cellule et le nœud système, plutôt que dans le retour de masse. Le plan de masse reste ainsi continu et unique, alors qu'une mesure côté bas insérerait la résistance dans le chemin de retour et créerait entre la masse de la cellule et celle de la carte un écart de potentiel proportionnel au courant consommé, dégradant la référence de la chaîne audio. Les grandeurs mesurées et l'état de charge estimé sont transmis au micro-contrôleur par l'I\textsuperscript{2}C, et une broche d'alerte signale au firmware le passage sous un seuil bas de charge.
 
-\fig[H, width=0.6\linewidth]{Mesure de courant côté haut, position de la résistance de mesure entre la cellule et le nœud système}{mesure_courant.drawio}
+\fig[H, width=0.8\linewidth]{Mesure de courant côté haut, position de la résistance de mesure entre la cellule et le nœud système}{mesure_courant.drawio}
 
 Le rail logique de 3,3~V est produit à partir de la tension système par le convertisseur abaisseur TPS62A01. Les composants passifs qui l'entourent ont été calculés d'après sa fiche technique pour cette tension de sortie, à savoir le pont de retour qui fixe la consigne à partir de la tension de référence interne, et le condensateur d'avance de phase placé en parallèle sur sa résistance haute, qui réduit l'ondulation résiduelle en mode d'économie d'énergie et améliore la réponse aux échelons de charge~\cite{TI_TPS62A01}. En fin de décharge, lorsque la tension système s'approche de 3,3~V, le convertisseur passe en conduction permanente et se comporte en régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable.
 
@@ -31,31 +31,51 @@ L'entrée d'activation du convertisseur est pilotée par une logique câblée, d
 
 \subsection{Chaîne audio filaire}
 
-La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque, selon le détail donné à la figure~\ref{extrait_audio.png}. Le convertisseur reconstruit lui-même son horloge interne à partir de l'horloge de bit, aucune horloge maître n'étant câblée, conformément au choix établi au chapitre précédent.
+La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque. Sa partie analogique, de la sortie différentielle du convertisseur au jack, est reprise sous forme simplifiée à la figure~\ref{chaine_audio.drawio}, la feuille complète du schéma figurant à l'annexe~\ref{annexe:schema}.
 
-\fig[H, width=1\linewidth]{Extrait du schéma, sorties différentielles du convertisseur, filtre passif et entrées de l'amplificateur}{extrait_audio.png}
+\fig[H, width=1\linewidth]{Schéma de principe simplifié d'un seul canal de la chaîne analogique, de la sortie différentielle du convertisseur au jack, le second canal étant strictement identique}{chaine_audio.drawio}
+
+\subsubsection{Liaison numérique}
+
+Le micro-contrôleur attaque le convertisseur par une liaison I\textsuperscript{2}S à trois fils, l'horloge de bit, l'horloge de mot et la donnée. Aucune piste d'horloge maître n'a été routée entre les deux composants, le PCM5242 reconstruisant sa propre horloge interne à partir de l'horloge de bit au moyen de sa boucle à verrouillage de phase~\cite{TI_PCM5242}. Ce choix retire une piste numérique à haute fréquence de plus sur une carte dense et supprime une source de rayonnement, au prix d'une fréquence d'échantillonnage minimale exploitable, plus de détails sont donnés à la section \ref{sec:horloges_dac}.
 
 \subsubsection{Filtre de sortie}
 
-Chaque ligne de sortie du convertisseur porte deux résistances série de 5,1~k$\Omega$ encadrant un condensateur de 100~pF monté entre les deux lignes différentielles. Cet ensemble forme un filtre passe-bas dont la fréquence de coupure se situe autour de 156~kHz. Son rôle n'est pas de lisser un signal en escalier, car le PCM5242 est un convertisseur delta-sigma à suréchantillonnage dont le filtre d'interpolation numérique interne assure déjà la reconstruction. Le filtre analogique se borne à atténuer le bruit résiduel hors bande et les images spectrales, déjà rejetées loin au-delà de la bande audio par le suréchantillonnage~\cite{TI_PCM5242}. Les mêmes résistances remplissent une seconde fonction, puisqu'elles constituent la résistance d'entrée qui fixe le gain de l'amplificateur décrit ci-après.
+Chaque ligne de sortie du convertisseur porte deux résistances série de 5,1~k$\Omega$ encadrant un condensateur de 100~pF monté entre les deux lignes différentielles. Cet ensemble forme un filtre passe-bas du premier ordre dont la fréquence de coupure différentielle se situe autour de 156~kHz.
+
+Le condensateur étant monté entre les deux lignes, le signal différentiel le voit à travers la résistance de chacune des deux branches, soit une résistance équivalente de $2R$. La fréquence de coupure vaut donc
+\begin{equation}
+    f_c = \frac{1}{2\pi \cdot 2R \cdot C} = \frac{1}{2\pi \times 10{,}2\,\text{k}\Omega \times 100\,\text{pF}} \approx 156\,\text{kHz},
+\end{equation}
+avec $C = 100\,\text{pF}$ et $R = 5{,}1\,\text{k}\Omega$, cette dernière désignant la résistance placée entre le convertisseur et le nœud du condensateur, la seconde résistance de chaque ligne se trouvant en aval et n'intervenant pas dans la constante de temps.
+
+Un ordre aussi faible suffit parce que le PCM5242 est un convertisseur delta-sigma à suréchantillonnage. Son filtre d'interpolation numérique porte la cadence de sortie à 352,8 ou 384~kHz pour les familles de fréquences usuelles~\cite{TI_PCM5242}. La première image d'un signal de 20~kHz se trouve ainsi reportée à 332,8~kHz, alors qu'un convertisseur sans suréchantillonnage cadencé à 44,1~kHz la placerait à 24,1~kHz et exigerait un filtre analogique raide pour l'éliminer. Le rejet des images est donc entièrement acquis avant l'étage analogique.
+
+Ce qui subsiste à la sortie du composant est le bruit de quantification mis en forme par le modulateur, dont l'énergie croît avec la fréquence et que la fiche technique caractérise de 100~kHz à 3~MHz. Celle-ci indique que de nombreuses applications exigent un filtre RC externe pour en obtenir un rejet suffisant, faute de quoi ce bruit engendre des perturbations électromagnétiques et du repliement dans les étages placés en aval, et signale que ce même filtre améliore la protection des sorties contre les décharges électrostatiques~\cite{TI_PCM5242}. C'est cette tâche que remplit le filtre, sa pente de six décibels par octave donnant une atténuation croissante sur les décades supérieures.
+
+Le choix d'une coupure aussi haute maintient l'influence du filtre sur la bande audio à un niveau négligeable. En posant $x = f/f_c$, le filtre du premier ordre présente à 20~kHz
+\begin{equation}
+    20\log_{10}|H| = -0{,}07\,\text{dB}, \qquad \varphi = -\arctan(x) = -7{,}3^\circ, \qquad \tau_g = \frac{\tau}{1+x^2} = 1{,}00\,\mu\text{s},
+\end{equation}
+avec $\tau = 2RC = 1{,}02\,\mu\text{s}$. Le déphasage correspond donc à un temps de propagation de groupe qui ne varie que de 1,6~\% entre le continu et 20~kHz, soit un simple retard identique sur les deux canaux et non une distorsion de phase. Les mêmes résistances remplissent enfin une seconde fonction, puisqu'elles constituent la résistance d'entrée qui fixe le gain de l'amplificateur décrit ci-après.
 
 \subsubsection{Adaptation de niveau et choix du gain}
 
-Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, l'excursion maximale en sortie de l'amplificateur est limitée à $V_{\text{swing}} \approx 2{,}1\,\text{V}_{\text{RMS}}$~\cite{analog_MAX97220A}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
+Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, la tension de sortie maximale de l'amplificateur est limitée à $V_{\text{amp,max}} = 2{,}15\,\text{V}_{\text{RMS}}$ sur une charge de $600\,\Omega$~\cite{analog_MAX97220A}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
 
 Le gain de l'amplificateur est fixé par le rapport des résistances externes selon
 \begin{equation}
     A_v = \frac{R_f}{R_{in}}.
 \end{equation}
-La résistance de contre-réaction vaut $R_f = 5{,}1\,\text{k}\Omega$, tandis que la résistance d'entrée est formée des deux résistances série de la ligne, soit $R_{in} = 5{,}1\,\text{k}\Omega + 5{,}1\,\text{k}\Omega = 10{,}2\,\text{k}\Omega$. Le gain retenu ramène ainsi la pleine échelle du convertisseur au niveau de l'excursion maximale de l'amplificateur,
+La résistance de contre-réaction vaut $R_f = 5{,}1\,\text{k}\Omega$, tandis que la résistance d'entrée est formée des deux résistances série de la ligne, soit $R_{in} = 5{,}1\,\text{k}\Omega + 5{,}1\,\text{k}\Omega = 10{,}2\,\text{k}\Omega$. Le gain retenu vaut donc
 \begin{equation}
     A_v = \frac{5{,}1\,\text{k}\Omega}{10{,}2\,\text{k}\Omega} = 0{,}5 \quad (\approx -6\,\text{dB}),
 \end{equation}
 ce qui donne en sortie
 \begin{equation}
-    V_{\text{out,max}} = A_v \cdot V_{\text{DAC}} = 0{,}5 \times 4{,}2\,\text{V}_{\text{RMS}} = 2{,}1\,\text{V}_{\text{RMS}} \le V_{\text{swing}}.
+    V_{\text{out,max}} = A_v \cdot V_{\text{DAC}} = 0{,}5 \times 4{,}2\,\text{V}_{\text{RMS}} = 2{,}1\,\text{V}_{\text{RMS}} \le V_{\text{amp,max}}.
 \end{equation}
-La pleine échelle numérique du convertisseur est de la sorte calée exactement sur l'excursion maximale de l'amplificateur, toute la dynamique disponible étant exploitée sans jamais atteindre la zone d'écrêtage.
+La pleine échelle numérique du convertisseur est de la sorte calée juste sous la tension de sortie maximale de l'amplificateur, toute la dynamique disponible étant exploitée sans jamais atteindre la zone d'écrêtage.
 
 \subsubsection{Conséquence d'un gain inadapté}
 
@@ -73,6 +93,26 @@ Le passage automatique en mode programmation repose sur le bootloader de premier
 
 \fig[H, width=0.70\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
 
+\subsubsection{Conditionnement du potentiomètre de volume}
+
+Le réglage de volume repose sur un potentiomètre de 10~k$\Omega$ dont le curseur est lu par le \gls{adc} du micro-contrôleur. Cette lecture n'est fidèle que sur une plage restreinte, la fiche technique de l'ESP32 donnant une plage de mesure utile de 150 à 2450~mV avec l'atténuation maximale, la précision se dégradant au-delà~\cite{ESP32_Technical_Reference_Manual}. Relier directement le potentiomètre entre le rail de 3,3~V et la masse placerait donc les deux extrémités de la course hors de cette plage, avec un curseur saturé sur une portion notable de la rotation. Le montage retenu est donné à la figure~\ref{potentiometre.png}.
+
+Deux résistances encadrent pour cette raison le potentiomètre, R11 de 3,3~k$\Omega$ vers le rail et R67 de 620~$\Omega$ vers la masse, formant un diviseur dont le potentiomètre constitue la portion centrale. La tension du curseur est ainsi bornée par
+\begin{equation}
+    V_{\text{min}} = 3{,}3 \times \frac{620}{13\,920} = 147\,\text{mV}, \qquad V_{\text{max}} = 3{,}3 \times \frac{10\,620}{13\,920} = 2{,}518\,\text{V}.
+\end{equation}
+La quasi-totalité de la rotation tombe de la sorte dans la plage exploitable de l'\gls{adc}, seuls les derniers pour cent de la course dépassant légèrement la borne haute, sans conséquence puisque le volume y est déjà à son maximum. Un condensateur de 100~nF filtre par ailleurs le bruit capté par la piste du curseur.
+
+\fig[H, width=0.35\linewidth]{Conditionnement du potentiomètre de volume, le diviseur bornant la tension du curseur dans la plage utile de l'ADC}{potentiometre.png}
+
+\subsubsection{Bouton de mise en marche}
+
+Le bouton A remplit deux fonctions, celle d'entrée utilisateur lue par le micro-contrôleur et celle de commande de mise en marche du système. Cette seconde fonction interdit de le relier au rail de 3,3~V, qui n'existe pas tant que le convertisseur abaisseur n'a pas démarré. Le bouton est donc raccordé à la tension système, disponible dès qu'une batterie est présente, ce qui lui permet de réveiller la carte depuis l'état éteint, selon le câblage donné à la figure~\ref{bouton_a.png}
+
+Ce raccordement expose en contrepartie l'entrée du micro-contrôleur à une tension supérieure à son rail d'alimentation, la tension système atteignant 4,2~V sur une batterie pleine. Une diode Zener de 3,3~V placée entre la ligne du bouton et la masse écrête cette tension, la résistance série de 10~k$\Omega$ limitant le courant dans la Zener. Un condensateur de 100~nF et une résistance de rappel de 100~k$\Omega$ complètent le réseau, le premier pour l'antirebond matériel et la seconde pour garantir un niveau bas défini bouton relâché.
+
+\fig[H, width=0.65\linewidth]{Réseau de protection et d'antirebond du bouton A, alimenté par la tension système et écrêté par une diode Zener}{bouton_a.png}
+
 
 \subsection{Protections électriques}
 
@@ -89,6 +129,12 @@ Les protections liées à l'énergie sont pour l'essentiel assurées de façon a
 Enfin, chaque broche d'alimentation des circuits actifs reçoit un découplage local, conforme aux schémas de référence des fiches techniques, afin de fournir les appels de courant rapides au plus près des composants et de contenir le bruit de commutation~\cite{prof_bogatin_rules_2013}.
 
 
-\subsection{Validation}
+\subsection{Validation du schéma}
 
-La cohérence du schéma a été vérifiée avant le routage. Le contrôle des règles électriques de l'outil de conception n'a signalé ni broche laissée en l'air ni conflit de sortie, et chaque sous-circuit a été relu broche à broche contre le schéma de référence de la fiche technique du composant concerné. Les chemins d'alimentation ont été suivis depuis le connecteur USB jusqu'à chaque rail afin de confirmer que la logique d'activation, le passage sur batterie et le verrouillage sous-tension se comportent comme prévu. Les points de protection ont été passés en revue pour s'assurer qu'aucune ligne exposée ne rejoint un composant actif sans écrêtage. Les vérifications chiffrées relevant de la mesure, elles sont reportées au chapitre des résultats.
+Le schéma a d'abord été vérifié par les outils de l'environnement de conception, la règle de contrôle électrique signalant les broches non connectées, les sorties en conflit et les réseaux à un seul nœud. Chaque feuille fonctionnelle a ensuite été relue en confrontant les broches aux fiches techniques des composants, en portant une attention particulière aux réseaux de configuration résistifs du chargeur et du convertisseur abaisseur, dont les valeurs déterminent un comportement qu'aucune correction logicielle ne pourra rattraper. Le déroulement complet de la mise en service de la carte et les valeurs relevées à cette occasion font l'objet du chapitre~\ref{chap:results}.
+
+Un seul défaut de conception a été mis en évidence, lors des premiers tests, sur la ligne du bouton A. Celle-ci desservant à la fois une entrée du micro-contrôleur et l'anode de la diode qui commande l'activation du convertisseur abaisseur, la carte éteinte ne pouvait pas démarrer sur appui du bouton. Le micro-contrôleur n'étant alors pas alimenté, sa diode de protection interne conduit vers un rail inactif et rabat la ligne à environ 0,6~V. Cette tension, amputée du seuil de la diode Schottky de commande, laisse l'entrée d'activation très en dessous du seuil de 1,2~V que le convertisseur exige pour démarrer~\cite{TI_TPS62A01}.
+
+La correction déplace l'anode de cette diode en amont de la résistance série, directement sur la broche commutée de l'interrupteur, où l'impédance quasi nulle du contact fermé impose la tension système sans que l'écrêtage du micro-contrôleur puisse la retenir. Elle a été réalisée par fil volant sur la carte et devra être reportée au schéma lors d'une éventuelle révision, la version annexée à ce rapport étant celle qui a été fabriquée.
+
+Hormis ce point, le schéma s'est révélé conforme, ce qui valide le découpage en feuilles et la démarche de vérification composant par composant adoptée en amont.
