@@ -1,5 +1,5 @@
 \chapter{Séquence de bascule vers la sortie Bluetooth}
-\label{annexe:bascule-bt}
+\label{ann:bascule-bt}
 
 Cette annexe détaille la bascule de la sortie filaire vers le Bluetooth en cours de lecture, mécanisme évoqué à la section~\ref{sec:soft_bluetooth}. La difficulté tient à une dépendance circulaire, l'envoi du volume supposant la sortie déjà routée vers le Bluetooth tandis que le démarrage de l'audio suppose le volume déjà acquitté. Elle est levée en dissociant deux phases portées par deux acteurs distincts, l'amorçage assuré par l'orchestrateur de lecture et la finalisation par la tâche de maintenance, cette dernière ne démarrant l'audio qu'une fois le volume acquitté par le récepteur. La garde anti-saturation interdit toute émission d'échantillon avant cet acquittement, la sortie précédente couvrant l'attente pour éviter toute coupure.
 

@@ -1,7 +1,7 @@
 \section{Schéma électrique}
 \label{sec:schema}
 
-Le schéma électrique réunit les composants retenus au chapitre précédent et fixe leurs interconnexions, des étages de puissance jusqu'aux protections. Cette section en décrit d'abord l'organisation, puis les sous-circuits qui demandent une explication propre, protections comprises. Elle ne reprend ni la justification des composants, traitée à la section~\ref{sec:choix_composants}, ni le routage, abordé à la section~\ref{sec:layout}. Les feuilles complètes du schéma figurent en annexe~\ref{annexe:schema} et font foi en cas d'écart avec le texte.
+Le schéma électrique réunit les composants retenus à la section précédente et fixe leurs interconnexions, des étages de puissance jusqu'aux protections. Cette section en décrit d'abord l'organisation, puis les sous-circuits qui demandent une explication propre, protections comprises. Elle ne reprend ni la justification des composants, traitée à la section~\ref{sec:choix_composants}, ni le routage, abordé à la section~\ref{sec:layout}. Les feuilles complètes du schéma figurent en annexe~\ref{ann:schema} et font foi en cas d'écart avec le texte.
 
 
 \subsection{Organisation du schéma}
@@ -31,7 +31,7 @@ L'entrée d'activation du convertisseur est pilotée par une logique câblée, d
 
 \subsection{Chaîne audio filaire}
 
-La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque. Sa partie analogique, de la sortie différentielle du convertisseur au jack, est reprise sous forme simplifiée à la figure~\ref{chaine_audio.drawio}, la feuille complète du schéma figurant à l'annexe~\ref{annexe:schema}.
+La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque. Sa partie analogique, de la sortie différentielle du convertisseur au jack, est reprise sous forme simplifiée à la figure~\ref{chaine_audio.drawio}, la feuille complète du schéma figurant à l'annexe~\ref{ann:schema}.
 
 \fig[H, width=1\linewidth]{Schéma de principe simplifié d'un seul canal de la chaîne analogique, de la sortie différentielle du convertisseur au jack, le second canal étant strictement identique}{chaine_audio.drawio}
 
@@ -93,7 +93,7 @@ Le passage automatique en mode programmation repose sur le bootloader de premier
 
 \fig[H, width=0.70\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
 
-\subsubsection{Conditionnement du potentiomètre de volume}
+\subsection{Conditionnement du potentiomètre de volume}
 
 Le réglage de volume repose sur un potentiomètre de 10~k$\Omega$ dont le curseur est lu par le \gls{adc} du micro-contrôleur. Cette lecture n'est fidèle que sur une plage restreinte, la fiche technique de l'ESP32 donnant une plage de mesure utile de 150 à 2450~mV avec l'atténuation maximale, la précision se dégradant au-delà~\cite{ESP32_Technical_Reference_Manual}. Relier directement le potentiomètre entre le rail de 3,3~V et la masse placerait donc les deux extrémités de la course hors de cette plage, avec un curseur saturé sur une portion notable de la rotation. Le montage retenu est donné à la figure~\ref{potentiometre.png}.
 
@@ -105,7 +105,7 @@ La quasi-totalité de la rotation tombe de la sorte dans la plage exploitable de
 
 \fig[H, width=0.35\linewidth]{Conditionnement du potentiomètre de volume, le diviseur bornant la tension du curseur dans la plage utile de l'ADC}{potentiometre.png}
 
-\subsubsection{Bouton de mise en marche}
+\subsection{Bouton de mise en marche}
 
 Le bouton A remplit deux fonctions, celle d'entrée utilisateur lue par le micro-contrôleur et celle de commande de mise en marche du système. Cette seconde fonction interdit de le relier au rail de 3,3~V, qui n'existe pas tant que le convertisseur abaisseur n'a pas démarré. Le bouton est donc raccordé à la tension système, disponible dès qu'une batterie est présente, ce qui lui permet de réveiller la carte depuis l'état éteint, selon le câblage donné à la figure~\ref{bouton_a.png}
 
