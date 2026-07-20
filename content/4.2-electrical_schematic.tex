@@ -107,7 +107,7 @@ La quasi-totalité de la rotation tombe de la sorte dans la plage exploitable de
 
 \subsection{Bouton de mise en marche}
 
-Le bouton A remplit deux fonctions, celle d'entrée utilisateur lue par le micro-contrôleur et celle de commande de mise en marche du système. Cette seconde fonction interdit de le relier au rail de 3,3~V, qui n'existe pas tant que le convertisseur abaisseur n'a pas démarré. Le bouton est donc raccordé à la tension système, disponible dès qu'une batterie est présente, ce qui lui permet de réveiller la carte depuis l'état éteint, selon le câblage donné à la figure~\ref{bouton_a.png}
+Le bouton A remplit deux fonctions, celle d'entrée utilisateur lue par le micro-contrôleur et celle de commande de mise en marche du système. Cette seconde fonction interdit de le relier au rail de 3,3~V, qui n'existe pas tant que le convertisseur abaisseur n'a pas démarré. Le bouton est donc raccordé à la tension système, disponible dès qu'une batterie est présente, ce qui lui permet de réveiller la carte depuis l'état éteint, selon le câblage donné à la figure~\ref{bouton_a.png}.
 
 Ce raccordement expose en contrepartie l'entrée du micro-contrôleur à une tension supérieure à son rail d'alimentation, la tension système atteignant 4,2~V sur une batterie pleine. Une diode Zener de 3,3~V placée entre la ligne du bouton et la masse écrête cette tension, la résistance série de 10~k$\Omega$ limitant le courant dans la Zener. Un condensateur de 100~nF et une résistance de rappel de 100~k$\Omega$ complètent le réseau, le premier pour l'antirebond matériel et la seconde pour garantir un niveau bas défini bouton relâché.
 
