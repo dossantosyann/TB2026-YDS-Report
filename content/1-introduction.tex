@@ -3,7 +3,7 @@
 \section{Contexte}
 Ce travail de Bachelor, réalisé à la HEIG-VD, porte sur la conception complète d'un lecteur audio portable, depuis le schéma électronique et le routage de la carte jusqu'au firmware embarqué. Le sujet a été choisi librement : il ne répond pas à une commande industrielle, mais à la volonté de mener un projet d'ingénierie de bout en bout et d'aboutir à un appareil réel, fabriqué et fonctionnel.
 
-Le lecteur audio dédié a largement disparu du marché grand public, absorbé par le smartphone. Il subsiste néanmoins dans des usages où la séparation des fonctions garde un intérêt : autonomie consacrée à la seule lecture, absence de distractions, ou simple préférence pour un objet matériel dédié. C'est dans cette logique que s'inscrit l'appareil développé ici, conçu comme un objet autonome et compact plutôt que comme une alternative au téléphone. \\
+Le lecteur audio dédié a largement disparu du marché grand public, absorbé par le smartphone. Il subsiste néanmoins dans des usages où la séparation des fonctions garde un intérêt : autonomie consacrée à la seule lecture, absence de distractions, ou simple préférence pour un objet matériel dédié. C'est dans cette logique que s'inscrit l'appareil développé ici, conçu comme un objet autonome et compact plutôt que comme une alternative au téléphone.
 
 
 \section{Problématique}
@@ -11,7 +11,7 @@ Concevoir un lecteur audio portable ne se résume pas à assembler des blocs fon
 
 La qualité audio exige une chaîne analogique à faible bruit, alors que la connectivité sans fil introduit des émissions RF (Bluetooth) à proximité immédiate de cette chaîne sensible. La compacité recherchée s'oppose à l'autonomie visée, qui suppose une batterie de capacité suffisante et une gestion fine de l'énergie. Le routage d'une carte multicouche doit isoler les signaux audio analogiques des signaux numériques rapides et des plans d'alimentation. Enfin, le firmware doit orchestrer en parallèle des tâches aux exigences temporelles très différentes — le flux audio ne tolère aucune interruption, tandis que l'affichage et la lecture de la carte SD sont moins critiques.
 
-Le problème central n'est donc pas le fonctionnement de chaque bloc pris isolément, mais la maîtrise des interfaces entre eux : c'est à ces frontières, entre l'analogique et le numérique, entre le matériel et le logiciel, que se concentrent l'essentiel des compromis et des difficultés du projet. \\
+Le problème central n'est donc pas le fonctionnement de chaque bloc pris isolément, mais la maîtrise des interfaces entre eux : c'est à ces frontières, entre l'analogique et le numérique, entre le matériel et le logiciel, que se concentrent l'essentiel des compromis et des difficultés du projet.
 
 
 \clearpage
@@ -25,10 +25,10 @@ L'objectif général est de concevoir, de bout en bout, un lecteur audio portabl
       \item modéliser le boîtier mécanique.
       \item commander les composants, assembler la carte et valider le montage.
       \item développer le firmware assurant les fonctions attendues.
-      \item rédiger le présent rapport.  \\
+      \item rédiger le présent rapport.
 \end{itemize}
 
-Les fonctions attendues de l'appareil se répartissent quant à elles en deux niveaux : des prérequis minimaux, qui suffisent à faire un appareil complet et utilisable, et des fonctions supplémentaires, ajoutées si le temps le permet. Le détail figure au cahier des charges.  \\
+Les fonctions attendues de l'appareil se répartissent quant à elles en deux niveaux : des prérequis minimaux, qui suffisent à faire un appareil complet et utilisable, et des fonctions supplémentaires, ajoutées si le temps le permet. Le détail figure au cahier des charges.
 
 
 \section{Méthodologie}

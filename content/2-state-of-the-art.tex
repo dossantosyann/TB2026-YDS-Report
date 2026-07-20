@@ -6,7 +6,7 @@ le projet par rapport à ce qui existe déjà. Le lecteur audio portable est un
 objet ancien, dont le marché a connu une quasi-disparition avant de se
 maintenir dans des usages de niche. Cette section retrace cette évolution,
 puis examine les briques technologiques aujourd'hui disponibles pour réaliser
-un tel appareil. \\
+un tel appareil.
 
 
 \section{Travaux existants}
@@ -23,7 +23,7 @@ Cette catégorie a ensuite été largement absorbée par le smartphone, qui réu
 dans un seul appareil la lecture audio, la connectivité et le stockage. Le
 lecteur audio dédié, en tant que produit de masse, a ainsi pratiquement
 disparu : les acteurs historiques se sont retirés du segment, qui ne subsiste
-plus guère que sur le marché de l'occasion \cite{Tom-Smigla_20_Best_DAP}.  \\
+plus guère que sur le marché de l'occasion \cite{Tom-Smigla_20_Best_DAP}.
 
 
 \subsection{Le marché actuel}
@@ -40,12 +40,11 @@ une amplification soignée et des sorties symétriques, pour des tarifs
 s'échelonnant de quelques centaines à plusieurs milliers de francs
 \cite{Homecine_DAP_Comparison}. Beaucoup reposent désormais sur un système
 d'exploitation complet comme Android exécuté par un processeur applicatif, ce qui
-les rapproche d'un smartphone dépourvu de fonction téléphonique. \\
+les rapproche d'un smartphone dépourvu de fonction téléphonique.
 
-\vspace{1cm}
 À l'autre extrémité se maintiennent des lecteurs d'entrée de gamme,
 généralement de conception simple, à faible coût et à faible consommation,
-destinés à un usage quotidien sans prétention audiophile \cite{AudiophileOn_Best_Cheap_DAP}.  \\
+destinés à un usage quotidien sans prétention audiophile \cite{AudiophileOn_Best_Cheap_DAP}.
 
 
 \subsection{Positionnement du projet}
@@ -56,7 +55,7 @@ de concevoir, de bout en bout et à des fins formatrices, un appareil dédié,
 compact et fonctionnel, dont chaque choix matériel et logiciel est maîtrisé et
 justifié. La contribution recherchée n'est donc pas un produit inédit sur le
 marché, mais la démarche complète d'intégration, depuis le composant jusqu'au
-firmware.  \\
+firmware.
 
 
 \section{Technologies et méthodes existantes}
@@ -64,7 +63,7 @@ firmware.  \\
 
 La réalisation d'un lecteur audio portable mobilise plusieurs briques
 technologiques aujourd'hui bien établies. Leur analyse permet de dégager les
-choix pertinents pour ce projet.  \\
+choix pertinents pour ce projet.
 
 
 \subsection{Architecture de calcul}
@@ -75,7 +74,7 @@ complexité élevées \cite{Homecine_DAP_Comparison}. À l'opposé, un microcont
 un SoC intégré suffit pour un lecteur dédié : il offre une consommation réduite
 et un comportement temps réel maîtrisé, au prix d'un développement logiciel
 plus proche du matériel. Cette seconde approche, retenue ici, correspond à un
-appareil à fonction unique.  \\
+appareil à fonction unique.
 
 
 \subsection{Chaîne audio}
@@ -86,7 +85,7 @@ logicielles éprouvées. La conversion fait appel à un convertisseur dédié
 (DAC) communiquant en I\textsuperscript{2}S, suivi d'un étage
 d'amplification capable d'attaquer un casque. Les architectures les plus
 soignées privilégient des liaisons symétriques afin de réduire la sensibilité
-au bruit, principe que l'on retrouve à toutes les gammes de prix.  \\
+au bruit, principe que l'on retrouve à toutes les gammes de prix.
 
 
 \subsection{Connectivité}
@@ -96,7 +95,7 @@ liaison sans fil Bluetooth (profil A2DP pour le flux audio, AVRCP pour le
 contrôle), plus pratique mais soumise aux contraintes de la compression et de
 la portée radio. La cohabitation d'une chaîne analogique sensible et d'un
 émetteur radio sur une même carte constitue l'une des difficultés récurrentes
-de ce type de conception.  \\
+de ce type de conception.
 
 
 \subsection{Énergie et stockage}
@@ -105,7 +104,7 @@ un circuit de charge et, dans les conceptions soignées, à une jauge de charge
 permettant d'estimer l'état de la batterie. La recharge s'effectue aujourd'hui
 majoritairement par USB-C. Le stockage de la musique fait appel soit à une
 mémoire interne, soit à une carte microSD exploitée via un système de fichiers
-standard.  \\
+standard.
 
 
 \subsection{Synthèse comparative}

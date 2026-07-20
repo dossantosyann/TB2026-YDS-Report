@@ -115,7 +115,7 @@ Tous les composants remplissant le critère minimum de 24 bits de résolution et
 
 \begin{itemize}
     \item Il est le seul des trois à disposer de sorties différentielles, critère déterminant établi précédemment.
-    \item Il offre les meilleures performances du comparatif, avec un SNR de 114~dB et un THD+N de $−100$~dB, contre 112~dB et $−93$~dB pour les deux autres.
+    \item Il offre les meilleures performances du comparatif, avec un SNR de 114~dB et un THD+N de $-100$~dB, contre 112~dB et $-93$~dB pour les deux autres.
 \end{itemize}
 
 
@@ -275,6 +275,7 @@ La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontai
 
 
 \subsubsection{Choix de la topologie : buck plutôt que LDO}
+\label{sec:topologie_buck}
 
 Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'au seuil de coupure de 3,2\,V imposé par le superviseur. Deux topologies permettent d'en tirer le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck). Le rendement d'un LDO est borné par le rapport $V_{OUT}/V_{IN}$, soit au mieux $3{,}3/4{,}2 \approx 80\,\%$, le reste étant dissipé en chaleur, ce qui pèse sur l'autonomie et la thermique d'un boîtier compact. Un buck conserve à l'inverse un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée~\cite{TI_TPS62A01}, avantage décisif pour un lecteur audio nomade.
 
@@ -334,7 +335,7 @@ Le MAX17624 est écarté en raison de son prix près de neuf fois supérieur pou
 
 Le superviseur de tension protège la cellule lithium-ion contre la décharge profonde, qui endommagerait irréversiblement la batterie. Il surveille en permanence la tension de la cellule et déclenche un verrouillage dès qu'elle descend sous un seuil de sécurité. Ce seuil est fixé ici à 3,2~V, valeur obtenue par le XC6120 de Torex~\cite{torex_XC6120}.
 
-Sa fonction première, et la principale, est de préserver la durée de vie de la batterie en interrompant la décharge avant que la cellule n'atteigne une tension nuisible. Ce choix présente un avantage secondaire pour la chaîne audio. Comme vu précédemment, lorsque la tension de la batterie s'approche de 3,3~V, le convertisseur abaisseur passe en conduction permanente et le rail de sortie suit alors la tension de la cellule, diminuée de la faible chute du régulateur. En coupant à 3,2~V, on maintient ce rail au-dessus des tensions minimales de fonctionnement de la chaîne audio filaire. Abaisser le seuil n'apporterait par ailleurs qu'un gain d'autonomie négligeable, la courbe de décharge d'une cellule lithium-ion s'effondrant rapidement sous cette tension, tout en rapprochant le rail de la limite basse des composants.
+Sa fonction première, et la principale, est de préserver la durée de vie de la batterie en interrompant la décharge avant que la cellule n'atteigne une tension nuisible. Ce choix présente un avantage secondaire pour la chaîne audio. Comme exposé à la section~\ref{sec:topologie_buck}, lorsque la tension de la batterie s'approche de 3,3~V, le rail de sortie suit alors la tension de la cellule, diminuée de la faible chute du régulateur. En coupant à 3,2~V, on maintient ce rail au-dessus des tensions minimales de fonctionnement de la chaîne audio filaire. Abaisser le seuil n'apporterait par ailleurs qu'un gain d'autonomie négligeable, la courbe de décharge d'une cellule lithium-ion s'effondrant rapidement sous cette tension, tout en rapprochant le rail de la limite basse des composants.
 
 
 

@@ -6,7 +6,7 @@ c'est-à-dire l'ensemble des exigences que le produit doit satisfaire, puis le
 traduit en spécifications techniques servant de référence vérifiable.
 Conformément à la démarche descendante annoncée en introduction, ces deux
 éléments précèdent l'analyse fonctionnelle, présentée ensuite, qui décompose le
-système en fonctions afin d'organiser la conception matérielle et logicielle. \\
+système en fonctions afin d'organiser la conception matérielle et logicielle.
 
 \section{Cahier des charges}
 Le sujet ayant été choisi librement, le cahier des charges ne découle pas d'une
@@ -18,7 +18,7 @@ l'ensemble des choix qui suivent.
 L'appareil doit être un lecteur audio portable, autonome et compact, dédié à la
 seule lecture de musique. Cette vocation d'objet à fonction unique,
 transportable dans une poche et utilisable sans dépendre d'un autre appareil,
-oriente l'ensemble des exigences ci-dessous.  \\
+oriente l'ensemble des exigences ci-dessous.
 
 \subsection{Exigences minimales}
 Sur le plan audio, le produit doit lire des fichiers aux formats \texttt{.MP3}
@@ -35,7 +35,7 @@ titre en cours de lecture et l'état de la batterie, et l'utilisateur doit
 pouvoir naviguer dans un système de menus à l'aide de commandes physiques.
 
 Enfin, ce même connecteur USB-C doit permettre la programmation du
-microcontrôleur, afin de n'exposer qu'une seule prise sur le boîtier.  \\
+microcontrôleur, afin de n'exposer qu'une seule prise sur le boîtier.
 
 \subsection{Objectifs supplémentaires}
 Au-delà de ce exigences minimales, les fonctions suivantes sont
@@ -48,7 +48,7 @@ extensions souhaitables si le calendrier le permet :
       \item navigation dans la bibliothèque musicale, avec tri par artiste, album
             et titre.
       \item menus de réglages (général, Bluetooth, égaliseur).
-      \item écran de statistiques (tension, courant, température, luminosité).  \\
+      \item écran de statistiques (tension, courant, température, luminosité).
 \end{itemize}
 
 \section{Spécifications techniques}
@@ -86,7 +86,7 @@ conduite à deux niveaux de granularité : le niveau~0 considère l'appareil com
 une boîte noire et recense ses échanges avec l'environnement extérieur, le
 niveau~1 ouvre cette boîte et répartit les fonctions internes en blocs reliés
 par leurs flux d'énergie et de données. Cette décomposition sert ensuite de
-trame à la conception matérielle. \\
+trame à la conception matérielle.
 
 \subsection{Niveau 0 : diagramme de contexte}
 Le niveau~0, présenté à la figure~\ref{Analyse_Fonctionnelle-Niv1.drawio}, situe l'appareil dans son
@@ -106,7 +106,7 @@ avec quatre éléments externes :
 chacune de ces interfaces physiques traverse un étage de protection à la
 frontière du système. Cet étage, qui protège les broches exposées contre les
 décharges électrostatiques et les perturbations, constitue la première
-fonction rencontrée par tout signal entrant ou sortant. \\
+fonction rencontrée par tout signal entrant ou sortant.
 
 \fig[H, width=0.7\textwidth]{Analyse fonctionnelle matérielle - Niveau 0}{Analyse_Fonctionnelle-Niv1.drawio}
 
