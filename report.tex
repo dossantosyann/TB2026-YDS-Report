@@ -22,6 +22,7 @@
 \usepackage[table]{xcolor}
 \usepackage{array}      % colonnes m{} et >{...}
 \usepackage{longtable}  % tableaux multi-pages avec en-tête répété
+\usepackage{wrapfig}
 
 \renewcommand{\arraystretch}{1.5}
 
@@ -74,13 +75,13 @@
 % Sommaire et tables
 \clearemptydoublepage
 {
-    \tableofcontents
-    \let\cleardoublepage\clearpage
-    \listoffigures
-    \let\cleardoublepage\clearpage
-    \listoftables
-    \let\cleardoublepage\clearpage
-    \listoflistings
+  \tableofcontents
+  \let\cleardoublepage\clearpage
+  \listoffigures
+  \let\cleardoublepage\clearpage
+  \listoftables
+  \let\cleardoublepage\clearpage
+  \listoflistings
 }
 
 \printnomenclature
