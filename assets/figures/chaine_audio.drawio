@@ -154,14 +154,8 @@
         <mxCell id="out_lbl" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontFamily=Helvetica;" value="Jack 3.5 mm" vertex="1">
           <mxGeometry height="20" width="160" x="875" y="168" as="geometry" />
         </mxCell>
-        <mxCell id="ann_filt" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontFamily=Helvetica;fontStyle=2" value="Filtre hors bande&#xa;f&lt;sub&gt;c&lt;/sub&gt; ≈ 156 kHz" vertex="1">
-          <mxGeometry height="34" width="180" x="250" y="240" as="geometry" />
-        </mxCell>
         <mxCell id="ann_rin" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontFamily=Helvetica;fontStyle=2" value="R&lt;sub&gt;in&lt;/sub&gt; = 10,2 kΩ par branche" vertex="1">
           <mxGeometry height="20" width="230" x="230" y="96" as="geometry" />
-        </mxCell>
-        <mxCell id="ann_gain" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontFamily=Helvetica;fontStyle=2" value="A&lt;sub&gt;v&lt;/sub&gt; = R35 / (R39 + R40)&lt;br&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp;= 5,1 / 10,2 = 0,5" vertex="1">
-          <mxGeometry height="40" width="130" x="790" y="104" as="geometry" />
         </mxCell>
         <mxCell id="F6fFzAIG0ZqPtWo9ln0A-1" edge="1" parent="1" style="endArrow=none;html=1;strokeWidth=2;">
           <mxGeometry relative="1" as="geometry">
