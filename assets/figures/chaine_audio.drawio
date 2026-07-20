@@ -152,7 +152,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="out_lbl" parent="1" style="text;html=1;align=left;verticalAlign=middle;fontSize=12;fontFamily=Helvetica;" value="Jack 3.5 mm" vertex="1">
-          <mxGeometry height="20" width="160" x="888" y="238" as="geometry" />
+          <mxGeometry height="20" width="72" x="888" y="238" as="geometry" />
         </mxCell>
         <mxCell id="ann_rin" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=11;fontFamily=Helvetica;fontStyle=2" value="R&lt;sub&gt;in&lt;/sub&gt; = 10,2 kΩ par branche" vertex="1">
           <mxGeometry height="20" width="230" x="243" y="166" as="geometry" />
