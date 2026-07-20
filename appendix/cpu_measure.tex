@@ -12,6 +12,8 @@ Le tableau~\ref{tab:charge_regime} donne la charge moyenne de chaque tâche sign
 
 \begin{table}[H]
     \centering
+    \caption{Charge processeur moyenne par régime, en pour-cent du temps de chaque cœur. La charge du cœur inclut, en plus des tâches détaillées, les tâches système résiduelles restant sous 1~\%. La charge de la tâche audio suit le format décodé et la pile Bluetooth reste confinée au cœur~0.}
+    \label{tab:charge_regime}
     \begin{tabular}{lccccc}
         \toprule
                                   & Repos & WAV 16 bits & WAV 24 bits & MP3  & Bluetooth \\
@@ -27,8 +29,6 @@ Le tableau~\ref{tab:charge_regime} donne la charge moyenne de chaque tâche sign
         \quad charge du cœur [\%] & 2,1   & 2,1         & 2,1         & 2,1  & 70,0      \\
         \bottomrule
     \end{tabular}
-    \caption{Charge processeur moyenne par régime, en pour-cent du temps de chaque cœur. La charge du cœur inclut, en plus des tâches détaillées, les tâches système résiduelles restant sous 1~\%. La charge de la tâche audio suit le format décodé et la pile Bluetooth reste confinée au cœur~0.}
-    \label{tab:charge_regime}
 \end{table}
 
 

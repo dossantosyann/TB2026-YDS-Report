@@ -15,6 +15,8 @@ Le firmware repose sur quatre tâches FreeRTOS permanentes et une conception ent
 
 \begin{table}[H]
     \centering
+    \caption{Tâches FreeRTOS permanentes du firmware. Les piles indiquées sont les tailles allouées à la création.}
+    \label{tab:taches}
     \begin{tabular}{lcccl}
         \toprule
         Tâche       & Cœur  & Priorité & Pile   & Rôle                                  \\
@@ -25,8 +27,6 @@ Le firmware repose sur quatre tâches FreeRTOS permanentes et une conception ent
         maintenance & libre & 3        & 3\,kio & corvées périodiques (100~ms)          \\
         \bottomrule
     \end{tabular}
-    \caption{Tâches FreeRTOS permanentes du firmware. Les piles indiquées sont les tailles allouées à la création.}
-    \label{tab:taches}
 \end{table}
 
 Aucune tâche ne pratique d'attente active. Au repos, chacune est bloquée sur sa file d'événements ou de commandes, donc retirée de la liste des tâches prêtes par l'ordonnanceur et sans consommation de cycles~\cite{barry_mastering_freertos}. L'appui sur un bouton déclenche une interruption sur la broche dédiée de l'expanseur, dont le gestionnaire se borne à débloquer la tâche d'entrée, l'identification du bouton exigeant une transaction I\textsuperscript{2}C interdite en contexte d'interruption~\cite{diodes_inc_PI4IOE5V9554}. La tâche d'entrée lit alors l'état des boutons, en déduit les événements et les poste dans la file consommée par la tâche d'interface. La tâche audio reste de même bloquée tant qu'aucune commande de lecture n'arrive. Seule la tâche de maintenance procède par scrutation. Les grandeurs qu'elle surveille, comme la position du potentiomètre de volume ou l'état de charge de la batterie, ne déclenchent aucune interruption et doivent donc être relues périodiquement. Sa période de 100~ms résulte d'un compromis entre la réactivité perçue du réglage de volume et le coût énergétique de ses réveils, sa durée d'exécution restant négligeable devant sa période. Ce fonctionnement événementiel sert directement l'autonomie, la gestion dynamique de fréquence ramenant le processeur à sa fréquence minimale dès qu'aucune tâche n'est prête~\cite{ESP32_IDF_guide} (section~\ref{sec:soft_power}).
@@ -46,6 +46,8 @@ Le dimensionnement des piles est confirmé par le niveau maximal d'occupation at
 
 \begin{table}[H]
     \centering
+    \caption{Occupation maximale des piles relevée sur 3~h~34 de fonctionnement continu. La marge minimale est le plus petit espace de pile resté libre à un instant quelconque de la campagne.}
+    \label{tab:piles}
     \begin{tabular}{lccc}
         \toprule
         Tâche       & Pile allouée & Marge minimale & Occupation maximale \\
@@ -56,8 +58,6 @@ Le dimensionnement des piles est confirmé par le niveau maximal d'occupation at
         maintenance & 3072 o       & 1708 o         & 44~\%               \\
         \bottomrule
     \end{tabular}
-    \caption{Occupation maximale des piles relevée sur 3~h~34 de fonctionnement continu. La marge minimale est le plus petit espace de pile resté libre à un instant quelconque de la campagne.}
-    \label{tab:piles}
 \end{table}
 
 L'absence d'attente active est établie par les statistiques d'exécution. Au repos, aucune lecture n'étant en cours, les tâches de repos des deux cœurs cumulent respectivement 97,3~\% et 99,0~\% du temps, le solde étant imputable à la seule scrutation périodique de la tâche de maintenance. Le temps attribué à la tâche audio suit par ailleurs strictement l'effort de décodage, passant de 11,5~\% du cœur~1 en WAV 44,1~kHz 16~bits à 16,1~\% en 24~bits et 36,8~\% en MP3, puis retombant à zéro dès l'arrêt de la lecture. Une boucle d'attente active produirait au contraire une consommation constante et indépendante du contenu restitué. La figure~\ref{charge_cpu} donne l'évolution de la charge de chaque cœur sur l'ensemble de la campagne et fait apparaître cette correspondance entre le format décodé et le coût processeur, chaque palier de la charge du cœur~1 coïncidant avec un changement de format.
