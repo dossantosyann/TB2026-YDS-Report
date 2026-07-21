@@ -1,0 +1,32 @@
+\section{Extrait du vidage mémoire ayant motivé le retrait de la \glsentryname{dfs}}
+\label{annexe:coredump}
+
+L'extrait ci-dessous réunit les quatre éléments qui portent le diagnostic de la section~\ref{sec:soft_power}. Les chemins de compilation ont été abrégés pour la lisibilité.
+
+\begin{lstlisting}[basicstyle=\ttfamily\scriptsize, breaklines=true]
+exccause       0x46 (InterruptWDTTimoutCPU1)
+Crashed task handle: 0x3ffb7b54, name: 'IDLE1'
+
+==================== CURRENT THREAD STACK =====================
+#0  0x40094222 in esp_cpu_wait_for_intr () at [...]/esp_hw_support/cpu.c:64
+#1  0x401491cd in esp_pm_impl_waiti ()   at [...]/esp_pm/pm_impl.c:1111
+#2  0x40175d83 in esp_vApplicationIdleHook () at [...]/freertos_hooks.c:56
+#3  0x401775ed in prvIdleTask ()         at [...]/FreeRTOS-Kernel/tasks.c:4350
+
+==================== THREAD 3 (name: 'maint') =====================
+#0  0x400885cc in esp_crosscore_int_send_yield (core_id=1) at [...]/crosscore_int.c:126
+#1  0x40177ee9 in vTaskDelay (xTicksToDelay=10)
+#2  0x400e3ab4 in maintenance_task ()    at [...]/services/maintenance/maintenance.c:127
+
+==================== THREAD 7 (name: 'Tmr Svc') =====================
+#0  0x400885cc in esp_crosscore_int_send_yield (core_id=1) at [...]/crosscore_int.c:126
+
+       TCB             NAME PRIO C/B  STACK USED/FREE
+---------- ---------------- -------- ----------------
+0x3ffb7b54            IDLE1      0/0         480/1040
+0x3ffbd6d0            maint      3/3         448/2608
+0x3ffbd9dc               ui      5/5         576/7608
+0x3ffbd974            audio    22/22        1312/2780
+\end{lstlisting}
+
+La première ligne identifie le chien de garde d'interruption du second cœur comme cause de la panique. La pile de la tâche fautive place le cœur dans la fonction de mise en attente du module de gestion d'énergie. Les tâches \texttt{maint} et \texttt{Tmr Svc}, portées par le premier cœur, attendent au même instant l'acquittement d'une demande de basculement par ce second cœur, ce qui confirme qu'il ne servait plus ses interruptions. La table finale montre enfin qu'aucune pile n'était saturée, ce qui écarte un débordement.
