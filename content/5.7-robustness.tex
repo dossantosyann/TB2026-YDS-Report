@@ -1,1 +1,51 @@
+\section{Robustesse et diagnostic embarqué}
 \label{sec:soft_robustness}
+
+Le maintien logiciel du rail décrit à la section~\ref{sec:soft_power} a une conséquence directe sur le diagnostic. Toute réinitialisation du micro-contrôleur relâche la ligne de maintien et fait donc tomber l'alimentation, de sorte que le démarrage suivant se présente toujours comme une mise sous tension. Un plantage y est indiscernable d'une extinction volontaire ou d'une batterie débranchée. Sur un appareil qui fonctionne sur batterie, loin de toute console série, aucune défaillance n'est donc observable après coup si le firmware ne produit pas lui-même sa propre trace. Cette section décrit les mécanismes qui la produisent, de la détection de l'anomalie jusqu'à sa conservation sur la carte.
+
+\subsection{Watchdogs}
+
+Deux watchdogs de nature différente sont actifs. Le premier surveille le service des interruptions sur chaque cœur et déclenche une panique lorsque l'interruption de tick n'est plus servie dans son délai. Le second surveille les tâches qui s'y abonnent et qui doivent lui donner signe de vie périodiquement~\cite{ESP32_IDF_wdt}. Ce second watchdog est configuré pour provoquer un redémarrage plutôt que pour se contenter d'un message. Sur un appareil sans console, un message n'est lu par personne, alors qu'un redémarrage laisse un \gls{coredump} exploitable.
+
+L'abonnement au watchdog de tâches demande un critère, car abonner les quatre tâches permanentes serait contre-productif. Dans la conception événementielle de la section~\ref{sec:archi}, une tâche bloquée sur sa file est dans son état normal et non en panne. L'abonnement suit donc l'activité et non la tâche. La boucle de décodage s'abonne quand elle décode, se désabonne pendant la pause où son inactivité est légitime, se réabonne à la reprise et se désabonne en sortie. La tâche d'interface applique la même règle à ses écrans, en s'abonnant uniquement lorsque l'écran courant se rafraîchit de lui-même à une cadence bien plus courte que le délai du watchdog. Un écran statique ou verrouillé attend au contraire plusieurs dizaines de secondes par conception, et reste donc en dehors, sans quoi l'attente elle-même passerait pour un blocage.
+
+Ce critère laisse ouvert un mode de défaillance opposé, celui d'une boucle qui consomme sans jamais rendre la main et qui n'est abonnée à rien. La surveillance des tâches de repos des deux cœurs, conservée à sa valeur par défaut, le couvre. Une tâche de repos qui ne s'exécute plus signale un cœur monopolisé. Les deux mécanismes se complètent ainsi, l'un attrapant une tâche qui n'avance plus, l'autre une tâche qui n'en laisse plus avancer d'autres.
+
+\subsection{Verdict d'extinction}
+
+Le firmware reconstitue au démarrage la manière dont la session précédente s'est terminée. La figure~\ref{verdict_extinction.drawio} donne les deux questions qu'il se pose et les trois verdicts qui en découlent.
+
+\fig[H, width=0.9\textwidth]{Reconstitution de la fin de la session précédente. Les deux témoins sont exclusifs, un plantage n'atteignant jamais le code qui écrit le marqueur.}{verdict_extinction.drawio}
+
+Le marqueur d'extinction volontaire est écrit en \gls{nvs} juste avant que le rail ne tombe, comme décrit à la section~\ref{sec:soft_power}. Il est lu puis effacé dans la même opération, car un drapeau oublié ferait passer le plantage suivant pour une extinction normale.
+
+Le \gls{coredump} est quant à lui écrit par le gestionnaire de panique dans une partition de flash dédiée, avant que la réinitialisation ne fasse tomber le rail. C'est le seul témoin qui survive à la coupure d'alimentation. Le firmware en extrait au démarrage le nom de la tâche fautive et son compteur de programme, que la page de diagnostic affiche.
+
+L'absence des deux signifie que l'alimentation a disparu sans laisser au firmware le temps d'écrire quoi que ce soit, ce qui renvoie l'enquête vers le matériel, connecteur de batterie, superviseur ou effondrement de tension. C'est aussi, logiquement, ce que rapporte un tout premier démarrage.
+
+\subsection{Conservation du coredump}
+
+Un \gls{coredump} laissé en flash n'est pas exploitable, la partition n'étant pas accessible depuis un ordinateur sans outil de programmation. Le firmware le recopie donc sur la carte au démarrage suivant, sous un nom libre, puis efface la partition. L'analyse se fait ensuite hors cible en résolvant le fichier contre les symboles du binaire, ce qui produit une pile d'appel lisible comme celle reproduite en annexe~\ref{ann:coredump}.
+
+Deux détails de cette recopie méritent d'être défendus. La partition est effacée même lorsque l'écriture sur la carte a échoué, parce qu'un \gls{coredump} périmé ferait étiqueter en plantage toutes les coupures d'alimentation ultérieures. Un verdict juste vaut mieux qu'une trace conservée mais illisible. À l'inverse, lorsque aucune carte n'est présente au démarrage, la partition est laissée intacte et la recopie est retentée à la première insertion, le montage à chaud décrit à la section~\ref{sec:transport} rappelant la même fonction d'export.
+
+\subsection{Mesure d'autonomie}
+
+L'autonomie d'un appareil qui s'éteint tout seul est difficile à mesurer avec un instrument externe, qui ne verra que la fin de la décharge sans savoir ce qui s'est passé avant. La carte porte pourtant déjà une jauge. Un service de campagne exploite cette jauge pour mener la mesure lui-même, en faisant tourner une charge de travail choisie sur batterie jusqu'à l'extinction et en enregistrant la courbe de décharge.
+
+Trois charges sont proposées, le repos, la lecture sur la sortie filaire et la lecture vers une enceinte Bluetooth. La dernière exige un lien déjà établi, car sans destinataire la carte, qui est une source \gls{a2dp}, n'émet rien et la mesure manquerait l'essentiel de son coût, la radio et l'encodage. Pour qu'une campagne soit reproductible, le service fige la charge pendant toute sa durée. Il force la répétition de la piste courante afin que la lecture ne s'arrête jamais d'elle-même, et impose un volume fixe indépendant du potentiomètre. Il restaure ces deux réglages à la fin.
+
+La contrainte principale porte sur la conservation de la courbe, qui doit survivre à la mort de la carte quelle qu'en soit la cause. Garder les points en mémoire vive ne convient donc pas, et chaque point est écrit en \gls{nvs} dès qu'il est relevé. Cette partition ne fait toutefois que 24~kio, ce qui interdit une courbe de détail illimité. Le service borne le nombre de points et, lorsque le tampon est plein, n'en conserve qu'un sur deux avant de doubler son intervalle d'échantillonnage. Une campagne de durée quelconque tient ainsi dans une taille fixe, au prix d'une résolution qui diminue à mesure qu'elle s'allonge. Chaque point porte pour cette raison sa propre date plutôt que de la déduire de son rang, afin que cette décimation reste exacte.
+
+Une campagne peut se terminer de quatre façons, et le service les distingue toutes. L'utilisateur peut l'annuler. La batterie peut atteindre le seuil critique, auquel cas le service prend la main sur l'extinction automatique du service d'énergie, relève un dernier point, écrit son journal, puis demande l'extinction. Le branchement de l'USB en cours de route invalide la mesure d'autonomie, mais la courbe partielle reste une donnée réelle et elle est donc conservée en étant marquée comme telle. Un plantage, enfin, ne laisse aucune occasion de conclure. C'est là que les deux moitiés de cette section se rejoignent, l'export au démarrage suivant reprenant le verdict de la sous-section précédente pour étiqueter la mort de la campagne. Une courbe interrompue indique ainsi d'elle-même si l'appareil s'est éteint proprement, a planté ou a perdu son alimentation.
+
+\subsection{Validation}
+\label{sec:robustness_validation}
+
+Les deux watchdogs ont été exercés par injection de fautes, en bloquant volontairement la boucle de décodage puis le rendu d'un écran vif. Chaque blocage a produit un redémarrage et un \gls{coredump} désignant la bonne tâche. Le critère d'abonnement a été vérifié dans l'autre sens, une lecture mise en pause et un écran verrouillé pouvant rester longtemps inactifs sans déclencher de redémarrage.
+
+Les verdicts d'extinction volontaire et de plantage ont été provoqués séparément, par une extinction demandée puis par une panique volontaire, et chacun a été correctement rapporté au démarrage suivant. L'effacement du marqueur a été vérifié en enchaînant une extinction volontaire puis un plantage, le second n'étant pas masqué par le premier.
+
+La recopie du \gls{coredump} a été suivie sur les deux chemins, celui du démarrage avec une carte présente et celui de l'insertion à chaud après un démarrage sans carte. Le fichier obtenu a été relu hors cible et résolu contre les symboles du binaire, procédure qui a produit le diagnostic exposé à la section~\ref{sec:soft_power}.
+
+Le service de campagne a enfin été exercé de bout en bout, de son démarrage à son export. L'annulation par l'utilisateur et l'invalidation par branchement de l'USB produisent bien deux fichiers distincts et correctement étiquetés.

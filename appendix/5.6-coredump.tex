@@ -29,4 +29,4 @@ Crashed task handle: 0x3ffb7b54, name: 'IDLE1'
 0x3ffbd974            audio    22/22        1312/2780
 \end{lstlisting}
 
-La première ligne identifie le chien de garde d'interruption du second cœur comme cause de la panique. La pile de la tâche fautive place le cœur dans la fonction de mise en attente du module de gestion d'énergie. Les tâches \texttt{maint} et \texttt{Tmr Svc}, portées par le premier cœur, attendent au même instant l'acquittement d'une demande de basculement par ce second cœur, ce qui confirme qu'il ne servait plus ses interruptions. La table finale montre enfin qu'aucune pile n'était saturée, ce qui écarte un débordement.
+La première ligne identifie le watchdog d'interruption du second cœur comme cause de la panique. La pile de la tâche fautive place le cœur dans la fonction de mise en attente du module de gestion d'énergie. Les tâches \texttt{maint} et \texttt{Tmr Svc}, portées par le premier cœur, attendent au même instant l'acquittement d'une demande de basculement par ce second cœur, ce qui confirme qu'il ne servait plus ses interruptions. La table finale montre enfin qu'aucune pile n'était saturée, ce qui écarte un débordement.

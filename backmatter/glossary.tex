@@ -20,6 +20,11 @@
     description={Inter-IC Sound. Bus numérique série dédié au transport d'audio entre circuits intégrés. Il transmet les échantillons sur trois signaux, une horloge de bit, une horloge de mot et une ligne de données, sans protocole d'adressage}
 }
 
+\newglossaryentry{i2c}{
+    name={I\textsuperscript{2}C},
+    description={Inter-Integrated Circuit. Bus série synchrone à deux fils utilisé pour relier des composants sur une carte, avec une ligne de données et une ligne d'horloge partagées}
+}
+
 \newglossaryentry{bck}{
     name={BCK},
     description={Bit Clock. Horloge du bus I\textsuperscript{2}S qui cadence la transmission de chaque bit. Sa fréquence vaut le produit de la fréquence d'échantillonnage, du nombre de canaux et de la largeur d'un slot}
@@ -129,6 +134,11 @@
     description={Task Watchdog Timer. Chien de garde d'ESP-IDF qui surveille les tâches abonnées et provoque une réinitialisation si l'une d'elles ne se signale pas dans le délai imparti, révélant un blocage logiciel}
 }
 
+\newglossaryentry{iwdt}{
+    name={IWDT},
+    description={Interrupt Watchdog Timer. Chien de garde d'ESP-IDF qui surveille le service des interruptions sur chaque cœur et provoque une panique lorsque l'interruption de tick n'est plus servie dans le délai imparti}
+}
+
 \newglossaryentry{esd}{
     name={ESD},
     description={Electrostatic Discharge. Décharge électrostatique, transfert brutal de charges lorsqu'un corps chargé touche le circuit. Sans protection, l'impulsion de tension associée peut détruire les entrées des composants}
@@ -204,7 +214,17 @@
     description={Vidage mémoire écrit par le gestionnaire de panique lors d'un plantage. Il contient les registres et la pile de chaque tâche au moment de la faute, et permet une analyse post-mortem hors cible}
 }
 
-\newglossaryentry{iwdt}{
-    name={IWDT},
-    description={Interrupt Watchdog Timer. Chien de garde d'ESP-IDF qui surveille le service des interruptions sur chaque cœur et provoque une panique lorsque l'interruption de tick n'est plus servie dans le délai imparti}
+\newglossaryentry{apb}{
+    name={APB},
+    description={Advanced Peripheral Bus. Bus interne reliant le cœur du \gls{soc} à ses périphériques numériques (\gls{i2s}, \gls{spi}, \gls{i2c}, \gls{uart}), cadencé à 80~MHz sur l'ESP32 lorsque la CPU est pilotée par la PLL et suspendu en sommeil léger, ce qui arrête simultanément tous les périphériques concernés}
+}
+
+\newglossaryentry{csv}{
+    name={CSV},
+    description={Comma-Separated Values. Format de fichier texte où chaque ligne représente un enregistrement et où les champs sont séparés par un caractère fixe, employé ici pour exporter les courbes de décharge vers un tableur ou un script d'analyse}
+}
+
+\newglossaryentry{uart}{
+    name={UART},
+    description={Universal Asynchronous Receiver-Transmitter. Circuit intégré ou module logique assurant la communication série asynchrone en convertissant les données parallèles du processeur en un flux série pour l'émission, et inversement pour la réception, sans nécessiter de signal d'horloge commun entre les équipements}
 }
