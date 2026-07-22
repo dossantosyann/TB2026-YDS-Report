@@ -21,7 +21,7 @@ Une tentative de connexion pouvait échouer en laissant la pile dans un état in
 
 \section{Robustesse système}
 
-Un incident d'extinction inexpliqué a révélé un angle mort du diagnostic. Le firmware maintient lui-même son propre rail d'alimentation, si bien que toute réinitialisation fait tomber ce rail et que le démarrage suivant lit invariablement une mise sous tension, ce qui rend un plantage indistinguable d'une extinction volontaire ou d'une coupure d'alimentation. La résolution repose sur des traces persistées avant la chute du rail, un marqueur d'extinction propre écrit en \gls{nvs} juste avant de relâcher le rail, et un vidage mémoire déposé dans une partition de flash dédiée en cas de panique. Le démarrage suivant lit ces traces et classe la fin de la session précédente en extinction propre, plantage ou coupure selon la logique suivante :
+Un incident d'extinction inexpliqué a révélé un angle mort du diagnostic. Le firmware maintient lui-même son propre rail d'alimentation, si bien que toute réinitialisation fait tomber ce rail et que le démarrage suivant lit invariablement une mise sous tension, ce qui rend un plantage indistinguable d'une extinction volontaire ou d'une coupure d'alimentation. La résolution repose sur des traces persistées avant la chute du rail, un marqueur d'extinction propre écrit en \gls{nvs} juste avant de relâcher le rail, et un coredump déposé dans une partition de flash dédiée en cas de panique. Le démarrage suivant lit ces traces et classe la fin de la session précédente en extinction propre, plantage ou coupure selon la logique suivante :
 
 \begin{table}[H]
     \centering

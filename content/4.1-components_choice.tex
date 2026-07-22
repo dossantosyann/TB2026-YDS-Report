@@ -147,7 +147,7 @@ Trois amplificateurs, issus de trois fabricants différents, ont été comparés
     \footnotesize
     \begin{tabular}{l c c >{\columncolor{teal!12}}c}
         \hline
-                                                & \makecell{\textbf{PAM8908}                                         \\\cite{diodes_inc_PAM8908}} & \makecell{\textbf{TPA6132A2}\\\cite{TI_TPA6132A2}} & \makecell{\textbf{MAX97220A}\\\cite{analog_MAX97220A}} \\
+                                                & \makecell{\textbf{PAM8908}                                         \\\cite{diodes_inc_PAM8908}} & \makecell{\textbf{TPA6132A2}\\\cite{TI_TPA6132A2}} & \makecell{\textbf{MAX97220AA}\\\cite{analog_MAX97220AA}} \\
         Fabricant                               & Diodes Inc.                & Texas Instruments    & Analog Devices \\
         \hline
         \multicolumn{4}{c}{\textbf{Caractéristiques électriques}}                                                    \\
@@ -173,7 +173,7 @@ Trois amplificateurs, issus de trois fabricants différents, ont été comparés
     \end{tabular}
 \end{table}
 
-Le MAX97220A se détache nettement sur les critères qui gouvernent la qualité de restitution :
+Le MAX97220AA se détache nettement sur les critères qui gouvernent la qualité de restitution :
 
 \begin{itemize}
     \item Le meilleur rapport signal sur bruit, à 112,5~dB contre 100~dB pour les deux autres.
@@ -262,7 +262,7 @@ Cette mesure, détaillée à l'annexe~\ref{ann:conso_esp32}, donne un courant mo
         ESP32-WROVER-E~\cite{ESP32_WROVER-E_Datasheet}            & 137                              & 350                              & Mesuré + marge datasheet                                 \\
         Écran OLED NHD-1.91-176176UBC3~\cite{NHD-1.91-176176UBC3} & 285                              & 310                              & Rail 3,3 V unique \newline 100\,\% pixels allumés        \\
         \gls{DAC} PCM5242~\cite{TI_PCM5242}                       & 37                               & 47                               & AVDD + CPVDD + DVDD à 192\,kHz                           \\
-        Amplificateur MAX97220A~\cite{analog_MAX97220A}           & ---                              & 50                               & Estimation en fonction de la puissance de sortie @ 3,3 V \\
+        Amplificateur MAX97220AA~\cite{analog_MAX97220AA}         & ---                              & 50                               & Estimation en fonction de la puissance de sortie @ 3,3 V \\
         Carte microSD                                             & ---                              & 100                              & Pire cas, dépend de la carte                             \\
         Divers (expanseur, pull-ups, etc.)                        & ---                              & 15                               & Estimation                                               \\
         \hline
@@ -279,7 +279,7 @@ La somme des courants maximaux atteint environ 875\,mA. Cette borne est volontai
 
 Le système est alimenté par une batterie Li-ion à une cellule, dont la tension varie d'environ 4,2\,V à pleine charge jusqu'au seuil de coupure de 3,2\,V imposé par le superviseur. Deux topologies permettent d'en tirer le rail 3,3\,V : un régulateur linéaire (LDO) ou un convertisseur abaisseur à découpage (buck). Le rendement d'un LDO est borné par le rapport $V_{OUT}/V_{IN}$, soit au mieux $3{,}3/4{,}2 \approx 80\,\%$, le reste étant dissipé en chaleur, ce qui pèse sur l'autonomie et la thermique d'un boîtier compact. Un buck conserve à l'inverse un rendement de l'ordre de 90 à 95\,\% sur toute la plage d'entrée~\cite{TI_TPS62A01}, avantage décisif pour un lecteur audio nomade.
 
-Deux réserves habituelles à l'égard d'un buck sont levées ici. En fin de décharge, lorsque la tension batterie s'approche de la sortie, le transistor haut passe en conduction permanente (100\,\% de rapport cyclique) et le convertisseur se comporte comme un régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable. Quant à l'ondulation de commutation, une fréquence élevée la repousse hors de la bande audio et la rend aisée à filtrer, tandis que le PCM5242 et le MAX97220 offrent un bon taux de réjection d'alimentation~\cite{TI_PCM5242, analog_MAX97220A}. La topologie buck est donc retenue.
+Deux réserves habituelles à l'égard d'un buck sont levées ici. En fin de décharge, lorsque la tension batterie s'approche de la sortie, le transistor haut passe en conduction permanente (100\,\% de rapport cyclique) et le convertisseur se comporte comme un régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable. Quant à l'ondulation de commutation, une fréquence élevée la repousse hors de la bande audio et la rend aisée à filtrer, tandis que le PCM5242 et le MAX97220A offrent un bon taux de réjection d'alimentation~\cite{TI_PCM5242, analog_MAX97220AA}. La topologie buck est donc retenue.
 
 
 \subsubsection{Comparaison des composants candidats}

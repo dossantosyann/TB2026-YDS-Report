@@ -18,6 +18,7 @@
   nooldvoltagedirection,
   european,
   americaninductors]{circuitikz} % Pour les schémas électriques
+\usepackage{pdfpages}
 \usepackage{booktabs}
 \usepackage[table]{xcolor}
 \usepackage{array}      % colonnes m{} et >{...}
@@ -75,13 +76,13 @@
 % Sommaire et tables
 \clearemptydoublepage
 {
-  \tableofcontents
-  \let\cleardoublepage\clearpage
-  \listoffigures
-  \let\cleardoublepage\clearpage
-  \listoftables
-  \let\cleardoublepage\clearpage
-  \listoflistings
+    \tableofcontents
+    \let\cleardoublepage\clearpage
+    \listoffigures
+    \let\cleardoublepage\clearpage
+    \listoftables
+    \let\cleardoublepage\clearpage
+    \listoflistings
 }
 
 \printnomenclature

@@ -61,7 +61,7 @@ avec $\tau = 2RC = 1{,}02\,\mu\text{s}$. Le déphasage correspond donc à un tem
 
 \subsubsection{Adaptation de niveau et choix du gain}
 
-Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, la tension de sortie maximale de l'amplificateur est limitée à $V_{\text{amp,max}} = 2{,}15\,\text{V}_{\text{RMS}}$ sur une charge de $600\,\Omega$~\cite{analog_MAX97220A}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
+Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, la tension de sortie maximale de l'amplificateur est limitée à $V_{\text{amp,max}} = 2{,}15\,\text{V}_{\text{RMS}}$ sur une charge de $600\,\Omega$~\cite{analog_MAX97220AA}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
 
 Le gain de l'amplificateur est fixé par le rapport des résistances externes selon
 \begin{equation}
