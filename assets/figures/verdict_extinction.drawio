@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="YDSTB2026">
   <diagram id="verdict" name="Verdict">
-    <mxGraphModel dx="2934" dy="1159" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="600" math="0" shadow="0">
+    <mxGraphModel dx="1397" dy="552" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="600" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -8,19 +8,19 @@
           <mxGeometry height="44" width="200" x="270" y="30" as="geometry" />
         </mxCell>
         <mxCell id="d1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=14;strokeColor=#333333;" value="Marqueur d&#39;extinction&#xa;volontaire présent en NVS ?" vertex="1">
-          <mxGeometry height="80" width="260" x="240" y="115" as="geometry" />
+          <mxGeometry height="80" width="260" x="240" y="95" as="geometry" />
         </mxCell>
         <mxCell id="d2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fontSize=14;strokeColor=#333333;" value="Coredump valide&#xa;en flash ?" vertex="1">
-          <mxGeometry height="80" width="260" x="240" y="250" as="geometry" />
+          <mxGeometry height="80" width="260" x="240" y="211" as="geometry" />
         </mxCell>
         <mxCell id="t1" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e6e6e6;strokeColor=#333333;" value="Extinction volontaire" vertex="1">
-          <mxGeometry height="54" width="210" x="590" y="128" as="geometry" />
+          <mxGeometry height="54" width="210" x="603" y="108" as="geometry" />
         </mxCell>
         <mxCell id="t2" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e6e6e6;strokeColor=#333333;" value="Plantage" vertex="1">
-          <mxGeometry height="54" width="210" x="590" y="263" as="geometry" />
+          <mxGeometry height="54" width="210" x="603" y="224" as="geometry" />
         </mxCell>
         <mxCell id="t3" parent="1" style="rounded=1;arcSize=30;whiteSpace=wrap;html=1;fontSize=14;fillColor=#e6e6e6;strokeColor=#333333;" value="Perte d&#39;alimentation" vertex="1">
-          <mxGeometry height="54" width="210" x="265" y="395" as="geometry" />
+          <mxGeometry height="54" width="210" x="265" y="330" as="geometry" />
         </mxCell>
         <mxCell id="e0" edge="1" parent="1" source="start" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=block;endFill=1;strokeColor=#333333;fontSize=14;" target="d1">
           <mxGeometry relative="1" as="geometry" />
@@ -29,13 +29,17 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e2" edge="1" parent="1" source="d1" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=block;endFill=1;strokeColor=#333333;fontSize=14;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="d2" value="non">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" x="-0.3306" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="e3" edge="1" parent="1" source="d2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=block;endFill=1;strokeColor=#333333;fontSize=14;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="t2" value="oui">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e4" edge="1" parent="1" source="d2" style="edgeStyle=orthogonalEdgeStyle;html=1;rounded=0;endArrow=block;endFill=1;strokeColor=#333333;fontSize=14;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="t3" value="non">
-          <mxGeometry relative="1" as="geometry" />
+          <mxGeometry relative="1" x="-0.2512" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
