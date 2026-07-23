@@ -3,7 +3,7 @@
 
 Le firmware est organisé en couches à responsabilité unique, dont la règle de dépendance est stricte : une couche ne peut dépendre que de couches situées en dessous d'elle, jamais l'inverse~\cite{martin_clean_architecture}. Cette règle est matérialisée par le découpage en composants ESP-IDF, chaque composant déclarant explicitement ses dépendances dans son \texttt{CMakeLists.txt}~\cite{ESP32_IDF_guide}. La figure~\ref{Architecture_logicielle.drawio} présente cette organisation.
 
-\fig[H, width=1\textwidth]{Architecture logicielle en couches. Les traits pleins représentent les dépendances de compilation. Le module \texttt{main} est le seul autorisé à toucher toutes les couches.}{Architecture_logicielle.drawio}
+\fig[H, width=1\textwidth]{Architecture logicielle en couches. Les traits pleins représentent les dépendances de compilation. Le module \texttt{main} est le seul autorisé à toucher toutes les couches. Diagramme créé avec l'aide de Claude Opus 4.8.}{Architecture_logicielle.drawio}
 
 La couche \texttt{bsp} (\textit{board support package}) est la seule à connaître le brochage de la carte, centralisé dans un unique fichier \texttt{board\_pins.h}. Elle initialise les bus partagés (ADC, I\textsuperscript{2}C, I\textsuperscript{2}S, SPI) et en distribue les handles aux couches supérieures, de sorte qu'aucun pilote ne configure lui-même le contrôleur qu'il utilise. La couche \texttt{drivers} contient un pilote fin par circuit, chacun ne dépendant que du \texttt{bsp} et n'exposant que les opérations réellement utilisées par le reste du firmware. La couche \texttt{services} expose des capacités indépendantes du matériel : stockage et indexation des pistes, pipeline audio, Bluetooth, entrées utilisateur, gestion de l'énergie et préférences persistantes. La couche \texttt{ui} fournit le cadre graphique générique (framebuffer, pile de navigation, menus) et la couche \texttt{screens} les écrans concrets qui assemblent services et interface. Le module \texttt{main} assemble enfin le système : il initialise chaque couche dans l'ordre de ses dépendances, crée les tâches, puis rend la main sans participer au fonctionnement courant.
 
@@ -17,6 +17,7 @@ Le firmware repose sur quatre tâches FreeRTOS permanentes et une conception ent
     \centering
     \caption{Tâches FreeRTOS permanentes du firmware. Les piles indiquées sont les tailles allouées à la création.}
     \label{tab:taches}
+    \footnotesize
     \begin{tabular}{lcccl}
         \toprule
         Tâche       & Cœur  & Priorité & Pile   & Rôle                                  \\
@@ -48,6 +49,7 @@ Le dimensionnement des piles est confirmé par le niveau maximal d'occupation at
     \centering
     \caption{Occupation maximale des piles relevée sur 3~h~34 de fonctionnement continu. La marge minimale est le plus petit espace de pile resté libre à un instant quelconque de la campagne.}
     \label{tab:piles}
+    \footnotesize
     \begin{tabular}{lccc}
         \toprule
         Tâche       & Pile allouée & Marge minimale & Occupation maximale \\
@@ -62,6 +64,6 @@ Le dimensionnement des piles est confirmé par le niveau maximal d'occupation at
 
 L'absence d'attente active est établie par les statistiques d'exécution. Au repos, aucune lecture n'étant en cours, les tâches de repos des deux cœurs cumulent respectivement 97,3~\% et 99,0~\% du temps, le solde étant imputable à la seule scrutation périodique de la tâche de maintenance. Le temps attribué à la tâche audio suit par ailleurs strictement l'effort de décodage, passant de 11,5~\% du cœur~1 en WAV 44,1~kHz 16~bits à 16,1~\% en 24~bits et 36,8~\% en MP3, puis retombant à zéro dès l'arrêt de la lecture. Une boucle d'attente active produirait au contraire une consommation constante et indépendante du contenu restitué. La figure~\ref{charge_cpu} donne l'évolution de la charge de chaque cœur sur l'ensemble de la campagne et fait apparaître cette correspondance entre le format décodé et le coût processeur, chaque palier de la charge du cœur~1 coïncidant avec un changement de format.
 
-\fig[H, width=1\textwidth]{Charge processeur de chaque cœur au cours de la campagne d'endurance. Le fond indique le régime en cours, du repos aux différents formats décodés en sortie filaire jusqu'au streaming Bluetooth. Les paliers de la charge du cœur~1 suivent l'effort de décodage tandis que la charge de la pile Bluetooth reste confinée au cœur~0.}{charge_cpu}
+\fig[H, width=1\textwidth]{Charge processeur de chaque cœur au cours de la campagne d'endurance. Le fond indique le régime en cours, du repos aux différents formats décodés en sortie filaire jusqu'au streaming Bluetooth. Les paliers de la charge du cœur~1 suivent l'effort de décodage tandis que la charge de la pile Bluetooth reste confinée au cœur~0. Plot créé avec l'aide Claude Opus 4.8.}{charge_cpu}
 
 L'isolement du cœur~1 est confirmé par la phase de streaming Bluetooth, la plus défavorable de la campagne. La pile Bluetooth, entièrement portée par le cœur~0, y élève la charge de ce dernier jusqu'à 81~\% tandis que le cœur~1, qui assure le décodage et le rendu, plafonne à 64~\% en incluant les rafraîchissements complets de l'écran. Les deux cœurs conservent ainsi une réserve suffisante et la restitution audio est demeurée exempte de coupure pendant toute la campagne, y compris lors des rafraîchissements d'écran concomitants à la lecture.

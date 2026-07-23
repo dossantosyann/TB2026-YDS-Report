@@ -18,11 +18,11 @@ Le MAX77757 répartit ensuite l'énergie entre l'entrée, le système et la batt
 
 La jauge MAX17260 s'insère sur ce chemin pour suivre l'état de la batterie. Elle combine deux grandeurs, la tension de la cellule et la charge échangée, obtenue par intégration du courant mesuré aux bornes d'une résistance de mesure de faible valeur placée en série avec la batterie. Cette résistance est placée du côté haut, entre le pôle positif de la cellule et le nœud système, plutôt que dans le retour de masse. Le plan de masse reste ainsi continu et unique, alors qu'une mesure côté bas insérerait la résistance dans le chemin de retour et créerait entre la masse de la cellule et celle de la carte un écart de potentiel proportionnel au courant consommé, dégradant la référence de la chaîne audio. Les grandeurs mesurées et l'état de charge estimé sont transmis au micro-contrôleur par l'I\textsuperscript{2}C, et une broche d'alerte signale au firmware le passage sous un seuil bas de charge.
 
-\fig[H, width=0.8\linewidth]{Mesure de courant côté haut, position de la résistance de mesure entre la cellule et le nœud système}{mesure_courant.drawio}
+\fig[H, width=0.8\linewidth]{Mesure de courant côté haut, position de la résistance de mesure entre la cellule et le nœud système. Diagramme créé avec l'aide de Claude Opus 4.8.}{mesure_courant.drawio}
 
 Le rail logique de 3,3~V est produit à partir de la tension système par le convertisseur abaisseur TPS62A01. Les composants passifs qui l'entourent ont été calculés d'après sa fiche technique pour cette tension de sortie, à savoir le pont de retour qui fixe la consigne à partir de la tension de référence interne, et le condensateur d'avance de phase placé en parallèle sur sa résistance haute, qui réduit l'ondulation résiduelle en mode d'économie d'énergie et améliore la réponse aux échelons de charge~\cite{TI_TPS62A01}. Comme exposé à la section~\ref{sec:topologie_buck}, en fin de décharge le convertisseur se comporte en régulateur à très faible chute, ce qui maintient le bas de la plage batterie exploitable.
 
-\fig[H, width=0.8\linewidth]{Arbre d'alimentation, de l'entrée USB au rail logique}{arbre_alim.drawio}
+\fig[H, width=0.8\linewidth]{Arbre d'alimentation, de l'entrée USB au rail logique. Diagramme créé avec l'aide de Claude Opus 4.8.}{arbre_alim.drawio}
 
 L'entrée d'activation du convertisseur est pilotée par une logique câblée, détaillée à la figure~\ref{extrain_enable.png}, qui combine trois sources de mise en marche validées par le superviseur de tension.
 
@@ -33,7 +33,7 @@ L'entrée d'activation du convertisseur est pilotée par une logique câblée, d
 
 La chaîne audio filaire conduit le flux numérique du micro-contrôleur jusqu'à la prise casque. Sa partie analogique, de la sortie différentielle du convertisseur au jack, est reprise sous forme simplifiée à la figure~\ref{chaine_audio.drawio}, la feuille complète du schéma figurant à l'annexe~\ref{ann:schema}.
 
-\fig[H, width=1\linewidth]{Schéma de principe simplifié d'un seul canal de la chaîne analogique, de la sortie différentielle du convertisseur au jack, le second canal étant strictement identique}{chaine_audio.drawio}
+\fig[H, width=1\linewidth]{Schéma de principe simplifié d'un seul canal de la chaîne analogique, de la sortie différentielle du convertisseur au jack, le second canal étant strictement identique. Diagramme créé avec l'aide de Claude Opus 4.8.}{chaine_audio.drawio}
 
 \subsubsection{Liaison numérique}
 
@@ -93,6 +93,7 @@ Le passage automatique en mode programmation repose sur le bootloader de premier
 
 \fig[H, width=0.70\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
 
+\clearpage
 \subsection{Conditionnement du potentiomètre de volume}
 
 \begin{wrapfigure}{l}{0.35\linewidth}

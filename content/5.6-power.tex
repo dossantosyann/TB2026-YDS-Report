@@ -39,7 +39,7 @@ Restent trois leviers effectifs. Le premier est structurel, le modèle événeme
 
 Trois voies conduisent à l'extinction, la commande explicite de l'utilisateur, l'atteinte du seuil critique de batterie et l'expiration du délai d'inactivité. La figure~\ref{extinction.drawio} en donne l'enchaînement complet avec les gardes de chaque voie.
 
-\fig[H, width=1\textwidth]{Séquence d'extinction. Les trois voies d'entrée convergent vers un corps commun. Une réponse négative à l'une des gardes rend la main au cycle suivant sans action.}{extinction.drawio}
+\fig[H, width=1\textwidth]{Séquence d'extinction. Les trois voies d'entrée convergent vers un corps commun. Une réponse négative à l'une des gardes rend la main au cycle suivant sans action. Diagramme créé avec l'aide de Claude Opus 4.8.}{extinction.drawio}
 
 L'extinction sur batterie critique n'est déclenchée que si la cellule est effectivement en décharge, c'est-à-dire ni en charge ni alimentée depuis l'extérieur. Cette double garde évite qu'un appareil branché ne s'éteigne alors même qu'il se recharge. Elle est de plus suspendue pendant une campagne de mesure d'autonomie, ce service devant détecter lui-même le seuil pour écrire son dernier relevé avant de demander l'extinction.
 
