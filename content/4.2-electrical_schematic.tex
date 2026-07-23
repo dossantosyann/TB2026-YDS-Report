@@ -61,7 +61,7 @@ avec $\tau = 2RC = 1{,}02\,\mu\text{s}$. Le déphasage correspond donc à un tem
 
 \subsubsection{Adaptation de niveau et choix du gain}
 
-Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, la tension de sortie maximale de l'amplificateur est limitée à $V_{\text{amp,max}} = 2{,}15\,\text{V}_{\text{RMS}}$ sur une charge de $600\,\Omega$~\cite{analog_MAX97220AA}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
+Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, la tension de sortie maximale de l'amplificateur est limitée à $V_{\text{amp,max}} = 2{,}15\,\text{V}_{\text{RMS}}$ sur une charge de $600\,\Omega$~\cite{analog_MAX97220A}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
 
 Le gain de l'amplificateur est fixé par le rapport des résistances externes selon
 \begin{equation}
@@ -95,15 +95,23 @@ Le passage automatique en mode programmation repose sur le bootloader de premier
 
 \subsection{Conditionnement du potentiomètre de volume}
 
-Le réglage de volume repose sur un potentiomètre de 10~k$\Omega$ dont le curseur est lu par le \gls{adc} du micro-contrôleur. Cette lecture n'est fidèle que sur une plage restreinte, la fiche technique de l'ESP32 donnant une plage de mesure utile de 150 à 2450~mV avec l'atténuation maximale, la précision se dégradant au-delà~\cite{ESP32_Technical_Reference_Manual}. Relier directement le potentiomètre entre le rail de 3,3~V et la masse placerait donc les deux extrémités de la course hors de cette plage, avec un curseur saturé sur une portion notable de la rotation. Le montage retenu est donné à la figure~\ref{potentiometre.png}.
+\begin{wrapfigure}{l}{0.35\linewidth}
+    \centering
+    \includegraphics[width=1\linewidth]{\assetsdir/potentiometre.png}
+    \caption{Croquis de la face avant du produit, fixant les dimensions extérieures du PCB et la position de l'écran et des commandes}
+    \label{fig:potentiometre}
+\end{wrapfigure}
 
-Deux résistances encadrent pour cette raison le potentiomètre, R11 de 3,3~k$\Omega$ vers le rail et R67 de 620~$\Omega$ vers la masse, formant un diviseur dont le potentiomètre constitue la portion centrale. La tension du curseur est ainsi bornée par
+Le réglage de volume repose sur un potentiomètre de 10~k$\Omega$ dont le curseur est lu par le \gls{adc} du micro-contrôleur. Cette lecture n'est fidèle que sur une plage restreinte, la fiche technique de l'ESP32 donnant une plage de mesure utile de 150 à 2450~mV avec l'atténuation maximale, la précision se dégradant au-delà~\cite{ESP32_Technical_Reference_Manual}. Relier directement le potentiomètre entre le rail de 3,3~V et la masse placerait donc les deux extrémités de la course hors de cette plage, avec un curseur saturé sur une portion notable de la rotation.
+
+Le montage retenu, donné à la figure~\ref{fig:potentiometre}, encadre pour cette raison le potentiomètre par deux résistances : R11 de 3,3~k$\Omega$ vers le rail et R67 de 620~$\Omega$ vers la masse, formant un diviseur dont le potentiomètre constitue la portion centrale. Un condensateur de 100~nF filtre par ailleurs le bruit capté par la piste du curseur. La tension du curseur est ainsi bornée par les deux valeurs extrêmes suivantes, calculées à partir des résistances du diviseur : \\
+
 \begin{equation}
-    V_{\text{min}} = 3{,}3 \times \frac{620}{13\,920} = 147\,\text{mV}, \qquad V_{\text{max}} = 3{,}3 \times \frac{10\,620}{13\,920} = 2{,}518\,\text{V}.
+    V_{\text{min}} = 3{,}3 \times \frac{620}{13\,920} \approx 147~\text{mV},
+    \qquad
+    V_{\text{max}} = 3{,}3 \times \frac{10\,620}{13\,920} \approx 2{,}518~\text{V}.
 \end{equation}
-La quasi-totalité de la rotation tombe de la sorte dans la plage exploitable de l'\gls{adc}, seuls les derniers pour cent de la course dépassant légèrement la borne haute, sans conséquence puisque le volume y est déjà à son maximum. Un condensateur de 100~nF filtre par ailleurs le bruit capté par la piste du curseur.
-
-\fig[H, width=0.35\linewidth]{Conditionnement du potentiomètre de volume, le diviseur bornant la tension du curseur dans la plage utile de l'ADC}{potentiometre.png}
+La quasi-totalité de la rotation tombe de la sorte dans la plage exploitable de l'\gls{adc}, seuls les derniers pour cent de la course dépassant légèrement la borne haute, sans conséquence puisque le volume y est déjà à son maximum.
 
 \subsection{Bouton de mise en marche}
 

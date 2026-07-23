@@ -25,7 +25,36 @@
 \usepackage{longtable}  % tableaux multi-pages avec en-tête répété
 \usepackage{wrapfig}
 
+% Espacement des titres de chapitre (défaut book : 50 pt au-dessus, 40 pt en dessous)
+\makeatletter
+\newlength{\chapskipabove}\setlength{\chapskipabove}{-40pt}
+\newlength{\chapskipbelow}\setlength{\chapskipbelow}{14pt}
+\renewcommand{\@makechapterhead}[1]{%
+  \vspace*{\chapskipabove}%
+  {\parindent\z@\raggedright\normalfont\interlinepenalty\@M
+   \ifnum\c@secnumdepth>\m@ne\if@mainmatter
+     \huge\bfseries\@chapapp\space\thechapter\quad
+   \fi\fi
+   \huge\bfseries #1\par\nobreak
+   \vskip 4pt\hrule height 0.6pt
+   \vskip\chapskipbelow}}
+\renewcommand{\@makeschapterhead}[1]{%
+  \vspace*{\chapskipabove}%
+  {\parindent\z@\raggedright\normalfont\interlinepenalty\@M
+   \huge\bfseries #1\par\nobreak
+   \vskip 4pt\hrule height 0.6pt
+   \vskip\chapskipbelow}}
+\makeatother
+
 \renewcommand{\arraystretch}{1.5}
+
+% À placer dans le préambule, avec les autres définitions de macros.
+% Bloc de déclaration d'utilisation de l'IA, compact et uniforme entre chapitres.
+\newcommand{\declIA}[1]{%
+    \par\vspace{0.6em}%
+    \noindent{\small\itshape #1\par}%
+    \vspace{0.6em}%
+}
 
 % Si vous voulez générer des graphiques avec pgfplots
 \usepackage{pgfplots}
@@ -76,13 +105,13 @@
 % Sommaire et tables
 \clearemptydoublepage
 {
-    \tableofcontents
-    \let\cleardoublepage\clearpage
-    \listoffigures
-    \let\cleardoublepage\clearpage
-    \listoftables
-    \let\cleardoublepage\clearpage
-    \listoflistings
+  \tableofcontents
+  \let\cleardoublepage\clearpage
+  \listoffigures
+  \let\cleardoublepage\clearpage
+  \listoftables
+  \let\cleardoublepage\clearpage
+  \listoflistings
 }
 
 \printnomenclature

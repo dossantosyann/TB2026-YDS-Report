@@ -69,7 +69,7 @@
         <mxCell id="filt" value="Filtre RC&#10;différentiel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="950" y="610" width="150" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="amp" value="Amplificateur&#10;MAX97220AA&#10;Av = 0,5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+        <mxCell id="amp" value="Amplificateur&#10;MAX97220A&#10;Av = 0,5" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
           <mxGeometry x="1150" y="605" width="150" height="80" as="geometry" />
         </mxCell>
         <mxCell id="jack" value="Prise jack&#10;3,5 mm" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
