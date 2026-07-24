@@ -1,0 +1,74 @@
+\section{Bilan fonctionnel}
+\label{sec:res_bilan}
+
+Les sections précédentes ont établi les performances de l'appareil grandeur par grandeur. Il reste à confronter l'ensemble au cahier des charges et à dire, sans détour, ce qui a été livré et ce qui ne l'a pas été. Le tableau~\ref{tab:bilan} recense chaque fonction en distinguant trois origines, les exigences minimales qui devaient impérativement être satisfaites, les objectifs supplémentaires annoncés comme souhaitables et les fonctions ajoutées en cours de projet sans figurer au cahier des charges.
+
+\begingroup
+\renewcommand{\arraystretch}{1.25}
+\footnotesize
+\begin{longtable}{p{0.44\textwidth} p{0.13\textwidth} p{0.32\textwidth}}
+    \caption{Bilan fonctionnel de l'appareil au regard du cahier des charges.}
+    \label{tab:bilan}                                                                                                                                    \\
+    \hline
+    \textbf{Fonction}                                                                   & \textbf{État} & \textbf{Remarque}                              \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Fonction}                                                                   & \textbf{État} & \textbf{Remarque}                              \\
+    \hline
+    \endhead
+    \hline
+    \multicolumn{3}{r}{\itshape Suite à la page suivante}                                                                                                \\
+    \endfoot
+    \hline
+    \endlastfoot
+    \multicolumn{3}{c}{\textbf{Exigences minimales}}                                                                                                     \\*
+    \hline
+    Lecture de fichiers MP3 et WAV depuis la carte microSD                              & Réalisé       & Section~\ref{sec:transport}                    \\
+    Restitution jusqu'à 24 bits et 192 kHz                                              & Réalisé       & Section~\ref{sec:res_audio}                    \\
+    Restitution stéréo sur jack 3,5 mm                                                  & Réalisé       & Section~\ref{sec:res_audio}                    \\
+    Sortie sans fil Bluetooth A2DP en SBC                                               & Réalisé       & Section~\ref{sec:res_bluetooth}                \\
+    Réglage du volume d'écoute                                                          & Réalisé       & Potentiomètre en filaire, AVRCP en Bluetooth   \\
+    Affichage du titre en cours et du niveau de batterie                                & Réalisé       & Annexe~\ref{ann:ecrans}                        \\
+    Navigation par menus au moyen de commandes physiques                                & Réalisé       & Section~\ref{sec:soft_ui}                      \\
+    Autonomie d'au moins 10 h sur batterie lithium-ion                                  & Partiel       & Section~\ref{sec:res_autonomie}                \\
+    Recharge par connecteur USB-C                                                       & Réalisé       & Section~\ref{sec:res_electrique}               \\
+    Programmation par le même connecteur USB-C                                          & Réalisé       & Section~\ref{sec:res_electrique}               \\
+    Format compact et transportable                                                     & Réalisé       & Annexe~\ref{ann:photos}                        \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Objectifs supplémentaires}}                                                                                               \\*
+    \hline
+    Barre de statut permanente, batterie et connectivité                                & Réalisé       & Annexe~\ref{ann:ecrans}                        \\
+    Écran de lecture avec position dans la piste                                        & Réalisé       & Annexe~\ref{ann:ecrans}                        \\
+    Liste des pistes présentes sur la carte microSD                                     & Réalisé       & Annexe~\ref{ann:ecrans}                        \\
+    Statistiques de capacité, de tension et de courant de la batterie                   & Réalisé       & Annexe~\ref{ann:ecrans}                        \\
+    Réglage de la luminosité de l'écran                                                 & Réalisé       & Menu des réglages, page Écran                  \\
+    Activation, appairage, liste, connexion et oubli des appareils liés                 & Réalisé       & Menu des réglages, page Bluetooth              \\
+    Statistiques de température                                                         & Partiel       & Température de la cellule et non du processeur \\
+    Tri par artiste, album et titre                                                     & Non réalisé   & Navigation par dossiers uniquement             \\
+    Barre de statut permanente, heure                                                   & Non réalisé   & Aucune horloge temps réel sur la carte         \\
+    Réglage manuel de la date et de l'heure                                             & Non réalisé   & Aucune horloge temps réel sur la carte         \\
+    Synchronisation de l'heure par Bluetooth                                            & Non réalisé   & Sans objet, voir ci-dessous                    \\
+    Mise à jour du firmware depuis la carte microSD                                     & Non réalisé   & Chapitre~\ref{chap:ameliorations}              \\
+    Égaliseur                                                                           & Non réalisé   & Chapitre~\ref{chap:ameliorations}              \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Ajouts hors cahier des charges}}                                                                                          \\*
+    \hline
+    Pages de statistiques sur le stockage, les entrées, les périphériques et le système & Réalisé       & Annexe~\ref{ann:ecrans}                        \\
+    Sélection de la sortie audio et bascule à chaud en cours de lecture                 & Réalisé       & Section~\ref{sec:soft_bluetooth}               \\
+    Repli automatique sur la sortie filaire à la perte du lien                          & Réalisé       & Section~\ref{sec:soft_bluetooth}               \\
+    Gestion à chaud de l'insertion et du retrait de la carte microSD                    & Réalisé       & Section~\ref{sec:transport}                    \\
+    Verrouillage de l'écran après inactivité et décalage anti-rémanence                 & Réalisé       & Section~\ref{sec:ui_verrouillage}              \\
+    Arrêt automatique après inactivité prolongée                                        & Réalisé       & Section~\ref{sec:soft_power}                   \\
+    Sauvegarde et restitution de la piste en cours au démarrage suivant                 & Réalisé       & Section~\ref{sec:soft_power}                   \\
+    Surveillance par watchdog matériel et logiciel                                      & Réalisé       & Section~\ref{sec:soft_robustness}              \\
+    Coredump sur carte microSD et verdict de fin de session au démarrage                & Réalisé       & Annexe~\ref{ann:coredump}                      \\
+    Service embarqué de mesure d'autonomie                                              & Réalisé       & Annexe~\ref{ann:autonomie}                     \\
+\end{longtable}
+\endgroup
+
+Sur les onze exigences minimales, dix sont pleinement satisfaites et la onzième, l'autonomie, l'est dans les conditions établies à la section~\ref{sec:res_autonomie}. Aucune fonction imposée n'a donc été abandonnée en cours de projet.
+
+Quatre objectifs supplémentaires non atteints partagent une cause unique, l'absence d'horloge temps réel sur la carte. Le firmware coupant son propre rail à l'extinction, le micro-contrôleur ne conserve aucune référence de temps d'une mise sous tension à la suivante, si bien que l'heure ne peut être ni affichée ni réglée utilement. La synchronisation par Bluetooth qui devait fournir cette référence est de surcroît sans objet, l'appareil ne se liant qu'à une enceinte ou à un casque qui n'expose aucune information de temps. Le remède, une horloge sauvegardée par pile bouton, est discuté au chapitre~\ref{chap:ameliorations}.
+
+Onze fonctions absentes du cahier des charges complètent le tableau. Elles traduisent un arbitrage assumé, l'effort disponible ayant porté sur la robustesse et le diagnostic plutôt que sur les objectifs supplémentaires restants.

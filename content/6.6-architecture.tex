@@ -1,0 +1,44 @@
+\section{Modèle d'exécution et charge processeur}
+\label{sec:res_execution}
+
+Cette section rassemble les relevés qui établissent la validité du modèle d'exécution décrit à la section~\ref{sec:archi}, soit le dimensionnement des piles, la stabilité de l'occupation mémoire, l'absence d'attente active et l'isolement du cœur~1 vis-à-vis de la pile Bluetooth.
+
+\subsection{Protocole}
+
+Les relevés proviennent d'une campagne d'endurance de 3~h~34 menée sur la carte, au cours de laquelle la tâche de maintenance produit toutes les dix secondes un relevé de l'occupation des piles, des statistiques d'exécution de FreeRTOS et de l'état des tas. Le scénario enchaîne la lecture continue de fichiers WAV 16~bits, WAV 24~bits puis MP3 depuis la carte SD, des séquences de navigation dans l'interface et une phase de streaming Bluetooth d'une demi-heure. La méthode de relevé et un extrait du journal figurent en annexe~\ref{ann:endurance}.
+
+Le compteur de temps d'exécution de FreeRTOS étant codé sur 32~bits, il repasse par zéro toutes les 71~minutes environ. Les pourcentages cumulés imprimés par le firmware ne sont donc pas exploitables au-delà de cette durée. Les charges présentées ici sont pour cette raison recalculées hors cible, à partir des différences entre relevés consécutifs et avec correction du repassage par zéro. La somme des charges ainsi obtenues sur les deux cœurs vaut 200~\% à chaque intervalle, ce qui confirme la cohérence du calcul.
+
+\subsection{Dimensionnement des piles et occupation mémoire}
+
+Le niveau maximal d'occupation atteint par chaque pile, mesuré par \texttt{uxTaskGetStackHighWaterMark}, est reporté au tableau~\ref{tab:piles}. Aucune tâche ne dépasse 62~\% de sa pile et la marge résiduelle la plus faible, celle de la tâche audio, reste de 1544~octets. Le dimensionnement retenu à la création des tâches (tableau~\ref{tab:taches}) est donc confirmé, sans réserve excessive qui aurait immobilisé de la mémoire interne inutilement.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Occupation maximale des piles relevée sur 3~h~34 de fonctionnement continu. La marge minimale est le plus petit espace de pile resté libre à un instant quelconque de la campagne.}
+    \label{tab:piles}
+    \footnotesize
+    \begin{tabular}{lccc}
+        \toprule
+        Tâche       & Pile allouée & Marge minimale & Occupation maximale \\
+        \midrule
+        audio       & 4096 o       & 1544 o         & 62~\%               \\
+        ui          & 8192 o       & 4348 o         & 47~\%               \\
+        input       & 3072 o       & 2076 o         & 32~\%               \\
+        maintenance & 3072 o       & 1708 o         & 44~\%               \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Le tas interne, ressource la plus contrainte du système puisqu'il est seul accessible au contrôleur d'accès direct à la mémoire et à la pile Bluetooth, conserve un plancher de 55,6~kio libres sur l'ensemble de la campagne. Cette valeur provient du suivi continu assuré par le firmware et non de l'échantillonnage à dix secondes, dont le minimum visible sur la figure~\ref{tas_interne} en annexe est légèrement supérieur. Le plancher ne dérive pas au fil des heures, ce qui écarte toute fuite mémoire sur les chemins exercés par le scénario.
+
+\subsection{Charge processeur}
+
+Au repos, aucune lecture n'étant en cours, les tâches de repos des deux cœurs cumulent respectivement 97,3~\% et 99,0~\% du temps. Le solde est imputable à la seule scrutation périodique de la tâche de maintenance. Aucune autre tâche ne consomme de cycle en attendant un événement, ce qui établit l'absence d'attente active annoncée à la section~\ref{sec:archi}.
+
+Le temps attribué à la tâche audio suit strictement l'effort de décodage. Il passe de 11,5~\% du cœur~1 en WAV 44,1~kHz 16~bits à 16,1~\% en 24~bits et 36,8~\% en MP3, puis retombe à zéro dès l'arrêt de la lecture. Une boucle d'attente active produirait au contraire une consommation constante et indépendante du contenu restitué. La figure~\ref{charge_cpu} donne l'évolution de la charge de chaque cœur sur l'ensemble de la campagne, chaque palier de la charge du cœur~1 coïncidant avec un changement de format.
+
+\fig[H, width=1\textwidth]{Charge processeur de chaque cœur au cours de la campagne d'endurance. Le fond indique le régime en cours. Plot créé avec l'aide de Claude Opus 4.8.}{charge_cpu}
+
+La phase de streaming Bluetooth constitue le régime le plus défavorable de la campagne. La pile Bluetooth, entièrement portée par le cœur~0, y élève la charge de ce dernier jusqu'à 81~\%, tandis que le cœur~1, qui assure le décodage et le rendu, plafonne à 64~\% en incluant les rafraîchissements complets de l'écran. Les deux cœurs conservent donc une réserve, et la restitution audio est demeurée exempte de coupure pendant toute la campagne, y compris lors des rafraîchissements d'écran concomitants à la lecture. L'épinglage des tâches audio et d'interface sur le cœur~1 remplit ainsi la fonction attendue de confinement de la charge radio sur le cœur~0.

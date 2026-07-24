@@ -1,0 +1,29 @@
+\section{Autonomie}
+\label{sec:res_autonomie}
+
+L'autonomie a été mesurée par trois décharges complètes, en veille, en lecture filaire et en lecture Bluetooth. Les trois campagnes utilisent le même exemplaire, la même cellule et la même version de firmware. Le service de mesure utilise la jauge MAX17260, directement intégrée au système, et enregistre les données sur la carte microSD. Même si la jauge n'est pas le moyen de mesure le plus précis, cela retire le besoin d'un appareil de mesure externe. Le protocole complet et les relevés détaillés se trouvent à l'annexe~\ref{ann:autonomie}.
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Autonomie mesurée dans les trois modes de fonctionnement.}
+    \label{tab:res_autonomie}
+    \footnotesize
+    \begin{tabular}{lrrr}
+        \toprule
+        Mode              & Durée   & $I_\text{moy}$ [mA] & $Q$ [mAh] \\
+        \midrule
+        Veille            & 13 h 28 & 62                  & 834       \\
+        Lecture jack      & 9 h 14  & 96                  & 890       \\
+        Lecture Bluetooth & 5 h 48  & 156                 & 903       \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+La lecture filaire consomme 34 mA de plus que la veille. Ce supplément couvre l'accès à la carte microSD, le décodage, l'horloge \gls{i2s} et l'étage analogique, réglé ici à un volume de 50~\%. La lecture Bluetooth consomme 94 mA de plus, soit presque trois fois plus. La radio est donc le premier poste de consommation de l'appareil.
+
+Les 9 h 14 d'autonomie en lecture filaire, bien qu'inférieures à l'objectif de dix heures, ont été obtenues en lecture continue sans pause, un scénario rarement rencontré dans la pratique. L'écoute non-stop sur une telle durée étant peu réaliste, ce résultat reste très convaincant pour un usage quotidien, même s'il ne valide pas strictement le cahier des charges du test.
+
+Le mode Bluetooth reste nettement plus loin de la cible avec 5 h 48. Ce résultat était attendu, la radio et l'encodage \gls{sbc} s'ajoutant à la consommation de base de l'appareil. L'objectif d'autonomie est donc partiellement atteint, tenu en veille et en filaire, mais pas en Bluetooth.
+
+Les trois campagnes se terminent vers 3,3 V, au-dessus du seuil de 3,2 V du superviseur XC6120. C'est donc la jauge qui commande l'arrêt, en signalant un état de charge trop bas, et non la coupure matérielle. La protection contre la décharge profonde reste une sécurité de dernier recours.
