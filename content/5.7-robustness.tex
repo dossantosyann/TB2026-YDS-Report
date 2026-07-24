@@ -17,7 +17,7 @@ Ce critère laisse ouvert un mode de défaillance opposé, celui d'une boucle qu
 
 Le firmware reconstitue au démarrage la manière dont la session précédente s'est terminée. La figure~\ref{verdict_extinction.drawio} donne les deux questions qu'il se pose et les trois verdicts qui en découlent.
 
-\fig[H, width=0.7\textwidth]{Reconstitution de la fin de la session précédente. Les deux témoins sont exclusifs, un plantage n'atteignant jamais le code qui écrit le marqueur. Diagramme créé avec l'aide de Claude Opus 4.8.}{verdict_extinction.drawio}
+\fig[H, width=0.65\textwidth]{Reconstitution de la fin de la session précédente. Les deux témoins sont exclusifs, un plantage n'atteignant jamais le code qui écrit le marqueur. Diagramme créé avec l'aide de Claude Opus 4.8.}{verdict_extinction.drawio}
 
 Le marqueur d'extinction volontaire est écrit en \gls{nvs} juste avant que le rail ne tombe, comme décrit à la section~\ref{sec:soft_power}. Au redémarrage, il est lu puis effacé dans la même opération, car un drapeau oublié ferait passer le plantage suivant pour une extinction normale.
 
@@ -40,14 +40,3 @@ Trois charges sont proposées, le repos, la lecture sur la sortie filaire et la 
 La contrainte principale porte sur la conservation de la courbe, qui doit survivre à la mort de l'appareil quelle qu'en soit la cause. La courbe est donc tenue à jour en mémoire vive, puis recopiée en entier en \gls{nvs} après chaque nouveau point. Cette recopie impose en revanche une taille bornée, la partition \gls{nvs} ne faisant que 24~kio. Le service limite donc le nombre de points et, lorsque le tableau est plein, n'en conserve qu'un sur deux avant de doubler son intervalle d'échantillonnage. Une campagne de durée quelconque tient ainsi dans une taille fixe, au prix d'une courbe de moins en moins fine. Chaque point porte pour cette raison sa propre date plutôt que de la déduire de son rang, afin que cette réduction reste exacte.
 
 Une campagne peut se terminer de quatre façons, et le service les distingue toutes. L'utilisateur peut l'annuler. La batterie peut atteindre le seuil critique, auquel cas le service prend la main sur l'extinction automatique du service d'énergie, relève un dernier point, écrit son journal, puis demande l'extinction. Le branchement de l'USB en cours de route invalide la mesure d'autonomie, mais la courbe partielle reste une donnée réelle et elle est donc conservée en étant marquée comme telle. Un plantage, enfin, ne laisse aucune occasion de conclure. C'est là que les deux volets de cette section se rejoignent, l'export au démarrage suivant reprenant le verdict de la sous-section précédente pour étiqueter la mort de la campagne. Une courbe interrompue indique ainsi d'elle-même si l'appareil s'est éteint proprement, a planté ou a perdu son alimentation.
-
-\subsection{Validation}
-\label{sec:robustness_validation}
-
-Les deux watchdogs ont été exercés par injection de fautes, en bloquant volontairement la boucle de décodage puis le rendu d'un écran à rafraîchissement automatique. Chaque blocage a produit un redémarrage et un \gls{coredump} désignant la bonne tâche. Le critère d'abonnement a été vérifié dans l'autre sens, une lecture mise en pause et un écran verrouillé pouvant rester longtemps inactifs sans déclencher de redémarrage.
-
-Les verdicts d'extinction volontaire et de plantage ont été provoqués séparément, par une extinction demandée puis par une panique volontaire, et chacun a été correctement rapporté au démarrage suivant. L'effacement du marqueur a été vérifié en enchaînant une extinction volontaire puis un plantage, le second n'étant pas masqué par le premier.
-
-La recopie du \gls{coredump} a été suivie sur les deux chemins, celui du démarrage avec une carte présente et celui de l'insertion à chaud après un démarrage sans carte. Le fichier obtenu a été relu hors cible et résolu contre les symboles du binaire, procédure qui a produit le diagnostic exposé à la section~\ref{sec:soft_power}.
-
-Le service de campagne a été exercé de bout en bout, de son démarrage à son export. L'annulation par l'utilisateur et l'invalidation par branchement de l'USB produisent bien deux fichiers distincts et correctement étiquetés. La réduction du journal a enfin été observée sur une campagne assez longue pour saturer le tampon, la courbe exportée présentant sur toute sa longueur un intervalle entre relevés doublé, sans discontinuité dans les dates ni perte de sa partie initiale.

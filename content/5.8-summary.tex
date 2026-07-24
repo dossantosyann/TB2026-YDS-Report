@@ -1,0 +1,78 @@
+\section{Validation du firmware}
+\label{sec:soft_validation}
+
+Chaque mécanisme décrit dans ce chapitre a fait l'objet d'une vérification, menée par du code de test exécuté sur machine hôte lorsque la logique est pure et indépendante du matériel, et directement sur la carte dans le cas contraire. Le tableau~\ref{tab:validation_soft} en donne le relevé. Trois vérifications, qui reposent sur une injection de faute ou sur un jugement à l'écoute, sont détaillées en fin de section.
+
+\begingroup
+\renewcommand{\arraystretch}{1.25}
+\footnotesize
+\begin{longtable}{p{0.24\textwidth} p{0.34\textwidth} p{0.31\textwidth}}
+    \caption{Vérification des mécanismes du firmware.}
+    \label{tab:validation_soft}                                                                                                                                                                                                               \\
+    \hline
+    \textbf{Mécanisme}                        & \textbf{Méthode}                                                                                 & \textbf{Constat}                                                                           \\
+    \hline
+    \endfirsthead
+    \hline
+    \textbf{Mécanisme}                        & \textbf{Méthode}                                                                                 & \textbf{Constat}                                                                           \\
+    \hline
+    \endhead
+    \hline
+    \multicolumn{3}{r}{\itshape Suite à la page suivante}                                                                                                                                                                                     \\
+    \endfoot
+    \hline
+    \endlastfoot
+    \multicolumn{3}{c}{\textbf{Architecture générale (section~\ref{sec:archi})}}                                                                                                                                                              \\*
+    \hline
+    Règle de dépendance entre couches         & Ajout volontaire d'une dépendance vers une couche supérieure                                     & Erreur de compilation, violation impossible à introduire par inadvertance                  \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Chaîne audio filaire (section~\ref{sec:audio_filaire})}}                                                                                                                                                       \\*
+    \hline
+    Table de coefficients de la boucle        & Relecture du registre d'état d'horloge sur les dix fréquences supportées                         & Verrouillage obtenu sur chaque ligne, une entrée erronée ne verrouillant pas               \\
+    Configuration du convertisseur            & Relecture et comparaison de chaque registre écrit                                                & Toute erreur de transaction sur le bus I\textsuperscript{2}C signalée à l'exécution        \\
+    Dimensionnement de l'anneau de tampons    & Sollicitation de la carte SD pendant la lecture                                                  & Aucune coupure là où la configuration par défaut en produisait                             \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Transport de l'audio (section~\ref{sec:transport})}}                                                                                                                                                           \\*
+    \hline
+    Alignement du débit sur la sortie         & Saturation volontaire du sink                                                                    & Aucun échantillon perdu, ordres d'arrêt et de pause toujours pris en compte                \\
+    Reconnaissance de format                  & Fichiers dont l'extension contredit le contenu, puis fichiers porteurs d'étiquettes volumineuses & Signature de tête retenue, fausses amorces de trame franchies avant validation             \\
+    Bornes de l'index                         & Carte dépassant 512 pistes, puis carte vide mais lisible                                         & Échec explicite dans le premier cas, succès sans piste dans le second                      \\
+    Gestion à chaud de la carte               & Cycles répétés d'insertion et de retrait                                                         & Réindexation complète ou arrêt suivi d'un démontage, sans blocage de l'affichage           \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Bluetooth (section~\ref{sec:soft_bluetooth})}}                                                                                                                                                                 \\*
+    \hline
+    Refus des fréquences non prises en charge & Lecture de fichiers de fréquence autre que 44,1~kHz                                              & Écartés avec message à l'écran, jamais restitués à une cadence fausse                      \\
+    Garde anti-saturation                     & Connexion d'un récepteur réglé à un volume élevé                                                 & Aucun échantillon émis avant l'acquittement du volume, absence d'à-coup initial            \\
+    Bascule de sortie en cours de lecture     & Passage du jack au Bluetooth puis retour pendant une piste                                       & Position et progression préservées, aucune coupure audible                                 \\
+    Repli sur la sortie filaire               & Perte du lien provoquée pendant la lecture                                                       & Reprise sur la prise casque sans intervention                                              \\
+    Reprise après échec de connexion          & Tentatives volontairement mises en échec, répétées                                               & Redémarrage de la pile ramenant chaque fois un état exploitable                            \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Interface utilisateur (section~\ref{sec:soft_ui})}}                                                                                                                                                            \\*
+    \hline
+    Remise de l'événement au sommet de pile   & Enchaînement d'entrées et de sorties de menus                                                    & Aucun changement d'écran n'exige un second appui                                           \\
+    Verrouillage de l'écran                   & Écoulement du délai d'inactivité, puis appui sur chaque bouton                                   & Seule la validation réveille l'écran, la lecture se poursuivant pendant la veille          \\
+    Décalage anti-rémanence                   & Observation prolongée de l'écran de veille                                                       & Indication redessinée aux positions successives du cycle                                   \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Gestion de l'énergie (section~\ref{sec:soft_power})}}                                                                                                                                                          \\*
+    \hline
+    Prise de contrôle du rail                 & Relâchement du bouton de mise en marche après le démarrage                                       & Appareil maintenu sous tension                                                             \\
+    Replis du service d'observation           & Échecs de lecture provoqués sur le bus I\textsuperscript{2}C                                     & Relevé de la jauge invalidé sans extinction, verdict d'alimentation externe conservé       \\
+    Arbitrage du connecteur USB               & Page de diagnostic affichant INOKB et la destination des lignes de données                       & Bascule vers le chargeur pendant le temps de garde, puis retour au pont série              \\
+    Relance à chaud de l'arbitrage            & Branchement après démarrage, à un intervalle supérieur à la période de sondage                   & Séquence relancée sur le front montant                                                     \\
+    Gardes de l'arrêt automatique             & Chaque condition exercée séparément                                                              & Inhibition sous alimentation externe, reprise du décompte au retrait du câble              \\
+    Sauvegarde de la piste en pause           & Cycle complet de pause, arrêt automatique et remise en marche                                    & Chemin et position restitués au démarrage suivant                                          \\
+    \hline
+    \multicolumn{3}{c}{\textbf{Robustesse et diagnostic (section~\ref{sec:soft_robustness})}}                                                                                                                                                 \\*
+    \hline
+    Critère d'abonnement au watchdog          & Lecture mise en pause et écran verrouillé laissés durablement inactifs                           & Aucun redémarrage, l'inactivité légitime n'étant pas prise pour un blocage                 \\
+    Verdicts d'extinction                     & Extinction demandée, puis panique volontaire                                                     & Chaque verdict correctement rapporté au démarrage suivant                                  \\
+    Effacement du marqueur                    & Extinction volontaire immédiatement suivie d'un plantage                                         & Le plantage n'est pas masqué par le marqueur de la session précédente                      \\
+    Recopie du coredump                       & Démarrage avec carte présente, puis insertion à chaud après un démarrage sans carte              & Fichier écrit sur les deux chemins et résolu hors cible contre les symboles                \\
+    Campagne d'autonomie                      & Annulation par l'utilisateur, puis invalidation par branchement de l'USB                         & Deux journaux distincts et correctement étiquetés                                          \\
+    Réduction du journal                      & Campagne assez longue pour saturer le tableau de points                                          & Intervalle doublé sur toute la longueur, sans discontinuité ni perte de la partie initiale \\
+\end{longtable}
+\endgroup
+
+Trois vérifications ne se laissent pas résumer à une ligne. Les deux watchdogs ont été exercés par injection de fautes, en bloquant volontairement la boucle de décodage puis le rendu d'un écran à rafraîchissement automatique. Chaque blocage a produit le redémarrage attendu et un \gls{coredump} désignant la bonne tâche, ce qui établit à la fois le déclenchement et la valeur diagnostique de la trace conservée. Le tableau rapporte la vérification réciproque, celle qui confirme qu'une inactivité légitime ne déclenche rien.
+
+Deux vérifications reposent enfin sur l'écoute plutôt que sur un mécanisme. Le séquencement d'activation de la chaîne filaire a été contrôlé à la mise sous tension et à l'extinction, aucun de ces événements ne produisant de bruit parasite au casque. L'ordre d'extinction l'a été de même, aucune impulsion audible n'apparaissant à la coupure. Ces deux contrôles sont qualitatifs.
