@@ -99,11 +99,11 @@ Le passage automatique en mode programmation repose sur le bootloader de premier
 \begin{wrapfigure}{l}{0.35\linewidth}
     \centering
     \includegraphics[width=1\linewidth]{\assetsdir/potentiometre.png}
-    \caption{Croquis de la face avant du produit, fixant les dimensions extérieures du PCB et la position de l'écran et des commandes}
+    \caption{Montage du potentiomètre de volume, conditionné par deux résistances d'adaptation vers l'entrée ADC}
     \label{fig:potentiometre}
 \end{wrapfigure}
 
-Le réglage de volume repose sur un potentiomètre de 10~k$\Omega$ dont le curseur est lu par le \gls{adc} du micro-contrôleur. Cette lecture n'est fidèle que sur une plage restreinte, la fiche technique de l'ESP32 donnant une plage de mesure utile de 150 à 2450~mV avec l'atténuation maximale, la précision se dégradant au-delà~\cite{ESP32_Technical_Reference_Manual}. Relier directement le potentiomètre entre le rail de 3,3~V et la masse placerait donc les deux extrémités de la course hors de cette plage, avec un curseur saturé sur une portion notable de la rotation.
+Le réglage de volume repose sur un potentiomètre de 10~k$\Omega$ dont le curseur est lu par l'\gls{adc} du micro-contrôleur. Cette lecture n'est fidèle que sur une plage restreinte, la fiche technique de l'ESP32 donnant une plage de mesure utile de 150 à 2450~mV avec l'atténuation maximale, la précision se dégradant au-delà~\cite{ESP32_Technical_Reference_Manual}. Relier directement le potentiomètre entre le rail de 3,3~V et la masse placerait donc les deux extrémités de la course hors de cette plage, avec un curseur saturé sur une portion notable de la rotation.
 
 Le montage retenu, donné à la figure~\ref{fig:potentiometre}, encadre pour cette raison le potentiomètre par deux résistances : R11 de 3,3~k$\Omega$ vers le rail et R67 de 620~$\Omega$ vers la masse, formant un diviseur dont le potentiomètre constitue la portion centrale. Un condensateur de 100~nF filtre par ailleurs le bruit capté par la piste du curseur. La tension du curseur est ainsi bornée par les deux valeurs extrêmes suivantes, calculées à partir des résistances du diviseur : \\
 

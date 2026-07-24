@@ -1,6 +1,6 @@
 \chapter{Analyse et spécifications}
 \label{chap:analyse}
-Avant toute décision de conception, il convient de fixer le cadre auquel l'appareil devra répondre. Ce chapitre établit d'abord le cahier des charges, c'est-à-dire l'ensemble des exigences que le produit doit satisfaire, puis le traduit en spécifications techniques servant de référence vérifiable. Conformément à la démarche descendante annoncée en introduction, ces deux éléments précèdent l'analyse fonctionnelle, présentée ensuite, qui décompose le système en fonctions afin d'organiser la conception matérielle et logicielle.
+Avant toute décision de conception, il convient de fixer le cadre auquel l'appareil devra répondre. Ce chapitre établit d'abord le cahier des charges, c'est-à-dire l'ensemble des exigences que le produit doit satisfaire, puis le traduit en spécifications techniques servant de référence vérifiable. Conformément à la démarche descendante annoncée en introduction, ces deux éléments précèdent l'analyse fonctionnelle, présentée ensuite, qui décompose le système en fonctions afin d'organiser la conception.
 
 \section{Cahier des charges}
 Le sujet ayant été choisi librement, le cahier des charges ne découle pas d'une commande externe, il a été établi en début de projet et tient lieu de contrat que l'appareil doit honorer. Son caractère auto-imposé ne le rend pas moins contraignant, il délimite le périmètre du produit et sert de référence à l'ensemble des choix qui suivent.
@@ -53,8 +53,8 @@ Là où le cahier des charges énonce les fonctions attendues, les spécificatio
 \end{table}
 
 \clearpage
-\section{Analyse fonctionnelle matérielle}
-L'analyse fonctionnelle traduit les exigences du cahier des charges en une décomposition du système, indépendamment du détail des composants. Elle est conduite à deux niveaux de granularité : le niveau~0 considère l'appareil comme une boîte noire et recense ses échanges avec l'environnement extérieur, le niveau~1 ouvre cette boîte et répartit les fonctions internes en blocs reliés par leurs flux d'énergie et de données. Cette décomposition sert ensuite de trame à la conception matérielle.
+\section{Analyse fonctionnelle}
+L'analyse fonctionnelle traduit les exigences du cahier des charges en une décomposition du système, indépendamment du détail des composants. Elle est conduite à deux niveaux de granularité : le niveau~0 considère l'appareil comme une boîte noire et recense ses échanges avec l'environnement extérieur, le niveau~1 ouvre cette boîte et répartit les fonctions internes en blocs reliés par leurs flux d'énergie et de données. Cette décomposition sert ensuite de trame aux chapitres de conception.
 
 \subsection{Niveau 0 : diagramme de contexte}
 Le niveau~0, présenté à la figure~\ref{Analyse_Fonctionnelle-Niv1.drawio}, situe l'appareil dans son environnement et identifie ses interfaces avec l'extérieur. L'appareil échange avec quatre éléments externes :
@@ -66,7 +66,7 @@ Le niveau~0, présenté à la figure~\ref{Analyse_Fonctionnelle-Niv1.drawio}, si
 \end{itemize}
 À l'exception de la liaison radio, qui rayonne directement par l'antenne, chacune de ces interfaces physiques traverse un étage de protection à la frontière du système. Cet étage, qui protège les broches exposées contre les décharges électrostatiques et les perturbations, constitue la première fonction rencontrée par tout signal entrant ou sortant.
 
-\fig[H, width=0.7\textwidth]{Analyse fonctionnelle matérielle - Niveau 0}{Analyse_Fonctionnelle-Niv1.drawio}
+\fig[H, width=0.7\textwidth]{Analyse fonctionnelle - Niveau 0}{Analyse_Fonctionnelle-Niv1.drawio}
 
 \clearpage
 \subsection{Niveau 1 : décomposition interne}
@@ -78,6 +78,6 @@ Le niveau~1, présenté à la figure~\ref{Analyse_Fonctionnelle-Niv2.drawio}, d�
 
 \paragraph{Chaîne audio filaire :} Pour la sortie filaire, le processeur transmet l'audio numérique au bloc \emph{Audio filaire} via I\textsuperscript{2}S pour les échantillons et via I\textsuperscript{2}C pour la configuration. Ce bloc convertit le flux numérique en signal analogique, l'amplifie, puis le restitue en stéréo sur le jack 3,5\,mm après passage par l'étage de protection.
 
-\fig[H, width=1\textwidth]{Analyse fonctionnelle matérielle - Niveau 1}{Analyse_Fonctionnelle-Niv2.drawio}
+\fig[H, width=1\textwidth]{Analyse fonctionnelle - Niveau 1}{Analyse_Fonctionnelle-Niv2.drawio}
 
-Cette décomposition fonctionnelle découpe les sous-systèmes alimentation, traitement, interface utilisateur, stockage et audio, qui structureront le chapitre de conception matérielle, où chaque bloc est traduit en un choix de composants et un schéma.
+Cette décomposition fonctionnelle découpe les sous-systèmes alimentation, traitement, interface utilisateur, stockage et audio, qui structureront la suite du document, où chaque bloc est traduit en composants, en schémas et en tâches d'exécution.
