@@ -46,12 +46,12 @@ Le tableau \ref{tab:auton_synthese} rassemble les grandeurs dérivées des trois
     \label{tab:auton_synthese}
     \begin{tabular}{lrrrrrr}
         \toprule
-        Mode              & Durée & $I_\text{moy}$ & $I_\text{min}$ / $I_\text{max}$ & $P_\text{moy}$ & $Q$   & $E$   \\
-                          & [h]   & [mA]           & [mA]                            & [mW]           & [mAh] & [mWh] \\
+        Mode              & Durée  & $I_\text{moy}$ & $I_\text{min}$ / $I_\text{max}$ & $P_\text{moy}$ & $Q$   & $E$   \\
+                          & [h]    & [mA]           & [mA]                            & [mW]           & [mAh] & [mWh] \\
         \midrule
-        Veille            & 13,46 & 62             & 36 / 96                         & 236            & 834   & 3175  \\
-        Lecture jack      & 9,24  & 96             & 76 / 137                        & 366            & 890   & 3381  \\
-        Lecture Bluetooth & 5,81  & 156            & 120 / 211                       & 586            & 903   & 3405  \\
+        Veille            & 13h 28 & 62             & 36 / 96                         & 236            & 834   & 3175  \\
+        Lecture jack      & 9 h 14 & 96             & 76 / 137                        & 366            & 890   & 3381  \\
+        Lecture Bluetooth & 5 h 48 & 156            & 120 / 211                       & 586            & 903   & 3405  \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -84,9 +84,9 @@ Le tableau \ref{tab:auton_comparaison} exprime chaque mode de lecture relativeme
     \end{tabular}
 \end{table}
 
-La lecture filaire ajoute 34 mA au plancher de veille. Ce surcoût regroupe la lecture de la carte microSD, le décodage et la mise en forme des échantillons, l'horloge \gls{i2s}, ainsi que la consommation du \gls{DAC} PCM5242 et de l'amplificateur MAX97220 débitant dans la charge du casque. Il porte l'autonomie de 13,5 h à 9,2 h, soit une perte de 31 \%.
+La lecture filaire ajoute 34 mA au plancher de veille. Ce surcoût regroupe la lecture de la carte microSD, le décodage et la mise en forme des échantillons, l'horloge \gls{i2s}, ainsi que la consommation du \gls{DAC} PCM5242 et de l'amplificateur MAX97220 débitant dans la charge du casque. Il porte l'autonomie de 13 h 28 à 9 h 14, soit une perte de 31 \%.
 
-La lecture Bluetooth ajoute 94 mA, soit un surcoût presque trois fois supérieur à celui de la chaîne filaire. La différence de 59 mA entre les deux modes de lecture correspond à l'écart entre le coût de l'émetteur radio et de l'encodage SBC d'une part, et le coût de la chaîne analogique désactivée dans ce mode d'autre part. L'autonomie tombe à 5,8 h, soit une perte de 57 \% par rapport à la veille. Le Bluetooth constitue ainsi le poste de consommation dominant de l'appareil.
+La lecture Bluetooth ajoute 94 mA, soit un surcoût presque trois fois supérieur à celui de la chaîne filaire. La différence de 59 mA entre les deux modes de lecture correspond à l'écart entre le coût de l'émetteur radio et de l'encodage SBC d'une part, et le coût de la chaîne analogique désactivée dans ce mode d'autre part. L'autonomie tombe à 5 h 48, soit une perte de 57 \% par rapport à la veille. Le Bluetooth constitue ainsi le poste de consommation dominant de l'appareil.
 
 Le réglage de volume retenu diffère entre les deux campagnes de lecture, pour des raisons propres à chaque mode. En lecture filaire, le volume est fixé à 50~\%, afin de garantir la reproductibilité de la campagne. Ce point de fonctionnement détermine directement la puissance délivrée au casque et donc le courant consommé par l'étage analogique, ce qui en fait un paramètre déterminant du résultat.
 
@@ -97,11 +97,11 @@ En A2DP, le volume est fixé à sa valeur minimale non nulle. Ce choix ne corres
 
 Les figures suivantes présentent, pour chaque campagne, l'évolution de l'état de charge, du courant consommé et de la tension de cellule en fonction du temps. Le courant est tracé à la fois brut et lissé par moyenne glissante, la trace brute rendant visible la dispersion d'échantillonnage et la trace lissée la tendance de consommation.
 
-\fig[H, width=1\textwidth]{Campagne de veille, décharge complète en 13,46 h}{auton_idle.png}
+\fig[H, width=1\textwidth]{Campagne de veille, décharge complète en 13 h 28.}{auton_idle.png}
 
-\fig[H, width=1\textwidth]{Campagne de lecture filaire sur le jack 3,5 mm, décharge complète en 9,24 h}{auton_jack.png}
+\fig[H, width=1\textwidth]{Campagne de lecture filaire sur le jack 3,5 mm, décharge complète en 9 h 14.}{auton_jack.png}
 
-\fig[H, width=1\textwidth]{Campagne de lecture Bluetooth A2DP, décharge complète en 5,81 h}{auton_bt.png}
+\fig[H, width=1\textwidth]{Campagne de lecture Bluetooth A2DP, décharge complète en 5 h 48.}{auton_bt.png}
 
 La figure \ref{auton_comparaison.png} superpose les trois campagnes sur un axe temporel commun. La linéarité des courbes d'état de charge sur la quasi-totalité de la décharge traduit un régime de consommation stable dans les trois modes, sans dérive progressive qui trahirait une accumulation de ressources ou une dégradation du fonctionnement au fil des heures.
 
