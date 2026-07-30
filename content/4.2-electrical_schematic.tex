@@ -78,11 +78,13 @@ ce qui donne en sortie
 \begin{equation}
     V_{\text{out,max}} = A_v \cdot V_{\text{DAC}} = 0{,}5 \times 4{,}2\,\text{V}_{\text{RMS}} = 2{,}1\,\text{V}_{\text{RMS}} \le V_{\text{amp,max}}.
 \end{equation}
-La pleine échelle numérique du convertisseur est de la sorte calée juste sous la tension de sortie maximale de l'amplificateur, toute la dynamique disponible étant exploitée sans jamais atteindre la zone d'écrêtage.
+La pleine échelle numérique du convertisseur est de la sorte calée juste sous la tension de sortie maximale de l'amplificateur. Cette comparaison porte toutefois sur la charge de référence de 600 $\Omega$ du datasheet. Sur une charge de casque, la contrainte n'est plus une tension mais une puissance, ce que la mesure a mis en évidence à la section~\ref{sec:res_audio}.
 
 \subsubsection{Conséquence d'un gain inadapté}
 
 La saturation n'est pas déterminée par le gain seul, mais par le produit du gain et du niveau d'entrée instantané. Le convertisseur n'atteignant sa pleine échelle qu'aux plus fortes amplitudes numériques, un gain unitaire ne provoquerait pas une distorsion permanente mais un écrêtage limité aux crêtes proches de $0\,\text{dBFS}$. Ce comportement est le plus défavorable à l'oreille, le signal demeurant propre à faible niveau puis se dégradant brutalement sur les passages de forte amplitude. Le gain de $0{,}5$ écarte entièrement ce risque.
+
+Ce raisonnement vaut pour l'écrêtage dû au gain. Un second mécanisme, propre à la puissance disponible sur charge de faible impédance, est apparu à la mesure et est traité à la section~\ref{sec:res_audio}.
 
 \subsubsection{Coupure du signal}
 

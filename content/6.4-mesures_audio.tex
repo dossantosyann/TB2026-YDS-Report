@@ -1,0 +1,47 @@
+\section{Caractérisation de la chaîne audio filaire}
+\label{sec:res_audio}
+
+La chaîne filaire a été caractérisée à l'analyseur Audio Precision ATS-2, complété par des relevés au multimètre et à l'oscilloscope pour les points qui demandent de voir la forme d'onde. Toute la campagne se déroule dans une configuration unique, volume système au maximum et registre de volume du \gls{DAC} à 0 dB, le niveau de sollicitation venant du seul fichier joué. Les protocoles et les relevés complets figurent aux sections~\ref{ann:mesures_audio} et~\ref{ann:mesures_ap} de l'annexe~\ref{ann:mesures}. Les entrées de l'analyseur présentent 100 k$\Omega$, toutes les mesures de performance sont donc faites à vide. Le comportement sur charge casque est traité en fin de section.
+
+La sortie jack lit correctement les seize formats du tableau de la section~\ref{ann:mesures_formats}. Aucun écart n'apparaît entre la durée annoncée par le conteneur et la durée chronométrée, ce qui écarte toute erreur d'horloge. La sortie Bluetooth se limite pour sa part aux fichiers à 44,1 kHz, seule fréquence gérée par la chaîne \gls{a2dp} telle qu'elle est implémentée.
+
+Le gain de l'étage analogique vaut 0,500 sur la voie gauche et 0,502 sur la voie droite, conforme au 0,5 fixé par le rapport des résistances à la section~\ref{sec:schema}. Le filtre RC est transparent dans la bande utile, avec un écart de 0,01 dB à 20 kHz par rapport au relevé à 1 kHz, et il le reste jusqu'à 90 kHz où l'écart n'excède pas 0,16 dB. Cette dernière valeur est du même ordre que la résolution de lecture de l'oscilloscope et ne doit pas être interprétée comme une réponse en fréquence. Le détail de ces relevés figure à la section~\ref{ann:mesures_filtre}.
+
+\begin{table}[H]
+    \centering
+    \caption{Performances de la sortie jack, mesurées à vide sur les entrées de 100 k$\Omega$ de l'analyseur}
+    \label{tab:res_audio}
+    \small
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.46\textwidth} r r >{\raggedright\arraybackslash}p{0.24\textwidth}@{}}
+        \toprule
+        \textbf{Grandeur}                                     & \textbf{Voie A}           & \textbf{Voie B}      & \textbf{Référence}              \\
+        \midrule
+        Niveau de sortie à 0 \gls{dbfs} [Vrms]                & 2,139                     & 2,143                & 2,1 par dimensionnement         \\
+        Gain de l'étage analogique                            & 0,500                     & 0,502                & 0,5 par dimensionnement         \\
+        THD+N à 1 kHz et $-1$ \gls{dbfs} [dB]                 & $-94,7$                   & $-94,9$              & $-94$ typique \cite{TI_PCM5242} \\
+        THD+N le plus défavorable de 20 Hz à 20 kHz [dB]      & $-92,6$                   & $-93,1$              & relevé à 5 kHz                  \\
+        Écart de niveau maximal de 20 Hz à 20 kHz [dB]        & \multicolumn{2}{c}{0,073} & critère de $\pm$ 0,1                                   \\
+        Bruit pondéré A, 22 Hz à 20 kHz [$\mu$V]              & 5,252                     & 5,165                &                                 \\
+        Rapport signal sur bruit pondéré A [dB]               & 112,2                     & 112,4                &                                 \\
+        Plage dynamique AES17 pondérée A [dB]                 & 109,8                     & 110,1                &                                 \\
+        \gls{diaphonie} à 1 kHz, A vers B puis B vers A [dB]  & $-102,6$                  & $-106,7$             &                                 \\
+        \gls{diaphonie} à 10 kHz, A vers B puis B vers A [dB] & $-92,5$                   & $-88,0$              &                                 \\
+        Offset continu en sortie [$\mu$V]                     & 17,5                      & 14,2                 & $<$ 350 \cite{analog_MAX97220A} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Le THD+N mesuré rejoint la valeur typique annoncée pour le PCM5242, ce qui indique que l'étage analogique n'ajoute pas de distorsion mesurable à celle du convertisseur \cite{TI_PCM5242}. Le résidu propre de l'analyseur, relevé à $-101$ dB, reste sept décibels sous les valeurs mesurées et n'est donc pas limitant. La réponse en fréquence tient le critère de $\pm$ 0,1 dB sur toute la bande audio, la légère remontée au-delà de 10 kHz étant cohérente avec le filtre numérique de reconstruction du convertisseur. La \gls{diaphonie} se dégrade avec la fréquence, comportement attendu d'un couplage capacitif, et reste sous $-88$ dB dans le pire cas. L'offset continu, mesurable directement au connecteur puisque la topologie \gls{directdrive} supprime les condensateurs de liaison, se situe vingt fois sous la limite du datasheet.
+
+Le passage du WAV au MP3 dégrade le THD+N d'environ 8 dB. L'écart entre fichier MP3 à 320 et 128 kbit/s reste faible. La dégradation vient donc du codage lui-même et non du débit retenu, ce qui est le comportement attendu d'un codec avec pertes.
+
+Ces performances sont établies à vide. Sur charge casque, la chaîne se heurte à une limite qui constitue le résultat le plus important de la section. À vide et à 0 \gls{dbfs}, la sortie délivre 2,13 Vrms en conservant une sinusoïde propre, conforme au dimensionnement. Branchée sur un casque de 32 $\Omega$, la même configuration ne fournit plus que 1,83 Vrms et l'alternance négative présente un plat marqué, visible à la figure~\ref{saturation_negative.png}, tandis que l'alternance positive reste intacte.
+
+\fig[H, width=0.6\textwidth]{Écrêtage de l'alternance négative en sortie du jack, fichier à 0 dBFS débité dans un casque de 32 $\Omega$}{saturation_negative.png}
+
+Cette dissymétrie oriente à elle seule le diagnostic. Un écrêtage numérique en amont ou une saturation de l'étage différentiel du convertisseur déformeraient les deux alternances de la même manière. Seule une faiblesse d'un des deux rails de l'amplificateur peut aplatir un seul côté. La mesure du rail négatif le confirme, PVSS passant de $-3,291$ V à vide à $-2,720$ V sous charge. La pompe de charge interne du MAX97220A ne tient pas ce rail lorsque la sortie débite dans 32 $\Omega$, si bien que la crête négative de 2,97 V exigée par un signal de 2,1 Vrms devient inatteignable \cite{analog_MAX97220A}.
+
+L'origine de cet écart remonte au dimensionnement. La comparaison faite à la section~\ref{sec:schema} confronte les 2,1 Vrms de la chaîne aux 2,15 Vrms que l'amplificateur délivre sur une charge de 600 $\Omega$. Or la contrainte pertinente pour un casque n'est pas une tension mais une puissance. Sortir 2,1 Vrms dans 32 $\Omega$ demande 138 mW, alors que le datasheet annonce 125 mW à 32 $\Omega$ sous une alimentation de 5 V, et se limite sous 3,3 V à spécifier 2 Vrms dans 600 $\Omega$ \cite{analog_MAX97220A}. La cible de 2,1 Vrms était donc hors de portée sur casque dès la conception, indépendamment du gain retenu. Les 1,83 Vrms relevés correspondent déjà à 105 mW, soit un point de fonctionnement situé au-delà de la plage utile du composant.
+
+La correction retenue limite le volume maximal du lecteur à $-6$ dB par le registre du convertisseur, premier niveau auquel l'alternance négative redevient propre sur charge de 32 $\Omega$. Le calcul confirme ce résultat empirique, les 1,072 Vrms correspondants ne demandant plus que 36 mW dans 32 $\Omega$. Cette limitation coûte six décibels de niveau et autant de rapport signal sur bruit à la sortie, l'atténuation étant appliquée dans le domaine numérique alors que le bruit analogique reste inchangé. Le rapport résultant demeure très au-delà de ce qu'un casque permet de discerner, et 36 mW dans 32 $\Omega$ reste une puissance très élevée. La conséquence pratique est donc nulle, mais la leçon de conception subsiste, un étage de sortie destiné à un casque doit être dimensionné en puissance sur l'impédance réelle de la charge et non en tension sur la charge de référence du datasheet.

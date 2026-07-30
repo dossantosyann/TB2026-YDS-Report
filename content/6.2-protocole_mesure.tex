@@ -1,0 +1,10 @@
+\section{Protocole de mesure}
+\label{sec:res_protocole}
+
+La validation a été menée sous forme d'une campagne unique, entre le 27 et le 31 juillet 2026, sur la carte finale et avec le firmware de version \texttt{1c6e3c6} compilé sous ESP-IDF 6.0.1. Elle compte 213 points de contrôle répartis en trois parties, les mesures matérielles sur la carte, les vérifications fonctionnelles du firmware et la caractérisation de la sortie audio filaire. L'intégralité des protocoles, du matériel utilisé et des relevés figure à l'annexe~\ref{ann:mesures}, qui sert de source unique aux valeurs commentées dans ce chapitre.
+
+Chaque point de contrôle a reçu un critère de conformité avant d'être mesuré, établi depuis le schéma, les datasheets ou le dimensionnement retenu au chapitre~\ref{chap:hardware}. Cette précaution évite d'ajuster le critère après coup pour qu'il englobe le résultat obtenu. Un point est déclaré non conforme lorsque la mesure sort de ce critère, ce qui ne signifie pas nécessairement que la carte est en défaut. Le critère peut avoir été formulé sur une hypothèse trop simple, comme la section~\ref{sec:res_audio} l'a montré pour la charge de référence de l'amplificateur.
+
+La campagne se termine sur 206 points conformes et 7 non conformes. Les mesures matérielles sont commentées à la section~\ref{sec:res_electrique}, la caractérisation audio à la section~\ref{sec:res_audio} et les vérifications fonctionnelles du firmware à la section~\ref{sec:res_firmware}.
+
+Deux séries de relevés antérieures complètent cette campagne et conservent leur propre traçabilité. Les trois décharges complètes de la section~\ref{sec:res_autonomie} et la campagne d'endurance de la section~\ref{sec:res_execution} ont été conduites plus tôt, avec leur propre version de firmware, documentée dans les annexes qui leur sont consacrées.
