@@ -41,23 +41,26 @@ Le micro-contrôleur attaque le convertisseur par une liaison I\textsuperscript{
 
 \subsubsection{Filtre de sortie}
 
-Chaque ligne de sortie du convertisseur porte deux résistances série de 5,1~k$\Omega$ encadrant un condensateur de 100~pF monté entre les deux lignes différentielles. Cet ensemble forme un filtre passe-bas du premier ordre dont la fréquence de coupure différentielle se situe autour de 156~kHz.
+Chaque ligne de sortie du convertisseur porte deux résistances série de 5,1~k$\Omega$ encadrant un condensateur de 100~pF monté entre les deux lignes différentielles. Cet ensemble forme un filtre passe-bas du premier ordre dont la fréquence de coupure différentielle se situe autour de 312~kHz.
 
-Le condensateur étant monté entre les deux lignes, le signal différentiel le voit à travers la résistance de chacune des deux branches, soit une résistance équivalente de $2R$. La fréquence de coupure vaut donc
+Le nœud du condensateur n'est pas un point à vide. La seconde résistance de chaque ligne rejoint l'entrée inverseuse de l'amplificateur, que la contre-réaction maintient au potentiel de référence et qui se comporte donc en masse pour le signal. Vue de ce nœud, la résistance amont apparaît ainsi en parallèle avec la résistance aval, ce qui ramène la résistance de chaque branche à $R \parallel R = 2{,}55\,\text{k}\Omega$. Le condensateur étant monté entre les deux lignes, le signal différentiel traverse cette résistance deux fois. La fréquence de coupure vaut donc
 \begin{equation}
-    f_c = \frac{1}{2\pi \cdot 2R \cdot C} = \frac{1}{2\pi \times 10{,}2\,\text{k}\Omega \times 100\,\text{pF}} \approx 156\,\text{kHz},
+    f_c = \frac{1}{2\pi \cdot 2\,(R \parallel R) \cdot C} = \frac{1}{2\pi \times 5{,}1\,\text{k}\Omega \times 100\,\text{pF}} \approx 312\,\text{kHz},
 \end{equation}
-avec $C = 100\,\text{pF}$ et $R = 5{,}1\,\text{k}\Omega$, cette dernière désignant la résistance placée entre le convertisseur et le nœud du condensateur, la seconde résistance de chaque ligne se trouvant en aval et n'intervenant pas dans la constante de temps.
 
 Un ordre aussi faible suffit parce que le PCM5242 est un convertisseur delta-sigma à suréchantillonnage. Son filtre d'interpolation numérique porte la cadence de sortie à 352,8 ou 384~kHz pour les familles de fréquences usuelles~\cite{TI_PCM5242}. La première image d'un signal de 20~kHz se trouve ainsi reportée à 332,8~kHz, alors qu'un convertisseur sans suréchantillonnage cadencé à 44,1~kHz la placerait à 24,1~kHz et exigerait un filtre analogique raide pour l'éliminer. Le rejet des images est donc entièrement acquis avant l'étage analogique.
 
 Ce qui subsiste à la sortie du composant est le bruit de quantification mis en forme par le modulateur, dont l'énergie croît avec la fréquence et que la fiche technique caractérise de 100~kHz à 3~MHz. Celle-ci indique que de nombreuses applications exigent un filtre RC externe pour en obtenir un rejet suffisant, faute de quoi ce bruit engendre des perturbations électromagnétiques et du repliement dans les étages placés en aval, et signale que ce même filtre améliore la protection des sorties contre les décharges électrostatiques~\cite{TI_PCM5242}. C'est cette tâche que remplit le filtre, sa pente de six décibels par octave donnant une atténuation croissante sur les décades supérieures.
 
-Le choix d'une coupure aussi haute maintient l'influence du filtre sur la bande audio à un niveau négligeable. En posant $x = f/f_c$, le filtre du premier ordre présente à 20~kHz
+La position de la coupure découle de deux contraintes. Les résistances sont imposées par le gain de l'étage de sortie, établi au paragraphe suivant, et ne constituent donc pas un degré de liberté. Le condensateur, lui, se trouve sur le nœud sommateur de l'amplificateur, à l'intérieur de la boucle de contre-réaction. Une valeur élevée y ajouterait un pôle dans la bande de la boucle et réduirait la marge de phase, au risque de faire osciller l'étage. La valeur de 100~pF du schéma de référence du convertisseur est conservée pour cette raison~\cite{TI_PCM5242}.
+
+Cette coupure reste cohérente avec le contenu à rejeter. Le bruit gênant se situe dans le domaine du mégahertz, où il produit des perturbations rayonnées et du repliement dans les étages en aval. Le premier ordre y atténue d'environ 20~dB à 3~MHz, avec une pente qui se poursuit au-delà. Une coupure plus basse renforcerait ce rejet, mais exigerait un condensateur plus grand sur le nœud sommateur ou un filtre du second ordre, deux options écartées par la contrainte de stabilité et par l'encombrement.
+
+L'influence du filtre sur la bande audio reste par ailleurs négligeable. En posant $x = f/f_c$, le filtre présente à 20~kHz
 \begin{equation}
-    20\log_{10}|H| = -0{,}07\,\text{dB}, \qquad \varphi = -\arctan(x) = -7{,}3^\circ, \qquad \tau_g = \frac{\tau}{1+x^2} = 1{,}00\,\mu\text{s},
+    20\log_{10}|H| = -0{,}02\,\text{dB}, \qquad \varphi = -\arctan(x) = -3{,}7^\circ, \qquad \tau_g = \frac{\tau}{1+x^2} = 0{,}51\,\mu\text{s},
 \end{equation}
-avec $\tau = 2RC = 1{,}02\,\mu\text{s}$. Le déphasage correspond donc à un temps de propagation de groupe qui ne varie que de 1,6~\% entre le continu et 20~kHz, soit un simple retard identique sur les deux canaux et non une distorsion de phase. Les mêmes résistances remplissent enfin une seconde fonction, puisqu'elles constituent la résistance d'entrée qui fixe le gain de l'amplificateur décrit ci-après.
+avec $\tau = 2\,(R \parallel R)\,C = 0{,}51\,\mu\text{s}$. Le déphasage correspond à un temps de propagation de groupe qui ne varie que de 0,4~\% entre le continu et 20~kHz, soit un simple retard identique sur les deux canaux et non une distorsion de phase. Les mêmes résistances constituent enfin la résistance d'entrée qui fixe le gain de l'amplificateur décrit ci-après.
 
 \subsubsection{Adaptation de niveau et choix du gain}
 
