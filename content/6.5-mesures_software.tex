@@ -1,0 +1,12 @@
+\section{Vérification fonctionnelle du firmware}
+\label{sec:res_firmware}
+
+Cette partie de la campagne parcourt le firmware par son interface, écran par écran et fonction par fonction, sur la carte finale. Elle se distingue de la validation de la section~\ref{sec:soft_validation}, qui exerçait les mécanismes internes par du code de test et de l'injection de fautes pendant le développement. Ici rien n'est instrumenté, chaque point est jugé sur ce que l'appareil affiche ou restitue. Les 69 points de contrôle et leurs constats figurent à la section~\ref{ann:mesures_sw} de l'annexe.
+
+Le parcours couvre le menu principal, les quatre pages de statistiques, le navigateur de stockage, l'écran de lecture, les pages de réglages, une série de cas dégradés, la robustesse au redémarrage et l'absence de bruits parasites. Soixante-six points sont conformes et trois ne le sont pas. Aucune des trois non-conformités n'affecte la lecture en fonctionnement nominal.
+
+Deux d'entre elles portent sur la gestion d'erreur à l'ouverture d'un fichier. Un fichier WAV tronqué ou de taille nulle, ainsi qu'un fichier d'extension supportée mais de format non géré, déclenchent la lecture au lieu de produire un message d'erreur. La pipeline audio reste fonctionnelle et l'appareil ne se bloque pas, la conséquence se limite donc à l'absence de retour à l'utilisateur. La reconnaissance de format décrite à la section~\ref{sec:transport} identifie bien le conteneur par sa signature de tête, mais aucun contrôle ne valide ensuite la cohérence du contenu utile avec cette signature.
+
+La troisième concerne les bruits de commutation. Aucune impulsion n'est audible à l'allumage, à l'extinction, au début et à la fin d'une lecture ni au changement de sortie, mais un léger glitch subsiste au changement de piste. Son origine n'a pas pu être établie faute de temps. La piste la plus probable est logicielle, les quatre transitions propres étant précisément celles qui passent par la séquence de sourdine du convertisseur et de mise en veille de l'amplificateur décrite à la section~\ref{sec:schema}, séquence que le chemin de reconfiguration au changement de piste ne semble pas emprunter.
+
+Ces trois points relèvent du confort d'usage et du traitement des cas limites, non du fonctionnement de la chaîne audio. Ils sont repris au chapitre~\ref{chap:ameliorations}.
