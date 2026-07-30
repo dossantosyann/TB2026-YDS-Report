@@ -1,7 +1,66 @@
-\chapter{Travail restant et perspectives}
+\chapter{Améliorations et perspectives}
 \label{chap:ameliorations}
 
-\begin{itemize}
-    \item Placer le bouton S1 afin qu'il soit accessible même lorsque la batterie est dans le boîtier.
-    \item Décaler l'ESP32 vers le bas du PCB afin de laisser la place dans le coin adjacent pour y placer une vis (Vu qu'il ne doit pas y avoir de métal à 15~mm de l'antenne)
-\end{itemize}
+La conception et la mise au point du prototype ont fait apparaître des défauts de circuit, des choix discutables et des fonctions restées absentes. Ce chapitre les rassemble et propose une réponse pour chacun. Il ne décrit pas des tâches inachevées du projet, mais les points de départ d'une révision suivante.
+
+\section{Défauts à corriger}
+\label{sec:amel_defauts}
+
+Le réseau d'écrêtage du bouton A protège correctement l'entrée du micro-contrôleur, mais il empêche l'allumage. Tant que le micro-contrôleur n'est pas alimenté, ses diodes de protection internes ramènent la tension à environ 0,6 V, niveau insuffisant pour activer le régulateur. La figure~\ref{buttonA_corrected_schematic.drawio} donne le montage corrigé.
+
+\fig[H, width=0.5\textwidth]{Montage corrigé du bouton A, avec prélèvement direct de la commande d'activation et réseau d'écrêtage vers le micro-contrôleur.}{buttonA_corrected_schematic.drawio}
+
+La commande d'activation est prélevée directement en sortie du bouton, en amont du réseau d'écrêtage, de sorte qu'elle évite l'écrêtage imposé par le micro-contrôleur éteint. Un bouton unique continue ainsi d'assurer les deux fonctions.
+
+La résistance série doit par ailleurs être fortement réduite, la diode Zener ne travaillant pas dans sa zone de régulation comme expliqué à la section~\ref{sec:res_electrique}. Une diode Zener régulant à plus faible constitue également une solution valable.
+
+Deux défauts relèvent du seulement du placement et se corrigent sans toucher au schéma. Le connecteur de batterie est trop proche du fusible pour que la fiche se connecte confortablement. Le bouton S1 devient inaccessible une fois la batterie posée dans le boîtier.
+
+\section{Faciliter la mise au point}
+\label{sec:amel_miseaupoint}
+
+Plusieurs boîtiers dont les contacts se trouvent sous le corps du composant imposent un four à refusion et rendent toute retouche délicate. Pour une carte de prototype, destinée à être modifiée et réparée, des boîtiers avec des pins accessibles seraient préférables, même au prix d'un encombrement supérieur.
+
+Les rails d'alimentation disposent de points de test, mais la vérification s'arrête là. Rien ne permet de contrôler directement sur les pins d'un composant qu'il est effectivement alimenté, ce qui oblige à chercher une pastille ou un via accessible à proximité. Des points de test reliés aux pins d'alimentation des principaux composants lèveraient ce doute immédiatement.
+
+Ce problème concerne également les broches de configuration matérielle. Actuellement, il est impossible de mesurer les signaux qui définissent l'adresse d'un composant sur le bus I2C ou son mode de fonctionnement. L'ajout d'un point de test sur chacune de ces lignes permettrait de vérifier en quelques secondes si un composant silencieux est simplement mal configuré ou s'il est réellement défectueux.
+
+Des résistances de 0~$\Omega$ posées sur VBUS et sur VSys compléteraient également ces points de test. Elles se retirent pour insérer un ampèremètre pour pouvoir y mesurer le courant.
+
+Le courant de charge étant figé par une résistance, essayer une autre batterie impose de dessouder un composant. Un chargeur réglable par \gls{i2c} permettrait de balayer plusieurs valeurs depuis le firmware et de retenir la batterie la plus adaptée sans intervention matérielle.
+
+\section{Simplification de la chaîne d'alimentation}
+\label{sec:amel_alimentation}
+
+La consommation de l'appareil ne dépasse pas 300 mA, radio Bluetooth active comprise. Un régulateur linéaire de 500 mA couvrirait donc ce besoin avec une marge de sécurité confortable pour les pointes de courant de la radio.
+
+L'intérêt n'est pas dans le régulateur lui-même, mais dans ce qu'il rend inutile. Sans découpage, il n'y a plus de raie de commutation à rejeter sur le rail analogique. La sortie différentielle du \gls{DAC}, le filtre RC qui la suit et l'étage de conversion vers l'asymétrique perdent alors leur justification principale. Un convertisseur à sortie asymétrique suffirait, ce qui retirerait une dizaine de composants de la chaîne audio. Le chargeur devrait être linéaire lui aussi pour que la démarche soit cohérente.
+
+Ce choix a un prix, d'abord sur la restitution. Le mode différentiel double l'amplitude utile sans doubler le bruit, rejette les perturbations communes aux deux lignes, en particulier les écarts de potentiel de masse entre le convertisseur et l'amplificateur, et annule les harmoniques de rang pair produits par le convertisseur \cite{TI_PCM5242}. Passer à l'asymétrique revient à renoncer à ces trois avantages. Le rendement souffre ensuite, puisqu'un régulateur linéaire dissipe l'écart entre la tension d'une cellule pleine et les 3,3 V de sortie, soit environ un cinquième de l'énergie prélevée, alors que le convertisseur à découpage actuel n'en perd qu'environ un dixième \cite{TI_TPS62A01}. L'écart se resserre à mesure que la cellule se décharge, mais il coûte de l'autonomie sur toute la durée d'écoute. Sous 300 mA et 0,9 V de chute, le régulateur évacuerait de plus près de 270 mW à l'intérieur d'un boîtier fermé et imprimé en plastique.
+
+L'arbitrage n'est donc pas évident. Il mérite d'être posé explicitement au début d'une révision, selon la priorité donnée à l'autonomie ou à la simplicité du circuit.
+
+\section{Fonctions matérielles absentes}
+\label{sec:amel_materiel}
+
+L'absence d'horloge temps réel prive l'appareil de trois objectifs supplémentaires du cahier des charges, comme l'établit la section~\ref{sec:res_bilan}. Ajouter un quartz de 32,768 kHz au micro-contrôleur n'y changerait rien, puisque le rail est coupé et non mis en sommeil. Il faut une horloge dédiée, alimentée par une pile bouton et interrogée par \gls{i2c} au démarrage.
+
+Le connecteur jack retenu ne comporte aucun contact de détection. Un pin de présence permettrait de couper l'amplificateur lorsque la prise est vide, de basculer automatiquement de sortie et d'éviter qu'une lecture se poursuive sans auditeur.
+
+Le potentiomètre de volume fournit une position absolue, ce qui entre en conflit avec le réglage du récepteur par \gls{avrcp}. Si un utilisateur modifie le volume depuis l'enceinte, le volume ne sera plus couplé à la position du potentiomètre. Un encodeur rotatif ne délivre que des incréments, sans position de repos, ce qui permet au firmware de tenir une valeur de volume unique quelle que soit l'origine de la commande.
+
+\section{Évolutions du firmware}
+\label{sec:amel_firmware}
+
+La source Bluetooth émet à 44,1 kHz. Les fichiers échantillonnés à une autre fréquence ne peuvent donc pas être transmis sans conversion. Un rééchantillonneur logiciel les rendrait accessibles en Bluetooth, au prix d'une charge processeur supplémentaire et d'une dégradation de la qualité du fichier.
+
+Le \gls{DAC} embarque un moteur de traitement programmable qui permettrait de réaliser un égaliseur sans coût processeur \cite{TI_PCM5242}. Ce traitement se ferait toutefois à l'intérieur du convertisseur, donc il ne s'appliquerait qu'à la sortie filaire. Un égaliseur valable sur les deux sorties doit être implémenté en amont du \gls{sink}, dans le firmware, ce qui consomme du temps processeur mais reste indépendant de la destination.
+
+La mise à jour du firmware depuis la carte \gls{sd} n'a pas été réalisée. Le mécanisme est fourni par ESP-IDF \cite{ESP32_IDF_guide} et suppose une table de partition prévoyant deux emplacements d'application. L'appareil pourrait alors être mis à jour sans câble ni environnement de développement.
+
+Le tri par artiste, album et titre demande de lire les métadonnées de toutes les pistes présentes sur la carte et d'en conserver un index. Cet index devrait être construit une seule fois puis stocké, sous peine d'allonger fortement le démarrage dès que le nombre de fichiers augmente.
+
+\section{Synthèse}
+\label{sec:amel_synthese}
+
+Aucune des pistes énumérées ne remet en cause l'architecture générale de l'appareil. Les corrections de la section~\ref{sec:amel_defauts} sont peu coûteuses et devraient figurer dans toute révision suivante. La simplification de la chaîne d'alimentation est d'une autre nature, puisqu'elle échange de l'autonomie contre de la simplicité et demande une décision explicite. Parmi les fonctions manquantes, l'horloge temps réel et la détection de jack sont celles qui apporteraient le plus à l'usage quotidien pour un effort mesuré.
