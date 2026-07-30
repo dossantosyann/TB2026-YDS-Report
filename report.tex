@@ -46,6 +46,32 @@
    \vskip\chapskipbelow}}
 \makeatother
 
+% Espacement vertical : book/twoside active \flushbottom, qui étire la colle
+% élastique (\parskip) pour égaliser la hauteur des pages. Combiné aux figures [H],
+% cela creuse de gros trous entre les paragraphes. On laisse plutôt le mou en bas
+% de page et on limite l'élasticité de \parskip.
+\raggedbottom
+\setlength{\parskip}{6pt plus 1pt minus 2pt} % défaut de la classe : \medskipamount
+
+% Espaces autour des figures/tableaux (défaut : ~12pt plus/minus 2-4pt)
+\setlength{\intextsep}{8pt plus 2pt minus 3pt}
+\setlength{\textfloatsep}{10pt plus 2pt minus 4pt}
+\setlength{\floatsep}{8pt plus 2pt minus 3pt}
+
+% Document destiné à la lecture à l'écran : on supprime les sauts de page doubles
+% qui forçaient chaque chapitre à démarrer en recto (21 pages blanches sur 184).
+\let\cleardoublepage\clearpage
+
+% La classe met -12ex d'espace avant chaque \subsection (~55 pt, 3,5 lignes),
+% alors que \section est a -2.5ex et \subsubsection a -3ex : vraisemblablement une
+% coquille pour -1.2ex. Ramene a l'echelle des autres niveaux (87 sous-sections).
+\makeatletter
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+    {-2.5ex\@plus -1ex \@minus -.2ex}%
+    {1.0ex \@plus .2ex}%
+    {\normalfont\large\bfseries\itshape}}
+\makeatother
+
 \renewcommand{\arraystretch}{1.5}
 
 % États de mesure, avec fond de couleur, utilisés dans les tableaux de relevés
@@ -115,7 +141,6 @@
   \let\cleardoublepage\clearpage
   \listoftables
   \let\cleardoublepage\clearpage
-  \listoflistings
 }
 
 \printnomenclature
