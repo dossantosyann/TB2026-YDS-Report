@@ -53,37 +53,37 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-22" parent="1" style="pointerEvents=1;fillColor=strokeColor;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.diodes.zener_diode_3;rotation=-90;" value="" vertex="1">
-          <mxGeometry height="10.7" width="16.05" x="257" y="453" as="geometry" />
+          <mxGeometry height="10.7" width="16.05" x="257" y="448" as="geometry" />
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-23" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="Xf25vBQQIQpFkKBukGzn-22" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="264.98999999999995" y="478" as="sourcePoint" />
+            <mxPoint x="264.95" y="472.08" as="sourcePoint" />
             <mxPoint x="264.98999999999995" y="463" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-25" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="258.04" y="478" as="sourcePoint" />
-            <mxPoint x="272.01000000000005" y="478" as="targetPoint" />
+            <mxPoint x="258.04" y="472" as="sourcePoint" />
+            <mxPoint x="272.01000000000005" y="472" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-26" parent="1" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.capacitors.capacitor_1;rotation=-90;" value="" vertex="1">
-          <mxGeometry height="11" width="19" x="280" y="457" as="geometry" />
+          <mxGeometry height="11" width="19" x="280" y="449" as="geometry" />
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-27" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="Xf25vBQQIQpFkKBukGzn-26" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="289.4599999999999" y="478" as="sourcePoint" />
+            <mxPoint x="289.47" y="472.08" as="sourcePoint" />
             <mxPoint x="289.4599999999999" y="463" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-28" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="282.51" y="478" as="sourcePoint" />
-            <mxPoint x="296.48" y="478" as="targetPoint" />
+            <mxPoint x="282.51" y="472" as="sourcePoint" />
+            <mxPoint x="296.48" y="472" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;rotation=-90;" value="" vertex="1">
-          <mxGeometry height="7.5" width="20" x="306" y="455" as="geometry" />
+          <mxGeometry height="7.5" width="20" x="306" y="452" as="geometry" />
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-34" edge="1" parent="1" source="Xf25vBQQIQpFkKBukGzn-31" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -93,14 +93,14 @@
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-35" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="Xf25vBQQIQpFkKBukGzn-31" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="316" y="478" as="sourcePoint" />
+            <mxPoint x="316" y="472.08" as="sourcePoint" />
             <mxPoint x="329" y="435" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-36" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="309.01" y="478" as="sourcePoint" />
-            <mxPoint x="322.98" y="478" as="targetPoint" />
+            <mxPoint x="309.01" y="472" as="sourcePoint" />
+            <mxPoint x="322.98" y="472" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-37" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;" value="To ESP32 GPIO" vertex="1">
@@ -117,7 +117,7 @@
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-42" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="205" y="500" as="sourcePoint" />
+            <mxPoint x="205" y="480" as="sourcePoint" />
             <mxPoint x="205" y="440" as="targetPoint" />
           </mxGeometry>
         </mxCell>
@@ -141,12 +141,12 @@
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-46" edge="1" parent="1" style="endArrow=classic;html=1;rounded=0;endFill=1;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
-            <mxPoint x="205" y="500" as="sourcePoint" />
-            <mxPoint x="335" y="500" as="targetPoint" />
+            <mxPoint x="205" y="480" as="sourcePoint" />
+            <mxPoint x="335" y="480" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="Xf25vBQQIQpFkKBukGzn-47" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;fontSize=9;" value="To buck EN" vertex="1">
-          <mxGeometry height="30" width="89" x="316" y="484" as="geometry" />
+          <mxGeometry height="30" width="89" x="316" y="464" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
