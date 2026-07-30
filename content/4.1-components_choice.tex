@@ -312,7 +312,7 @@ Le MCP73871 est d'emblée écarté, dépourvu de détection de source, limité �
 
 \subsection{Jauge de batterie}
 
-La jauge de batterie estime l'état de charge de la cellule, l'objectif principal étant d'afficher à l'utilisateur le pourcentage de charge restant (\gls{soc}) et l'objectif secondaire de rapporter le plus de grandeurs annexes possible, utiles au suivi de la batterie sans être indispensables. Le choix se joue donc sur la précision de l'estimation et sur la richesse des données fournies. Deux approches existent, la mesure de la seule tension de la cellule, simple mais sensible aux variations de charge, et le comptage de coulomb, qui intègre le courant réellement échangé pour un suivi plus fidèle. Les jauges à résistance de mesure intégrée auraient évité un composant supplémentaire mais ne sont proposées qu'en boîtier \gls{bga}, écarté pour ce projet, de sorte que la recherche s'est orientée vers des jauges à résistance externe (tableau~\ref{tab:comparo_jauge}).
+La jauge de batterie estime l'état de charge (\gls{soc}) pour l'affichage et, si possible, rapporte des grandeurs annexes utiles au suivi de la batterie. Deux approches existent : la mesure de tension seule, simple mais sensible aux variations de charge, et le comptage de coulomb, qui intègre le courant pour un suivi plus fidèle. Les jauges à résistance intégrée, écartées car uniquement disponibles en boîtier \gls{bga}, ont orienté la recherche vers des jauges à résistance externe (tableau~\ref{tab:comparo_jauge}).
 
 \begin{table}[H]
     \centering
@@ -353,7 +353,7 @@ La jauge de batterie estime l'état de charge de la cellule, l'objectif principa
     \end{tabular}
 \end{table}
 
-Le STC3100 est écarté en premier, ne calculant pas l'état de charge et ne remplissant donc même pas l'objectif principal. Le MAX17048, dépourvu de compteur de coulomb, fonde son estimation sur la seule tension et se dégrade sous charge variable. Le BQ27441-G1 constitue un candidat sérieux mais ne renseigne ni l'autonomie estimée ni le nombre de cycles. Le MAX17260 a été retenu parce qu'il associe un compteur de coulomb à l'algorithme ModelGauge m5, qui combine la mesure de tension et l'intégration du courant et demeure ainsi précis même sous charge variable, parce qu'il est le seul candidat à rapporter l'ensemble des grandeurs utiles, dont l'autonomie estimée particulièrement précieuse pour l'affichage, et parce qu'il présente la plus faible consommation du comparatif avec 30~$\mu$A en mode actif contre 93~$\mu$A pour le BQ27441-G1. Il nécessite une résistance de mesure externe, conséquence acceptée de la contrainte de boîtier.
+Le STC3100, qui ne calcule pas le SOC, est écarté d'emblée, de même que le MAX17048 dont l'estimation, fondée sur la seule tension, se dégrade sous charge variable. Le BQ27441-G1 est un candidat sérieux mais omet l'autonomie estimée et le nombre de cycles. Le MAX17260 est retenu : son algorithme ModelGauge m5 combine tension et comptage de coulomb pour rester précis sous charge variable, il est le seul à fournir l'ensemble des grandeurs utiles, et il possède la plus faible consommation active du comparatif. La résistance de mesure externe qu'il requiert est la contrepartie acceptée de la contrainte de boîtier.
 
 
 
