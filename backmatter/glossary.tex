@@ -243,3 +243,43 @@
     name={FDM},
     description={Fused Deposition Modeling. Procédé d'impression tridimensionnelle par dépôt de fil thermoplastique fondu, couche après couche}
 }
+
+\newglossaryentry{dbfs}{
+    name={dBFS},
+    description={Decibel Full Scale. Niveau d'un signal numérique exprimé en décibels par rapport à la pleine échelle du format, qui vaut 0 dBFS par définition. Toutes les valeurs utiles sont donc négatives, un fichier à $-20$ dBFS sollicitant le convertisseur au dixième de sa pleine échelle en tension}
+}
+
+\newglossaryentry{dbr}{
+    name={dBr},
+    description={Decibel relative. Niveau exprimé en décibels par rapport à une référence choisie par l'opérateur, ici le relevé à 1 kHz. Cette normalisation élimine le gain absolu de la chaîne et ne conserve que les écarts, ce qui est la grandeur pertinente pour une réponse en fréquence}
+}
+
+\newglossaryentry{rms}{
+    name={RMS},
+    description={Root Mean Square. Valeur efficace d'un signal, égale à la racine carrée de la moyenne de son carré. C'est le mode de détection à imposer pour mesurer un bruit, dont le facteur de crête diffère de celui d'une sinusoïde et rendrait toute détection de crête non comparable}
+}
+
+\newglossaryentry{por}{
+    name={POR},
+    description={Power-On Reset. Séquence d'initialisation déclenchée par la mise sous tension d'un circuit, qui place ses registres et ses entrées-sorties dans un état par défaut connu avant toute intervention du firmware}
+}
+
+\newglossaryentry{pwm}{
+    name={PWM},
+    description={Pulse Width Modulation. Modulation de largeur d'impulsion, mode de fonctionnement d'un convertisseur à découpage dans lequel la durée de conduction varie avec la charge tandis que la période reste sensiblement constante}
+}
+
+\newglossaryentry{directdrive}{
+    name={DirectDrive},
+    description={Topologie d'amplificateur casque qui produit un rail négatif au moyen d'une pompe de charge interne, de manière à centrer la sortie sur la masse. Elle supprime les condensateurs de liaison de sortie, au prix d'une dépendance du niveau maximal disponible à la capacité de la pompe de charge à tenir ce rail sous charge}
+}
+
+\newglossaryentry{diaphonie}{
+    name={diaphonie},
+    description={Crosstalk. Fuite du signal d'une voie vers l'autre, exprimée en décibels comme le rapport entre le niveau relevé sur la voie muette et le niveau de la voie excitée à la même fréquence}
+}
+
+\newglossaryentry{strapping}{
+    name={strapping pin},
+    description={Broche d'un micro-contrôleur dont l'état logique est échantillonné pendant le reset pour configurer un mode de démarrage, et qui retrouve ensuite sa fonction normale d'entrée-sortie. Un niveau incorrect au reset peut rendre le module inopérant sans qu'aucun défaut matériel ne soit en cause}
+}
