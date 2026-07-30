@@ -1,7 +1,7 @@
 \section{Validation du firmware}
 \label{sec:soft_validation}
 
-Chaque mécanisme décrit dans ce chapitre a fait l'objet d'une vérification, menée par du code de test exécuté sur machine hôte lorsque la logique est pure et indépendante du matériel, et directement sur la carte dans le cas contraire. Le tableau~\ref{tab:validation_soft} en donne le relevé. Trois vérifications, qui reposent sur une injection de faute ou sur un jugement à l'écoute, sont détaillées en fin de section.
+Chaque mécanisme décrit dans ce chapitre a fait l'objet d'une vérification, menée par du code de test exécuté sur machine hôte lorsque la logique est pure et indépendante du matériel, et directement sur la carte dans le cas contraire. Le tableau~\ref{tab:validation_soft} en donne le relevé. La vérification des watchdogs, qui repose sur une injection de faute, est détaillée en fin de section.
 
 \begingroup
 \renewcommand{\arraystretch}{1.25}
@@ -73,6 +73,6 @@ Chaque mécanisme décrit dans ce chapitre a fait l'objet d'une vérification, m
 \end{longtable}
 \endgroup
 
-Trois vérifications ne se laissent pas résumer à une ligne. Les deux watchdogs ont été exercés par injection de fautes, en bloquant volontairement la boucle de décodage puis le rendu d'un écran à rafraîchissement automatique. Chaque blocage a produit le redémarrage attendu et un \gls{coredump} désignant la bonne tâche, ce qui établit à la fois le déclenchement et la valeur diagnostique de la trace conservée. Le tableau rapporte la vérification réciproque, celle qui confirme qu'une inactivité légitime ne déclenche rien.
+Les deux watchdogs ont été exercés par injection de fautes, en bloquant volontairement la boucle de décodage puis le rendu d'un écran à rafraîchissement automatique. Chaque blocage a produit le redémarrage attendu et un \gls{coredump} désignant la bonne tâche, ce qui établit à la fois le déclenchement et la valeur diagnostique de la trace conservée. Le tableau rapporte la vérification réciproque, celle qui confirme qu'une inactivité légitime ne déclenche rien.
 
-Deux vérifications reposent enfin sur l'écoute plutôt que sur un mécanisme. Le séquencement d'activation de la chaîne filaire a été contrôlé à la mise sous tension et à l'extinction, aucun de ces événements ne produisant de bruit parasite au casque. L'ordre d'extinction l'a été de même, aucune impulsion audible n'apparaissant à la coupure. Ces deux contrôles sont qualitatifs.
+Le séquencement d'activation et d'extinction de la chaîne filaire ne se vérifie que par l'écoute. Il a été contrôlé lors de la campagne de validation, sur l'ensemble des transitions susceptibles de produire un bruit de commutation, et les constats sont rapportés à la section~\ref{sec:res_firmware}.
