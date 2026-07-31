@@ -27,7 +27,7 @@
 
 % Espacement des titres de chapitre (défaut book : 50 pt au-dessus, 40 pt en dessous)
 \makeatletter
-\newlength{\chapskipabove}\setlength{\chapskipabove}{-40pt}
+\newlength{\chapskipabove}\setlength{\chapskipabove}{-30pt}
 \newlength{\chapskipbelow}\setlength{\chapskipbelow}{14pt}
 \renewcommand{\@makechapterhead}[1]{%
   \vspace*{\chapskipabove}%
@@ -98,7 +98,7 @@
 
 \signature{signature.svg} % Remplacer par votre propre signature vectorielle.
 
-\makenomenclature
+%\makenomenclature
 \makenoidxglossaries
 \makeindex
 
@@ -143,7 +143,7 @@
   \let\cleardoublepage\clearpage
 }
 
-\printnomenclature
+%\printnomenclature
 \clearemptydoublepage
 \pagenumbering{arabic}
 

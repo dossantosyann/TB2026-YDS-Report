@@ -320,10 +320,10 @@
 
 \RequirePackage[
     a4paper,
-    top=2.5cm,
-    bottom=2.5cm,
-    left=2.5cm,
-    right=2.5cm,
+    top=2cm,
+    bottom=2cm,
+    left=2cm,
+    right=2cm,
     headheight=6mm,
     headsep=5mm,
     marginparwidth=3cm,
@@ -499,7 +499,7 @@
   {2.0ex \@plus.2ex}%
   {\normalfont\Large\bfseries\itshape}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
-    {-12ex\@plus -1ex \@minus -.2ex}%
+    {-2ex\@plus -1ex \@minus -.2ex}%
     {1.0ex \@plus .2ex}%
     {\normalfont\large\bfseries\itshape}}
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%

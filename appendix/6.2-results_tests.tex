@@ -26,7 +26,7 @@ Toutes les mesures matérielles et logicielles ont été réalisées sur la cart
         Oscilloscope                    & Tektronix DPO 2014B                      \\
         Analyseur audio                 & Audio Precision ATS-2, logiciel ATS 1.60 \\
         Carte microSD                   & Swissbit 16 GB                           \\
-        Casque, sortie jack             & Blon BL-03 32 $\Omega$                              \\
+        Casque, sortie jack             & Blon BL-03 32 $\Omega$                   \\
         Appareil Bluetooth de référence & JBL Charge 5                             \\
         \bottomrule
     \end{tabular}
@@ -115,44 +115,44 @@ Le repérage des signaux suit les noms de nets du schéma. Aux blocs 1 à 4, le 
 Protocole : circuit hors tension, batterie déconnectée, mesures à l'ohmmètre.
 
 {\scriptsize
-    \setlength{\tabcolsep}{3pt}
-    \renewcommand{\arraystretch}{1.15}
-    \begin{longtable}{@{}
-        >{\raggedright\arraybackslash}p{0.045\textwidth}
-        >{\raggedright\arraybackslash}p{0.190\textwidth}
-        >{\raggedright\arraybackslash}p{0.175\textwidth}
-        >{\raggedright\arraybackslash}p{0.080\textwidth}
-        >{\centering\arraybackslash}p{0.052\textwidth}
-        >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-        \caption{Bloc 1 -- Vérification du \gls{pcb}, hors tension}
-        \label{tab:ann_mesures_hw_b1} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 1 -- Vérification du \gls{pcb}, hors tension (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        1.1  & \texttt{GND} - \texttt{GND}     & $<$ 0,2 $\Omega$  & 0,000 $\Omega$  & \OK & \\
-        1.2  & \texttt{VBUS} - \texttt{GND}    & $\ge$ 1 k$\Omega$ & 44,1 k$\Omega$  & \OK & \\
-        1.3  & \texttt{VSys} - \texttt{GND}    & $\ge$ 1 k$\Omega$ & 280 k$\Omega$   & \OK & \\
-        1.4  & \texttt{VBatP} - \texttt{GND}   & $\ge$ 1 k$\Omega$ & 280 k$\Omega$   & \OK & \\
-        1.5  & \texttt{+3.3V} - \texttt{GND}   & $\ge$ 1 k$\Omega$ & 1,15 k$\Omega$  & \OK & Valeur la plus basse de la série, cohérente avec les charges permanentes du rail \\
-        1.6  & \texttt{VBUS} - \texttt{VSys}   & $\ge$ 1 k$\Omega$ & 21,1 M$\Omega$  & \OK & \\
-        1.7  & \texttt{VBUS} - \texttt{+3.3V}  & $\ge$ 1 k$\Omega$ & 28 k$\Omega$    & \OK & \\
-        1.8  & \texttt{VBUS} - \texttt{VBatP}  & $\ge$ 1 k$\Omega$ & 21,0 M$\Omega$  & \OK & \\
-        1.9  & \texttt{VSys} - \texttt{+3.3V}  & $\ge$ 1 k$\Omega$ & 23,3 M$\Omega$  & \OK & \\
-        1.10 & \texttt{VBatP} - \texttt{+3.3V} & $\ge$ 1 k$\Omega$ & 23,3 M$\Omega$  & \OK & \\
-        1.11 & \texttt{VSys} - \texttt{VBatP}  & $<$ 0,2 $\Omega$  & 0,115 $\Omega$  & \OK & Les deux nets sont reliés par le chemin de puissance du chargeur \\
-        \end{longtable}
-        }
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 1 -- Vérification du \gls{pcb}, hors tension}
+    \label{tab:ann_mesures_hw_b1}                                                                                                                                                                 \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}        & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                               \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 1 -- Vérification du \gls{pcb}, hors tension (suite)}                                                                                                                         \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}        & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                               \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                           \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    1.1         & \texttt{GND} - \texttt{GND}     & $<$ 0,2 $\Omega$         & 0,000 $\Omega$  & \OK           &                                                                                  \\
+    1.2         & \texttt{VBUS} - \texttt{GND}    & $\ge$ 1 k$\Omega$        & 44,1 k$\Omega$  & \OK           &                                                                                  \\
+    1.3         & \texttt{VSys} - \texttt{GND}    & $\ge$ 1 k$\Omega$        & 280 k$\Omega$   & \OK           &                                                                                  \\
+    1.4         & \texttt{VBatP} - \texttt{GND}   & $\ge$ 1 k$\Omega$        & 280 k$\Omega$   & \OK           &                                                                                  \\
+    1.5         & \texttt{+3.3V} - \texttt{GND}   & $\ge$ 1 k$\Omega$        & 1,15 k$\Omega$  & \OK           & Valeur la plus basse de la série, cohérente avec les charges permanentes du rail \\
+    1.6         & \texttt{VBUS} - \texttt{VSys}   & $\ge$ 1 k$\Omega$        & 21,1 M$\Omega$  & \OK           &                                                                                  \\
+    1.7         & \texttt{VBUS} - \texttt{+3.3V}  & $\ge$ 1 k$\Omega$        & 28 k$\Omega$    & \OK           &                                                                                  \\
+    1.8         & \texttt{VBUS} - \texttt{VBatP}  & $\ge$ 1 k$\Omega$        & 21,0 M$\Omega$  & \OK           &                                                                                  \\
+    1.9         & \texttt{VSys} - \texttt{+3.3V}  & $\ge$ 1 k$\Omega$        & 23,3 M$\Omega$  & \OK           &                                                                                  \\
+    1.10        & \texttt{VBatP} - \texttt{+3.3V} & $\ge$ 1 k$\Omega$        & 23,3 M$\Omega$  & \OK           &                                                                                  \\
+    1.11        & \texttt{VSys} - \texttt{VBatP}  & $<$ 0,2 $\Omega$         & 0,115 $\Omega$  & \OK           & Les deux nets sont reliés par le chemin de puissance du chargeur                 \\
+\end{longtable}
+}
 
 \subsection{Bloc 2. Alimentations sur batterie}
 
@@ -162,37 +162,37 @@ Protocole : alimentation de laboratoire en simulation de batterie, 3,5 V et 0,1 
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 2 -- Alimentations sur batterie}
-\label{tab:ann_mesures_hw_b2} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 2 -- Alimentations sur batterie (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        2.1 & Courant d'alimentation          & $<$ 10 mA                                             & 1 mA    & \OK & \\
-        2.2 & \texttt{VBatP} - \texttt{GND}   & 3,5 V                                                  & 3,495 V & \OK & \\
-        2.3 & \texttt{VSys} - \texttt{GND}    & 3,5 V                                                  & 3,495 V & \OK & \\
-        2.4 & \texttt{VBUS} - \texttt{GND}    & 0 V                                                    & 0,006 V & \OK & \\
-        2.5 & \texttt{+3.3V} - \texttt{GND}   & 0 V                                                    & 0 V     & \OK & Sans appuyer sur le bouton A \\
-        2.6 & \texttt{+3.3V} - \texttt{GND}   & 3,345 V, consigne fixée par R6 et R8                  & 3,345 V & \OK & En appuyant sur le bouton A \\
-        2.7 & \texttt{BuckEN} - \texttt{GND}  & Niveau haut, $>$ 1,2 V                                & 3,345 V & \OK & En appuyant sur le bouton A \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 2 -- Alimentations sur batterie}
+    \label{tab:ann_mesures_hw_b2}                                                                                                                        \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}       & \textbf{Valeur attendue}             & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}           \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 2 -- Alimentations sur batterie (suite)}                                                                                             \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}       & \textbf{Valeur attendue}             & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}           \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                  \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    2.1         & Courant d'alimentation         & $<$ 10 mA                            & 1 mA            & \OK           &                              \\
+    2.2         & \texttt{VBatP} - \texttt{GND}  & 3,5 V                                & 3,495 V         & \OK           &                              \\
+    2.3         & \texttt{VSys} - \texttt{GND}   & 3,5 V                                & 3,495 V         & \OK           &                              \\
+    2.4         & \texttt{VBUS} - \texttt{GND}   & 0 V                                  & 0,006 V         & \OK           &                              \\
+    2.5         & \texttt{+3.3V} - \texttt{GND}  & 0 V                                  & 0 V             & \OK           & Sans appuyer sur le bouton A \\
+    2.6         & \texttt{+3.3V} - \texttt{GND}  & 3,345 V, consigne fixée par R6 et R8 & 3,345 V         & \OK           & En appuyant sur le bouton A  \\
+    2.7         & \texttt{BuckEN} - \texttt{GND} & Niveau haut, $>$ 1,2 V               & 3,345 V         & \OK           & En appuyant sur le bouton A  \\
+\end{longtable}
+}
 
 \subsection{Bloc 3. Superviseur de tension XC6120}
 
@@ -202,36 +202,36 @@ Protocole : alimentation de laboratoire abaissée par paliers, USB déconnecté.
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 3 -- Superviseur de tension XC6120}
-\label{tab:ann_mesures_hw_b3} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 3 -- Superviseur de tension XC6120 (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        3.1 & \texttt{Supervisor} - \texttt{GND} & 3,25 V                                              & 3,244 V & \OK & Alimentation descendue à 3,25 V \\
-        3.2 & \texttt{BuckEN} - \texttt{GND}     & Niveau haut, $>$ 1,2 V                              & 3,123 V & \OK & En appuyant sur le bouton A. Le superviseur n'a pas encore basculé \\
-        3.3 & \texttt{Supervisor} - \texttt{GND} & 3,2 V                                                & 3,189 V & \OK & Alimentation descendue à 3,2 V \\
-        3.4 & \texttt{BuckEN} - \texttt{GND}     & Niveau bas, $<$ 0,4 V                               & 0,017 V & \OK & En appuyant sur le bouton A. La protection contre la décharge profonde est fonctionnelle \\
-        3.5 & Seuil de basculement                & Entre 3,136 V et 3,264 V \cite{torex_XC6120}        & 3,212 V & \OK & Balayage de l'alimentation de 3,40 V vers 3,10 V par pas de 10 mV, relevé de la tension exacte de bascule de \texttt{BuckEN} \\
-        3.6 & Hystérésis                          & Tension de retour supérieure au seuil de bascule    & 3,279 V & \OK & Alimentation remontée, relevé de la tension de redémarrage \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 3 -- Superviseur de tension XC6120}
+    \label{tab:ann_mesures_hw_b3}                                                                                                                                                                                                                                        \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}           & \textbf{Valeur attendue}                         & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                           \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 3 -- Superviseur de tension XC6120 (suite)}                                                                                                                                                                                                          \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}           & \textbf{Valeur attendue}                         & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                           \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                  \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    3.1         & \texttt{Supervisor} - \texttt{GND} & 3,25 V                                           & 3,244 V         & \OK           & Alimentation descendue à 3,25 V                                                                                              \\
+    3.2         & \texttt{BuckEN} - \texttt{GND}     & Niveau haut, $>$ 1,2 V                           & 3,123 V         & \OK           & En appuyant sur le bouton A. Le superviseur n'a pas encore basculé                                                           \\
+    3.3         & \texttt{Supervisor} - \texttt{GND} & 3,2 V                                            & 3,189 V         & \OK           & Alimentation descendue à 3,2 V                                                                                               \\
+    3.4         & \texttt{BuckEN} - \texttt{GND}     & Niveau bas, $<$ 0,4 V                            & 0,017 V         & \OK           & En appuyant sur le bouton A. La protection contre la décharge profonde est fonctionnelle                                     \\
+    3.5         & Seuil de basculement               & Entre 3,136 V et 3,264 V \cite{torex_XC6120}     & 3,212 V         & \OK           & Balayage de l'alimentation de 3,40 V vers 3,10 V par pas de 10 mV, relevé de la tension exacte de bascule de \texttt{BuckEN} \\
+    3.6         & Hystérésis                         & Tension de retour supérieure au seuil de bascule & 3,279 V         & \OK           & Alimentation remontée, relevé de la tension de redémarrage                                                                   \\
+\end{longtable}
+}
 
 \subsection{Bloc 4. Alimentations sur USB}
 
@@ -241,34 +241,34 @@ Protocole : câble USB branché, alimentation de laboratoire débranchée, batte
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 4 -- Alimentations sur USB}
-\label{tab:ann_mesures_hw_b4} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 4 -- Alimentations sur USB (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        4.1 & \texttt{VBUS} - \texttt{GND}  & 5,0 à 5,5 V & 5,256 V & \OK & \\
-        4.2 & \texttt{VBatP} - \texttt{GND} & 4,2 V       & 4,194 V & \OK & Tension imposée par le MAX77757 en l'absence de batterie \cite{analog_MAX77757} \\
-        4.3 & \texttt{VSys} - \texttt{GND}  & 4,2 V       & 4,194 V & \OK & \\
-        4.4 & \texttt{+3.3V} - \texttt{GND} & 3,345 V     & 3,339 V & \OK & \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 4 -- Alimentations sur USB}
+    \label{tab:ann_mesures_hw_b4}                                                                                                                                                              \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}      & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                              \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 4 -- Alimentations sur USB (suite)}                                                                                                                                        \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}      & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                              \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                        \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    4.1         & \texttt{VBUS} - \texttt{GND}  & 5,0 à 5,5 V              & 5,256 V         & \OK           &                                                                                 \\
+    4.2         & \texttt{VBatP} - \texttt{GND} & 4,2 V                    & 4,194 V         & \OK           & Tension imposée par le MAX77757 en l'absence de batterie \cite{analog_MAX77757} \\
+    4.3         & \texttt{VSys} - \texttt{GND}  & 4,2 V                    & 4,194 V         & \OK           &                                                                                 \\
+    4.4         & \texttt{+3.3V} - \texttt{GND} & 3,345 V                  & 3,339 V         & \OK           &                                                                                 \\
+\end{longtable}
+}
 
 \subsection{Bloc 5. \gls{strapping} et mux USB pour le flash}
 
@@ -278,108 +278,108 @@ Protocole : USB branché, rail \texttt{+3.3V} actif. Seuils du module ESP32-WROV
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 5 -- \gls{strapping} et mux USB pour le flash}
-\label{tab:ann_mesures_hw_b5} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 5 -- \gls{strapping} et mux USB pour le flash (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        5.1 & \texttt{fIO0}                  & Niveau haut, $>$ 2,475 V & 3,335 V & \OK & IO0, sélectionne le boot SPI \\
-        5.2 & \texttt{DispRST}               & Niveau bas, $<$ 0,825 V  & 0,5 mV  & \OK & IO2, participe au mode de boot \\
-        5.3 & \texttt{SPI.DC}                & Niveau bas, $<$ 0,825 V  & 0,5 mV  & \OK & IO12 (MTDI), fixe VDD\_SDIO à 3,3 V. Un niveau haut au reset basculerait la flash et la \gls{psram} sur le LDO 1,8 V interne et rendrait le module inopérant \cite{ESP32_Datasheet} \\
-        5.4 & \texttt{SPI.CS}                & Niveau haut, $>$ 2,475 V & 3,329 V & \OK & IO15 (MTDO), log de boot actif \\
-        5.5 & \texttt{SD.CS}                 & Niveau haut, $>$ 2,475 V & 3,336 V & \OK & IO5, timing SDIO slave \\
-        5.6 & \texttt{fEN}                   & Niveau haut, $>$ 2,475 V & 3,335 V & \OK & EN, module hors reset \\
-        5.7 & \texttt{USBDIR} - \texttt{GND} & Niveau bas, environ 0 V  & 0,001 V & \OK & Mux orienté vers le CP2102N, condition nécessaire au flash \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 5 -- \gls{strapping} et mux USB pour le flash}
+    \label{tab:ann_mesures_hw_b5}                                                                                                                                                                                                                                                                   \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}       & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                  \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 5 -- \gls{strapping} et mux USB pour le flash (suite)}                                                                                                                                                                                                                          \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}       & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                  \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                             \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    5.1         & \texttt{fIO0}                  & Niveau haut, $>$ 2,475 V & 3,335 V         & \OK           & IO0, sélectionne le boot SPI                                                                                                                                                        \\
+    5.2         & \texttt{DispRST}               & Niveau bas, $<$ 0,825 V  & 0,5 mV          & \OK           & IO2, participe au mode de boot                                                                                                                                                      \\
+    5.3         & \texttt{SPI.DC}                & Niveau bas, $<$ 0,825 V  & 0,5 mV          & \OK           & IO12 (MTDI), fixe VDD\_SDIO à 3,3 V. Un niveau haut au reset basculerait la flash et la \gls{psram} sur le LDO 1,8 V interne et rendrait le module inopérant \cite{ESP32_Datasheet} \\
+    5.4         & \texttt{SPI.CS}                & Niveau haut, $>$ 2,475 V & 3,329 V         & \OK           & IO15 (MTDO), log de boot actif                                                                                                                                                      \\
+    5.5         & \texttt{SD.CS}                 & Niveau haut, $>$ 2,475 V & 3,336 V         & \OK           & IO5, timing SDIO slave                                                                                                                                                              \\
+    5.6         & \texttt{fEN}                   & Niveau haut, $>$ 2,475 V & 3,335 V         & \OK           & EN, module hors reset                                                                                                                                                               \\
+    5.7         & \texttt{USBDIR} - \texttt{GND} & Niveau bas, environ 0 V  & 0,001 V         & \OK           & Mux orienté vers le CP2102N, condition nécessaire au flash                                                                                                                          \\
+\end{longtable}
+}
 
 \subsection{Bloc 6. Potentiomètre de volume}
 
 Protocole : USB branché, rail \texttt{+3.3V} actif.
 
-{\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 6 -- Potentiomètre de volume}
-\label{tab:ann_mesures_hw_b6} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 6 -- Potentiomètre de volume (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        6.1 & \texttt{Vol} - \texttt{GND} & 0,147 V $\pm$ 30 \% & 0,141 V & \OK & Potentiomètre R13 en butée basse. Bornes calculées pour rester dans la plage linéaire de l'\gls{adc} \\
-        6.2 & \texttt{Vol} - \texttt{GND} & 2,518 V $\pm$ 30 \% & 2,582 V & \OK & Potentiomètre R13 en butée haute \\
-        6.3 & \texttt{Vol} - \texttt{GND} & Valeur intermédiaire entre 6.1 et 6.2 & 1,380 V & \OK & Position médiane. Vérifie l'absence de discontinuité de la piste \\
+    {\scriptsize
+        \setlength{\tabcolsep}{3pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.045\textwidth}
+            >{\raggedright\arraybackslash}p{0.190\textwidth}
+            >{\raggedright\arraybackslash}p{0.175\textwidth}
+            >{\raggedright\arraybackslash}p{0.080\textwidth}
+            >{\centering\arraybackslash}p{0.052\textwidth}
+            >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+            \caption{Bloc 6 -- Potentiomètre de volume}
+            \label{tab:ann_mesures_hw_b6}                                                                                                                                                                                              \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}    & \textbf{Valeur attendue}              & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                   \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc 6 -- Potentiomètre de volume (suite)}                                                                                                                                                                      \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}    & \textbf{Valeur attendue}              & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                   \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                        \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            6.1         & \texttt{Vol} - \texttt{GND} & 0,147 V $\pm$ 30 \%                   & 0,141 V         & \OK           & Potentiomètre R13 en butée basse. Bornes calculées pour rester dans la plage linéaire de l'\gls{adc} \\
+            6.2         & \texttt{Vol} - \texttt{GND} & 2,518 V $\pm$ 30 \%                   & 2,582 V         & \OK           & Potentiomètre R13 en butée haute                                                                     \\
+            6.3         & \texttt{Vol} - \texttt{GND} & Valeur intermédiaire entre 6.1 et 6.2 & 1,380 V         & \OK           & Position médiane. Vérifie l'absence de discontinuité de la piste                                     \\
         \end{longtable}
-        }
+    }
 
 \subsection{Bloc 7. Bouton de reset matériel S1}
 
 Protocole : USB branché, appui maintenu sur S1.
 
-{\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 7 -- Bouton de reset matériel S1}
-\label{tab:ann_mesures_hw_b7} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 7 -- Bouton de reset matériel S1 (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        7.1 & \texttt{BuckEN} - \texttt{GND} & Niveau bas, $<$ 0,4 V & 0,001 V & \OK & \\
-        7.2 & \texttt{+3.3V} - \texttt{GND}  & 0 V                   & 0,003 V & \OK & Le rail s'effondre, le force-reset matériel est fonctionnel \\
+    {\scriptsize
+        \setlength{\tabcolsep}{3pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.045\textwidth}
+            >{\raggedright\arraybackslash}p{0.190\textwidth}
+            >{\raggedright\arraybackslash}p{0.175\textwidth}
+            >{\raggedright\arraybackslash}p{0.080\textwidth}
+            >{\centering\arraybackslash}p{0.052\textwidth}
+            >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+            \caption{Bloc 7 -- Bouton de reset matériel S1}
+            \label{tab:ann_mesures_hw_b7}                                                                                                                                           \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}       & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                          \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc 7 -- Bouton de reset matériel S1 (suite)}                                                                                                               \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}       & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                          \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                     \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            7.1         & \texttt{BuckEN} - \texttt{GND} & Niveau bas, $<$ 0,4 V    & 0,001 V         & \OK           &                                                             \\
+            7.2         & \texttt{+3.3V} - \texttt{GND}  & 0 V                      & 0,003 V         & \OK           & Le rail s'effondre, le force-reset matériel est fonctionnel \\
         \end{longtable}
-        }
+    }
 
 \subsection{Bloc 8. Pull-ups et pull-downs de signaux}
 
@@ -389,40 +389,40 @@ Protocole : USB branché, rail \texttt{+3.3V} actif. Au \gls{por}, les I/O du PI
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 8 -- Pull-ups et pull-downs de signaux}
-\label{tab:ann_mesures_hw_b8} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 8 -- Pull-ups et pull-downs de signaux (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        8.1  & \texttt{BatAlrt} - \texttt{GND}  & Niveau haut & 3,334 V & \OK & Sortie ALRT du MAX17260, open-drain active basse \cite{analog_MAX17260} \\
-        8.2  & \texttt{SDA} - \texttt{GND}      & Niveau haut & 3,336 V & \OK & Bus au repos, aucun esclave ne tire la ligne \\
-        8.3  & \texttt{SCL} - \texttt{GND}      & Niveau haut & 3,336 V & \OK & \\
-        8.4  & \texttt{DACMute} - \texttt{GND}  & Niveau bas, $<$ 0,3 $\times$ DVDD = 1,00 V \cite{TI_PCM5242} & 0,353 V & \OK & Pont entre la pull-up interne de 100 k$\Omega$ de l'expanseur et la pull-down externe de 10 k$\Omega$, soit 3,345 $\times$ 10 / 110 = 0,304 V. Le \gls{DAC} est muet au \gls{por} \\
-        8.5  & \texttt{AmpSHDN} - \texttt{GND}  & Niveau bas, $<$ 0,4 V & 0,361 V & \OK & Même pont diviseur qu'au point 8.4 \\
-        8.6  & \texttt{SD.CS}                   & Niveau haut & 3,336 V & \OK & Doublon du point 5.5, conservé pour la cohérence du bloc \\
-        8.7  & \texttt{SD.MOSI}                 & Niveau haut & 3,336 V & \OK & \\
-        8.8  & \texttt{SD.MISO}                 & Niveau haut & 3,336 V & \OK & \\
-        8.9  & \texttt{SD.Detect}               & Niveau haut & 3,336 V & \OK & Aucune carte insérée \\
-        8.10 & \texttt{SD.Detect}               & Niveau bas  & 0,001 V & \OK & Carte microSD insérée \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 8 -- Pull-ups et pull-downs de signaux}
+    \label{tab:ann_mesures_hw_b8}                                                                                                                                                                                                                                                                                                      \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}        & \textbf{Valeur attendue}                                     & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 8 -- Pull-ups et pull-downs de signaux (suite)}                                                                                                                                                                                                                                                                    \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}        & \textbf{Valeur attendue}                                     & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                                                \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    8.1         & \texttt{BatAlrt} - \texttt{GND} & Niveau haut                                                  & 3,334 V         & \OK           & Sortie ALRT du MAX17260, open-drain active basse \cite{analog_MAX17260}                                                                                                           \\
+    8.2         & \texttt{SDA} - \texttt{GND}     & Niveau haut                                                  & 3,336 V         & \OK           & Bus au repos, aucun esclave ne tire la ligne                                                                                                                                      \\
+    8.3         & \texttt{SCL} - \texttt{GND}     & Niveau haut                                                  & 3,336 V         & \OK           &                                                                                                                                                                                   \\
+    8.4         & \texttt{DACMute} - \texttt{GND} & Niveau bas, $<$ 0,3 $\times$ DVDD = 1,00 V \cite{TI_PCM5242} & 0,353 V         & \OK           & Pont entre la pull-up interne de 100 k$\Omega$ de l'expanseur et la pull-down externe de 10 k$\Omega$, soit 3,345 $\times$ 10 / 110 = 0,304 V. Le \gls{DAC} est muet au \gls{por} \\
+    8.5         & \texttt{AmpSHDN} - \texttt{GND} & Niveau bas, $<$ 0,4 V                                        & 0,361 V         & \OK           & Même pont diviseur qu'au point 8.4                                                                                                                                                \\
+    8.6         & \texttt{SD.CS}                  & Niveau haut                                                  & 3,336 V         & \OK           & Doublon du point 5.5, conservé pour la cohérence du bloc                                                                                                                          \\
+    8.7         & \texttt{SD.MOSI}                & Niveau haut                                                  & 3,336 V         & \OK           &                                                                                                                                                                                   \\
+    8.8         & \texttt{SD.MISO}                & Niveau haut                                                  & 3,336 V         & \OK           &                                                                                                                                                                                   \\
+    8.9         & \texttt{SD.Detect}              & Niveau haut                                                  & 3,336 V         & \OK           & Aucune carte insérée                                                                                                                                                              \\
+    8.10        & \texttt{SD.Detect}              & Niveau bas                                                   & 0,001 V         & \OK           & Carte microSD insérée                                                                                                                                                             \\
+\end{longtable}
+}
 
 \subsection{Bloc 9. Boutons}
 
@@ -432,42 +432,42 @@ Protocole : USB branché, rail \texttt{+3.3V} actif. Seuils du PI4IOE5V9554, VIL
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 9 -- Boutons}
-\label{tab:ann_mesures_hw_b9} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 9 -- Boutons (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        9.1  & \texttt{bA} - \texttt{GND} & Niveau bas, $<$ 0,825 V  & 0,009 V & \OK  & Bouton au repos \\
-        9.2  & \texttt{bA} - \texttt{GND} & Niveau haut, $>$ 2,475 V & 2,221 V & \NOK & Bouton appuyé. Le bouton A est référencé à \texttt{VSys} à travers une diode Zener de 3,3 V et non au rail \texttt{+3.3V}, car il doit agir rail éteint. Le point 2.1 de la section~\ref{ann:mesures_sw} montre que la détection reste fiable \\
-        9.3  & \texttt{bB} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V & \OK  & Bouton au repos \\
-        9.4  & \texttt{bB} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V & \OK  & Bouton appuyé \\
-        9.5  & \texttt{bU} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V & \OK  & Bouton au repos \\
-        9.6  & \texttt{bU} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V & \OK  & Bouton appuyé \\
-        9.7  & \texttt{bD} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V & \OK  & Bouton au repos \\
-        9.8  & \texttt{bD} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V & \OK  & Bouton appuyé \\
-        9.9  & \texttt{bL} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V & \OK  & Bouton au repos \\
-        9.10 & \texttt{bL} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V & \OK  & Bouton appuyé \\
-        9.11 & \texttt{bR} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V & \OK  & Bouton au repos \\
-        9.12 & \texttt{bR} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V & \OK  & Bouton appuyé \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 9 -- Boutons}
+    \label{tab:ann_mesures_hw_b9}                                                                                                                                                                                                                                                                                                                         \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}   & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                                                                            \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 9 -- Boutons (suite)}                                                                                                                                                                                                                                                                                                                 \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}   & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                                                                            \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                                                                   \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    9.1         & \texttt{bA} - \texttt{GND} & Niveau bas, $<$ 0,825 V  & 0,009 V         & \OK           & Bouton au repos                                                                                                                                                                                                                               \\
+    9.2         & \texttt{bA} - \texttt{GND} & Niveau haut, $>$ 2,475 V & 2,221 V         & \NOK          & Bouton appuyé. Le bouton A est référencé à \texttt{VSys} à travers une diode Zener de 3,3 V et non au rail \texttt{+3.3V}, car il doit agir rail éteint. Le point 2.1 de la section~\ref{ann:mesures_sw} montre que la détection reste fiable \\
+    9.3         & \texttt{bB} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V         & \OK           & Bouton au repos                                                                                                                                                                                                                               \\
+    9.4         & \texttt{bB} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V         & \OK           & Bouton appuyé                                                                                                                                                                                                                                 \\
+    9.5         & \texttt{bU} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V         & \OK           & Bouton au repos                                                                                                                                                                                                                               \\
+    9.6         & \texttt{bU} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V         & \OK           & Bouton appuyé                                                                                                                                                                                                                                 \\
+    9.7         & \texttt{bD} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V         & \OK           & Bouton au repos                                                                                                                                                                                                                               \\
+    9.8         & \texttt{bD} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V         & \OK           & Bouton appuyé                                                                                                                                                                                                                                 \\
+    9.9         & \texttt{bL} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V         & \OK           & Bouton au repos                                                                                                                                                                                                                               \\
+    9.10        & \texttt{bL} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V         & \OK           & Bouton appuyé                                                                                                                                                                                                                                 \\
+    9.11        & \texttt{bR} - \texttt{GND} & Niveau haut, $>$ 1,8 V   & 3,336 V         & \OK           & Bouton au repos                                                                                                                                                                                                                               \\
+    9.12        & \texttt{bR} - \texttt{GND} & Niveau bas, $<$ 0,81 V   & 0,000 V         & \OK           & Bouton appuyé                                                                                                                                                                                                                                 \\
+\end{longtable}
+}
 
 \subsection{Bloc 10. Chaîne audio, alimentations et polarisation}
 
@@ -477,77 +477,77 @@ Protocole : USB branché, rail \texttt{+3.3V} actif, casque débranché. Les poi
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 10 -- Chaîne audio, alimentations et polarisation}
-\label{tab:ann_mesures_hw_b10} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 10 -- Chaîne audio, alimentations et polarisation (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        10.1  & AVDD du PCM5242, pin 14   & 3,345 V & 3,338 V & \OK & \\
-        10.2  & DVDD du PCM5242, pin 4    & 3,345 V & 3,336 V & \OK & \\
-        10.3  & CPVDD du PCM5242, pin 5   & 3,345 V & 3,336 V & \OK & Alimentation de la pompe de charge du \gls{DAC} \\
-        10.4  & VCOM du PCM5242, pin 16   & 0 V     & 0,000 V & \OK & \\
-        10.5  & PVDD du MAX97220A, pin 1  & 3,345 V & 3,336 V & \OK & Fixe le plafond d'écrêtage de l'étage de sortie. Valeur reprise au bloc B de la section~\ref{ann:mesures_audio} \\
-        10.6  & SVDD du MAX97220A, pin 13 & 3,345 V & 3,336 V & \OK & \\
-        10.7  & SVDD2 du MAX97220A, pin 9 & 3,345 V & 3,336 V & \OK & \\
-        10.8  & PVSS du MAX97220A, pin 5  & Environ $-3,3$ V & $-3,303$ V & \OK & Rail négatif produit par la pompe de charge interne \cite{analog_MAX97220A} \\
-        10.9  & XSMT du PCM5242, pin 1    & Niveau haut, $>$ 2,0 V, en lecture \cite{TI_PCM5242} & 3,333 V & \OK & Le \gls{DAC} n'est pas muté \\
-        10.10 & SHDN du MAX97220A, pin 16 & Niveau haut, $>$ 1,4 V, en lecture \cite{analog_MAX97220A} & 3,333 V & \OK & L'amplificateur est actif \\
-        10.11 & Jack tip - jack sleeve    & $<$ 350 $\mu$V & 55 $\mu$V & \OK & VOS maximal du MAX97220A \cite{analog_MAX97220A}. La topologie \gls{directdrive} supprime les condensateurs de liaison, l'offset est donc directement mesurable au connecteur \\
-        10.12 & Jack ring - jack sleeve   & $<$ 350 $\mu$V & 55 $\mu$V & \OK & \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 10 -- Chaîne audio, alimentations et polarisation}
+    \label{tab:ann_mesures_hw_b10}                                                                                                                                                                                                                                                                                         \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}  & \textbf{Valeur attendue}                                   & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                            \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 10 -- Chaîne audio, alimentations et polarisation (suite)}                                                                                                                                                                                                                                             \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}  & \textbf{Valeur attendue}                                   & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                            \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                                    \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    10.1        & AVDD du PCM5242, pin 14   & 3,345 V                                                    & 3,338 V         & \OK           &                                                                                                                                                                               \\
+    10.2        & DVDD du PCM5242, pin 4    & 3,345 V                                                    & 3,336 V         & \OK           &                                                                                                                                                                               \\
+    10.3        & CPVDD du PCM5242, pin 5   & 3,345 V                                                    & 3,336 V         & \OK           & Alimentation de la pompe de charge du \gls{DAC}                                                                                                                               \\
+    10.4        & VCOM du PCM5242, pin 16   & 0 V                                                        & 0,000 V         & \OK           &                                                                                                                                                                               \\
+    10.5        & PVDD du MAX97220A, pin 1  & 3,345 V                                                    & 3,336 V         & \OK           & Fixe le plafond d'écrêtage de l'étage de sortie. Valeur reprise au bloc B de la section~\ref{ann:mesures_audio}                                                               \\
+    10.6        & SVDD du MAX97220A, pin 13 & 3,345 V                                                    & 3,336 V         & \OK           &                                                                                                                                                                               \\
+    10.7        & SVDD2 du MAX97220A, pin 9 & 3,345 V                                                    & 3,336 V         & \OK           &                                                                                                                                                                               \\
+    10.8        & PVSS du MAX97220A, pin 5  & Environ $-3,3$ V                                           & $-3,303$ V      & \OK           & Rail négatif produit par la pompe de charge interne \cite{analog_MAX97220A}                                                                                                   \\
+    10.9        & XSMT du PCM5242, pin 1    & Niveau haut, $>$ 2,0 V, en lecture \cite{TI_PCM5242}       & 3,333 V         & \OK           & Le \gls{DAC} n'est pas muté                                                                                                                                                   \\
+    10.10       & SHDN du MAX97220A, pin 16 & Niveau haut, $>$ 1,4 V, en lecture \cite{analog_MAX97220A} & 3,333 V         & \OK           & L'amplificateur est actif                                                                                                                                                     \\
+    10.11       & Jack tip - jack sleeve    & $<$ 350 $\mu$V                                             & 55 $\mu$V       & \OK           & VOS maximal du MAX97220A \cite{analog_MAX97220A}. La topologie \gls{directdrive} supprime les condensateurs de liaison, l'offset est donc directement mesurable au connecteur \\
+    10.12       & Jack ring - jack sleeve   & $<$ 350 $\mu$V                                             & 55 $\mu$V       & \OK           &                                                                                                                                                                               \\
+\end{longtable}
+}
 
 \subsection{Bloc 11. Découpage du buck TPS62A01}
 
 Protocole : oscilloscope Tektronix DPO 2014B, alimentation sur batterie, lecture d'un fichier à 1 kHz en cours. Le point 11.1 est relevé sur le nœud SW, pin 2. Le point 11.2 est relevé sur le rail \texttt{+3.3V}, sonde 10:1, pointe posée directement sur les pads de C10, couplage alternatif.
 
-{\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 11 -- Découpage du buck TPS62A01}
-\label{tab:ann_mesures_hw_b11} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 11 -- Découpage du buck TPS62A01 (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        11.1 & Fréquence de découpage sur SW, pin 2, en lecture             & 2,4 MHz typique en mode \gls{pwm} & 2,083 MHz & \OK & Le TPS62A0x n'est pas à fréquence fixe. Le temps de blocage est fixé par un circuit adaptatif à partir du rapport VIN sur VOUT, ce qui ne rend la fréquence qu'approximativement constante \cite{TI_TPS62A01} \\
-        11.2 & Ondulation crête à crête du rail \texttt{+3.3V}, en lecture & Quelques millivolts                & 9,60 mV   & \OK & Soit 0,29 \% du rail \\
+    {\scriptsize
+        \setlength{\tabcolsep}{3pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.045\textwidth}
+            >{\raggedright\arraybackslash}p{0.190\textwidth}
+            >{\raggedright\arraybackslash}p{0.175\textwidth}
+            >{\raggedright\arraybackslash}p{0.080\textwidth}
+            >{\centering\arraybackslash}p{0.052\textwidth}
+            >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+            \caption{Bloc 11 -- Découpage du buck TPS62A01}
+            \label{tab:ann_mesures_hw_b11}                                                                                                                                                                                                                                                                                                                                  \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                                    & \textbf{Valeur attendue}          & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                                            \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc 11 -- Découpage du buck TPS62A01 (suite)}                                                                                                                                                                                                                                                                                                       \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                                    & \textbf{Valeur attendue}          & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                                            \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                                                                             \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            11.1        & Fréquence de découpage sur SW, pin 2, en lecture            & 2,4 MHz typique en mode \gls{pwm} & 2,083 MHz       & \OK           & Le TPS62A0x n'est pas à fréquence fixe. Le temps de blocage est fixé par un circuit adaptatif à partir du rapport VIN sur VOUT, ce qui ne rend la fréquence qu'approximativement constante \cite{TI_TPS62A01} \\
+            11.2        & Ondulation crête à crête du rail \texttt{+3.3V}, en lecture & Quelques millivolts               & 9,60 mV         & \OK           & Soit 0,29 \% du rail                                                                                                                                                                                          \\
         \end{longtable}
-        }
+    }
 
 \subsection{Bloc 12. Filtre RC différentiel}
 
@@ -557,33 +557,33 @@ Protocole : oscilloscope Tektronix DPO 2014B, deux voies acquises simultanément
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.190\textwidth}
->{\raggedright\arraybackslash}p{0.175\textwidth}
->{\raggedright\arraybackslash}p{0.080\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
-\caption{Bloc 12 -- Filtre RC différentiel}
-\label{tab:ann_mesures_hw_b12} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 12 -- Filtre RC différentiel (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        12.1 & Fondamentale 1 kHz en amont du filtre, sur \texttt{OUTLP}                              & Environ 1,9 Vrms & 1,88 Vrms & \OK & Une seule branche, soit la moitié de l'amplitude différentielle de 3,74 Vrms. Sert de référence d'entrée à tous les rapports du bloc \\
-        12.2 & Fondamentale 1 kHz en aval du filtre, sur \texttt{INR+}                                & Un tiers du point 12.1, soit $-9,54$ dB, le rapport du pont diviseur d'entrée de l'amplificateur valant RF / (RIN + RF) = 1/3 pour un gain de 0,5 & 0,62 Vrms & \OK & Le nœud \texttt{INR+} n'est pas la sortie du filtre mais un point interne du réseau d'entrée du MAX97220A. L'atténuation observée est plate et purement résistive, sans rapport avec le filtre \\
-        12.3 & Transparence du filtre dans la bande audio, rapport \texttt{INR+} sur \texttt{OUTLP} de 1 kHz à 20 kHz & Écart inférieur à 0,1 dB & 0,01 dB & \OK & Série complète au tableau~\ref{tab:ann_filtre_rc} \\
-        12.4 & Capture avant et après le filtre, balayage à 90 kHz                                    & Paliers de reconstruction nettement visibles sur \texttt{OUTLP}, lissés sur \texttt{INR+} & Conforme & \OK & Résultat principal du bloc, figure~\ref{filtre_rc_capture.PNG}. En amont du filtre les paliers de conversion du \gls{DAC} sont visibles, en aval le signal est lisse \\
-    \end{longtable}
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.190\textwidth}
+    >{\raggedright\arraybackslash}p{0.175\textwidth}
+    >{\raggedright\arraybackslash}p{0.080\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.345\textwidth}@{}}
+    \caption{Bloc 12 -- Filtre RC différentiel}
+    \label{tab:ann_mesures_hw_b12}                                                                                                                                                                                                                                                                                                                                                                                                                                                                              \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}                                                                               & \textbf{Valeur attendue}                                                                                                                          & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                             \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 12 -- Filtre RC différentiel (suite)}                                                                                                                                                                                                                                                                                                                                                                                                                                                       \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}                                                                               & \textbf{Valeur attendue}                                                                                                                          & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                                                                                                                             \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                                                                                                                                                                                                                         \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    12.1        & Fondamentale 1 kHz en amont du filtre, sur \texttt{OUTLP}                                              & Environ 1,9 Vrms                                                                                                                                  & 1,88 Vrms       & \OK           & Une seule branche, soit la moitié de l'amplitude différentielle de 3,74 Vrms. Sert de référence d'entrée à tous les rapports du bloc                                                           \\
+    12.2        & Fondamentale 1 kHz en aval du filtre, sur \texttt{INR+}                                                & Un tiers du point 12.1, soit $-9,54$ dB, le rapport du pont diviseur d'entrée de l'amplificateur valant RF / (RIN + RF) = 1/3 pour un gain de 0,5 & 0,62 Vrms       & \OK           & Le nœud \texttt{INR+} n'est pas la sortie du filtre mais un point interne du réseau d'entrée du MAX97220A. L'atténuation observée est plate et purement résistive, sans rapport avec le filtre \\
+    12.3        & Transparence du filtre dans la bande audio, rapport \texttt{INR+} sur \texttt{OUTLP} de 1 kHz à 20 kHz & Écart inférieur à 0,1 dB                                                                                                                          & 0,01 dB         & \OK           & Série complète au tableau~\ref{tab:ann_filtre_rc}                                                                                                                                              \\
+    12.4        & Capture avant et après le filtre, balayage à 90 kHz                                                    & Paliers de reconstruction nettement visibles sur \texttt{OUTLP}, lissés sur \texttt{INR+}                                                         & Conforme        & \OK           & Résultat principal du bloc, figure~\ref{filtre_rc_capture.PNG}. En amont du filtre les paliers de conversion du \gls{DAC} sont visibles, en aval le signal est lisse                           \\
+\end{longtable}
 }
 
 \fig[H, width=1\textwidth]{Signal avant et après le filtre RC, balayage à 90 kHz}{filtre_rc_capture.PNG}
@@ -681,92 +681,92 @@ Protocole : démarrage par le bouton A, batterie chargée, carte microSD insér�
         >{\centering\arraybackslash}p{0.055\textwidth}
         >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
         \caption{Bloc 2 -- Statistics / Inputs}
-        \label{tab:ann_mesures_sw_b2} \\
+        \label{tab:ann_mesures_sw_b2}                                                                                                                                                                                                                                             \\
         \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+        \textbf{N°} & \textbf{Comportement attendu}                                                         & \textbf{État} & \textbf{Remarques}                                                                                                                                  \\
         \midrule
         \endfirsthead
-        \caption[]{Bloc 2 -- Statistics / Inputs (suite)} \\
+        \caption[]{Bloc 2 -- Statistics / Inputs (suite)}                                                                                                                                                                                                                         \\
         \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+        \textbf{N°} & \textbf{Comportement attendu}                                                         & \textbf{État} & \textbf{Remarques}                                                                                                                                  \\
         \midrule
         \endhead
         \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
+        \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                       \\
         \endfoot
         \bottomrule
         \endlastfoot
-        2.1 & Chaque appui incrémente le compteur du bouton concerné de 1, et d'aucun autre & \OK & Malgré la faible tension mesurée sur \texttt{bA} au point 9.2 du tableau~\ref{tab:ann_mesures_hw_b9}, l'ESP32 détecte l'appui de manière répétitive \\
-        2.2 & Potentiomètre immobile pendant 60 s, la valeur affichée ne dérive pas          & \OK & La valeur dérive de $\pm$ 3 mV. Le volume fonctionne par paliers et une dérive de cette amplitude ne suffit pas à franchir un palier \\
-        2.3 & En butée basse puis en butée haute, les valeurs affichées encadrent la plage attendue & \OK & \\
-        \end{longtable}
-        }
+        2.1         & Chaque appui incrémente le compteur du bouton concerné de 1, et d'aucun autre         & \OK           & Malgré la faible tension mesurée sur \texttt{bA} au point 9.2 du tableau~\ref{tab:ann_mesures_hw_b9}, l'ESP32 détecte l'appui de manière répétitive \\
+        2.2         & Potentiomètre immobile pendant 60 s, la valeur affichée ne dérive pas                 & \OK           & La valeur dérive de $\pm$ 3 mV. Le volume fonctionne par paliers et une dérive de cette amplitude ne suffit pas à franchir un palier                \\
+        2.3         & En butée basse puis en butée haute, les valeurs affichées encadrent la plage attendue & \OK           &                                                                                                                                                     \\
+    \end{longtable}
+}
 
 \subsection{Bloc 3. Statistics / Peripherals}
 
 {\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 3 -- Statistics / Peripherals}
-\label{tab:ann_mesures_sw_b3} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{longtable}{@{}
+        >{\raggedright\arraybackslash}p{0.045\textwidth}
+        >{\raggedright\arraybackslash}p{0.400\textwidth}
+        >{\centering\arraybackslash}p{0.055\textwidth}
+        >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+        \caption{Bloc 3 -- Statistics / Peripherals}
+        \label{tab:ann_mesures_sw_b3}                                                                                                                                                                \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                                    & \textbf{État} & \textbf{Remarques}                                          \\
         \midrule
         \endfirsthead
-        \caption[]{Bloc 3 -- Statistics / Peripherals (suite)} \\
+        \caption[]{Bloc 3 -- Statistics / Peripherals (suite)}                                                                                                                                       \\
         \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+        \textbf{N°} & \textbf{Comportement attendu}                                                                    & \textbf{État} & \textbf{Remarques}                                          \\
         \midrule
         \endhead
         \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
+        \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                                                          \\
         \endfoot
         \bottomrule
         \endlastfoot
-        3.1 & Les registres relus sur le PCM5242, le MAX17260 et l'expanseur correspondent aux valeurs écrites & \OK & Valide au passage les adresses \gls{i2c} 0x4C, 0x36 et 0x38 \\
-        3.2 & L'état de montage de la carte SD suit l'insertion et le retrait                                  & \OK & \\
-        3.3 & L'état du Bluetooth suit la connexion et la déconnexion                                          & \OK & \\
-        \end{longtable}
-        }
+        3.1         & Les registres relus sur le PCM5242, le MAX17260 et l'expanseur correspondent aux valeurs écrites & \OK           & Valide au passage les adresses \gls{i2c} 0x4C, 0x36 et 0x38 \\
+        3.2         & L'état de montage de la carte SD suit l'insertion et le retrait                                  & \OK           &                                                             \\
+        3.3         & L'état du Bluetooth suit la connexion et la déconnexion                                          & \OK           &                                                             \\
+    \end{longtable}
+}
 
 \subsection{Bloc 4. Statistics / Storage}
 
 {\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 4 -- Statistics / Storage}
-\label{tab:ann_mesures_sw_b4} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{longtable}{@{}
+        >{\raggedright\arraybackslash}p{0.045\textwidth}
+        >{\raggedright\arraybackslash}p{0.400\textwidth}
+        >{\centering\arraybackslash}p{0.055\textwidth}
+        >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+        \caption{Bloc 4 -- Statistics / Storage}
+        \label{tab:ann_mesures_sw_b4}                                                                                                                       \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                                    & \textbf{État} & \textbf{Remarques} \\
         \midrule
         \endfirsthead
-        \caption[]{Bloc 4 -- Statistics / Storage (suite)} \\
+        \caption[]{Bloc 4 -- Statistics / Storage (suite)}                                                                                                  \\
         \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+        \textbf{N°} & \textbf{Comportement attendu}                                                                    & \textbf{État} & \textbf{Remarques} \\
         \midrule
         \endhead
         \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
+        \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                 \\
         \endfoot
         \bottomrule
         \endlastfoot
-        4.1 & Présence de la carte correctement indiquée, carte présente puis absente             & \OK & \\
-        4.2 & Fréquence \gls{spi} affichée égale à 40 MHz                                         & \OK & \\
-        4.3 & Capacité totale et utilisée conformes à celles vues sur un PC                       & \OK & \\
-        4.4 & Nombre de pistes égal au nombre de fichiers \texttt{.wav} et \texttt{.mp3} présents sur la carte & \OK & \\
-        4.5 & Le retrait de la carte met l'affichage à jour                                       & \OK & \\
-        \end{longtable}
-        }
+        4.1         & Présence de la carte correctement indiquée, carte présente puis absente                          & \OK           &                    \\
+        4.2         & Fréquence \gls{spi} affichée égale à 40 MHz                                                      & \OK           &                    \\
+        4.3         & Capacité totale et utilisée conformes à celles vues sur un PC                                    & \OK           &                    \\
+        4.4         & Nombre de pistes égal au nombre de fichiers \texttt{.wav} et \texttt{.mp3} présents sur la carte & \OK           &                    \\
+        4.5         & Le retrait de la carte met l'affichage à jour                                                    & \OK           &                    \\
+    \end{longtable}
+}
 
 \subsection{Bloc 5. Statistics / Battery}
 
@@ -776,380 +776,380 @@ Protocole : batterie branchée.
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 5 -- Statistics / Battery}
-\label{tab:ann_mesures_sw_b5} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 5 -- Statistics / Battery (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        5.1 & L'état de charge affiché suit le branchement et le débranchement de l'USB & \OK & \\
-        5.2 & \texttt{INOKB} au niveau haut, USB débranché                              & \OK & \\
-        5.3 & Mux USB orienté vers le CP2102N, USB débranché                            & \OK & \\
-        5.4 & \texttt{INOKB} passe au niveau bas au branchement de l'USB                & \OK & \\
-        5.5 & Mux USB orienté vers le MAX77757 au branchement                           & \OK & \\
-        5.6 & Mux USB revenu sur le CP2102N au plus tard 10 s après le branchement      & \OK & \\
-        \end{longtable}
-        }
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.400\textwidth}
+    >{\centering\arraybackslash}p{0.055\textwidth}
+    >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+    \caption{Bloc 5 -- Statistics / Battery}
+    \label{tab:ann_mesures_sw_b5}                                                                                                \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                             & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 5 -- Statistics / Battery (suite)}                                                                           \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                             & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                          \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    5.1         & L'état de charge affiché suit le branchement et le débranchement de l'USB & \OK           &                    \\
+    5.2         & \texttt{INOKB} au niveau haut, USB débranché                              & \OK           &                    \\
+    5.3         & Mux USB orienté vers le CP2102N, USB débranché                            & \OK           &                    \\
+    5.4         & \texttt{INOKB} passe au niveau bas au branchement de l'USB                & \OK           &                    \\
+    5.5         & Mux USB orienté vers le MAX77757 au branchement                           & \OK           &                    \\
+    5.6         & Mux USB revenu sur le CP2102N au plus tard 10 s après le branchement      & \OK           &                    \\
+\end{longtable}
+}
 
-        \subsection{Bloc 6. Statistics / Battery / Debug}
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 6 -- Statistics / Battery / Debug}
-\label{tab:ann_mesures_sw_b6} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 6 -- Statistics / Battery / Debug (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        6.1 & Les registres de configuration de la jauge relus sont tous conformes                & \OK & \\
-        6.2 & FullCapR compris entre 855 et 1045 mAh, soit la DesignCap de 950 mAh à $\pm$ 10 \%   & \OK & FullCapR = 1027 mAh. La valeur dépend du modèle ModelGauge configuré et non du seul circuit \cite{analog_MAX17260} \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 7. Storage}
-
-        Protocole : carte microSD de référence insérée.
+\subsection{Bloc 6. Statistics / Battery / Debug}
 
 {\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 7 -- Storage}
-\label{tab:ann_mesures_sw_b7} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{longtable}{@{}
+        >{\raggedright\arraybackslash}p{0.045\textwidth}
+        >{\raggedright\arraybackslash}p{0.400\textwidth}
+        >{\centering\arraybackslash}p{0.055\textwidth}
+        >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+        \caption{Bloc 6 -- Statistics / Battery / Debug}
+        \label{tab:ann_mesures_sw_b6}                                                                                                                                                                                                         \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                      & \textbf{État} & \textbf{Remarques}                                                                                                 \\
         \midrule
         \endfirsthead
-        \caption[]{Bloc 7 -- Storage (suite)} \\
+        \caption[]{Bloc 6 -- Statistics / Battery / Debug (suite)}                                                                                                                                                                            \\
         \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
+        \textbf{N°} & \textbf{Comportement attendu}                                                      & \textbf{État} & \textbf{Remarques}                                                                                                 \\
         \midrule
         \endhead
         \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
+        \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                   \\
         \endfoot
         \bottomrule
         \endlastfoot
-        7.1 & L'arborescence affichée correspond à celle vue sur un PC, sous-dossiers compris & \OK & \\
-        7.2 & Tous les fichiers \texttt{.mp3} présents sont listés, et aucun fichier fantôme  & \OK & \\
-        7.3 & Tous les fichiers \texttt{.wav} présents sont listés, et aucun fichier fantôme  & \OK & \\
-        7.4 & Les fichiers d'une autre extension ne sont pas affichés                         & \OK & \\
-        7.5 & La validation sur une piste ouvre la popup avec les deux actions                & \OK & \\
-        7.6 & Play lance la lecture et bascule sur le menu Music                              & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 8. Music}
-
-        Protocole : piste de référence, casque branché sur le jack, potentiomètre à mi-course.
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 8 -- Music}
-\label{tab:ann_mesures_sw_b8} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 8 -- Music (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        8.1 & Le titre affiché correspond au fichier lancé                                                                                 & \OK & \\
-        8.2 & Conteneur, profondeur, fréquence et débit affichés correspondent à ceux du fichier                                           & \OK & \\
-        8.3 & Depuis la piste n, next passe à n+1 et prev à n-1. Comportement en début et en fin de playlist conforme à la spécification      & \OK & \\
-        8.4 & Le son sort sur la sortie sélectionnée et sur elle seule                                                                     & \OK & \\
-        8.5 & La barre de volume suit le potentiomètre sans saut ni oscillation                                                            & \OK & \\
-        8.6 & Le registre de volume du \gls{DAC} varie de façon monotone entre les deux butées                                             & \OK & \\
-        8.7 & En fin de piste, la lecture enchaîne sur la suivante sans coupure ni doublon                                                 & \OK & \\
-        8.8 & Music / OutputSelection, l'icône change, le son cesse sur l'ancienne sortie et reprend sur la nouvelle, la position de lecture est conservée & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 9. Settings / Bluetooth}
-
-        Protocole : appareil Bluetooth de référence à portée.
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 9 -- Settings / Bluetooth}
-\label{tab:ann_mesures_sw_b9} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 9 -- Settings / Bluetooth (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        9.1 & Le scan liste les appareils à proximité, dont l'appareil de référence               & \OK & \\
-        9.2 & L'appairage aboutit et l'état passe à connecté                                      & \OK & \\
-        9.3 & La déconnexion volontaire aboutit et l'état est mis à jour                          & \OK & \\
-        9.4 & La reconnexion à un appareil connu aboutit sans nouvel appairage                    & \OK & \\
-        9.5 & L'oubli d'un appareil le retire de la liste, et un nouvel appairage est alors exigé & \OK & \\
-        9.6 & L'audio sort sur l'appareil Bluetooth, les deux voies présentes et non inversées    & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 10. Settings / Audio}
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 10 -- Settings / Audio}
-\label{tab:ann_mesures_sw_b10} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 10 -- Settings / Audio (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        10.1 & Bascule jack vers Bluetooth et retour, sans blocage ni redémarrage                & \OK & \\
-        10.2 & Balance à fond à gauche, seule la voie gauche est audible, et réciproquement      & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 11. Settings / Screen}
-
-        Protocole : USB débranché, pour que les temporisations d'extinction ne soient pas inhibées par la présence de l'alimentation externe.
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 11 -- Settings / Screen}
-\label{tab:ann_mesures_sw_b11} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 11 -- Settings / Screen (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        11.1 & La luminosité varie visiblement entre les deux réglages extrêmes                                            & \OK & \\
-        11.2 & Pour un réglage de n minutes, l'écran s'éteint dans la fenêtre attendue, testé sur deux réglages différents & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 12. Settings / Power}
-
-        Protocole : USB débranché, pour que les temporisations d'extinction ne soient pas inhibées par la présence de l'alimentation externe.
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 12 -- Settings / Power}
-\label{tab:ann_mesures_sw_b12} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 12 -- Settings / Power (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        12.1 & L'extinction automatique intervient dans la fenêtre du réglage, testée sur deux réglages différents & \OK & \\
-        12.2 & L'extinction manuelle coupe le rail \texttt{+3.3V}                                                  & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 13. Cas dégradés}
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 13 -- Cas dégradés}
-\label{tab:ann_mesures_sw_b13} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 13 -- Cas dégradés (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        13.1 & Retrait de la carte SD pendant la lecture, arrêt propre et pas de redémarrage                                       & \OK  & \\
-        13.2 & Extinction de l'enceinte Bluetooth pendant la lecture, perte de lien détectée et retour à un état cohérent          & \OK  & \\
-        13.3 & Fichier \texttt{.wav} tronqué ou de taille nulle, refus ou arrêt propre, pas de blocage                            & \NOK & Le firmware lance la lecture au lieu de signaler une erreur. La pipeline audio reste fonctionnelle \\
-        13.4 & Fichier d'extension supportée mais de format non géré, message explicite et pas de blocage                         & \NOK & Le firmware lance la lecture au lieu de signaler une erreur. La pipeline audio reste fonctionnelle \\
-        13.5 & Démarrage sans carte SD, menu Storage cohérent et pas de blocage                                                    & \OK  & \\
-        13.6 & Fichier au nom long et accentué, affichage correct et lecture possible                                             & \OK  & \\
-        13.7 & Appuis rapides et répétés sur les boutons, aucun événement perdu et pas de saturation de la file                    & \OK  & \\
-        13.8 & Décharge sous le seuil de sécurité, extinction propre et pas de corruption de la carte                             & \OK  & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 14. Robustesse et durée}
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 14 -- Robustesse et durée}
-\label{tab:ann_mesures_sw_b14} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 14 -- Robustesse et durée (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        14.1 & Appui sur S1 pendant l'affichage, redémarrage propre, flash et \gls{psram} opérationnelles                & \OK & \\
-        14.2 & Coupure d'alimentation brutale en lecture, au redémarrage le marqueur \gls{nvs} et le verdict d'extinction sont cohérents & \OK & \\
-        14.3 & Extinction normale, verdict d'extinction nominal au redémarrage suivant                                   & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc 15. Absence de bruits parasites}
-
-        Protocole : évaluation à l'oreille, casque branché sur le jack.
-
-{\footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.045\textwidth}
->{\raggedright\arraybackslash}p{0.400\textwidth}
->{\centering\arraybackslash}p{0.055\textwidth}
->{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
-\caption{Bloc 15 -- Absence de bruits parasites}
-\label{tab:ann_mesures_sw_b15} \\
-\toprule
-\textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc 15 -- Absence de bruits parasites (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Comportement attendu} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{4}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        15.1 & Aucun pop audible à l'allumage                          & \OK  & \\
-        15.2 & Aucun pop audible à l'extinction                        & \OK  & \\
-        15.3 & Aucun pop audible au début et à la fin d'une lecture    & \OK  & \\
-        15.4 & Aucun pop audible au changement de sortie                & \OK  & \\
-        15.5 & Aucun pop audible au changement de piste                 & \NOK & Un léger glitch reste audible. L'origine, logicielle ou matérielle, n'a pas pu être établie faute de temps \\
+        6.1         & Les registres de configuration de la jauge relus sont tous conformes               & \OK           &                                                                                                                    \\
+        6.2         & FullCapR compris entre 855 et 1045 mAh, soit la DesignCap de 950 mAh à $\pm$ 10 \% & \OK           & FullCapR = 1027 mAh. La valeur dépend du modèle ModelGauge configuré et non du seul circuit \cite{analog_MAX17260} \\
     \end{longtable}
 }
+
+\subsection{Bloc 7. Storage}
+
+Protocole : carte microSD de référence insérée.
+
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.400\textwidth}
+    >{\centering\arraybackslash}p{0.055\textwidth}
+    >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+    \caption{Bloc 7 -- Storage}
+    \label{tab:ann_mesures_sw_b7}                                                                                                      \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                                   & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 7 -- Storage (suite)}                                                                                              \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                                   & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    7.1         & L'arborescence affichée correspond à celle vue sur un PC, sous-dossiers compris & \OK           &                    \\
+    7.2         & Tous les fichiers \texttt{.mp3} présents sont listés, et aucun fichier fantôme  & \OK           &                    \\
+    7.3         & Tous les fichiers \texttt{.wav} présents sont listés, et aucun fichier fantôme  & \OK           &                    \\
+    7.4         & Les fichiers d'une autre extension ne sont pas affichés                         & \OK           &                    \\
+    7.5         & La validation sur une piste ouvre la popup avec les deux actions                & \OK           &                    \\
+    7.6         & Play lance la lecture et bascule sur le menu Music                              & \OK           &                    \\
+\end{longtable}
+}
+
+\subsection{Bloc 8. Music}
+
+Protocole : piste de référence, casque branché sur le jack, potentiomètre à mi-course.
+
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.400\textwidth}
+    >{\centering\arraybackslash}p{0.055\textwidth}
+    >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+    \caption{Bloc 8 -- Music}
+    \label{tab:ann_mesures_sw_b8}                                                                                                                                                                   \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                                                                                                & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 8 -- Music (suite)}                                                                                                                                                             \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                                                                                                & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                                                             \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    8.1         & Le titre affiché correspond au fichier lancé                                                                                                 & \OK           &                    \\
+    8.2         & Conteneur, profondeur, fréquence et débit affichés correspondent à ceux du fichier                                                           & \OK           &                    \\
+    8.3         & Depuis la piste n, next passe à n+1 et prev à n-1. Comportement en début et en fin de playlist conforme à la spécification                   & \OK           &                    \\
+    8.4         & Le son sort sur la sortie sélectionnée et sur elle seule                                                                                     & \OK           &                    \\
+    8.5         & La barre de volume suit le potentiomètre sans saut ni oscillation                                                                            & \OK           &                    \\
+    8.6         & Le registre de volume du \gls{DAC} varie de façon monotone entre les deux butées                                                             & \OK           &                    \\
+    8.7         & En fin de piste, la lecture enchaîne sur la suivante sans coupure ni doublon                                                                 & \OK           &                    \\
+    8.8         & Music / OutputSelection, l'icône change, le son cesse sur l'ancienne sortie et reprend sur la nouvelle, la position de lecture est conservée & \OK           &                    \\
+\end{longtable}
+}
+
+\subsection{Bloc 9. Settings / Bluetooth}
+
+Protocole : appareil Bluetooth de référence à portée.
+
+{\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{@{}
+    >{\raggedright\arraybackslash}p{0.045\textwidth}
+    >{\raggedright\arraybackslash}p{0.400\textwidth}
+    >{\centering\arraybackslash}p{0.055\textwidth}
+    >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+    \caption{Bloc 9 -- Settings / Bluetooth}
+    \label{tab:ann_mesures_sw_b9}                                                                                                          \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                                       & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc 9 -- Settings / Bluetooth (suite)}                                                                                     \\
+    \toprule
+    \textbf{N°} & \textbf{Comportement attendu}                                                       & \textbf{État} & \textbf{Remarques} \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                    \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    9.1         & Le scan liste les appareils à proximité, dont l'appareil de référence               & \OK           &                    \\
+    9.2         & L'appairage aboutit et l'état passe à connecté                                      & \OK           &                    \\
+    9.3         & La déconnexion volontaire aboutit et l'état est mis à jour                          & \OK           &                    \\
+    9.4         & La reconnexion à un appareil connu aboutit sans nouvel appairage                    & \OK           &                    \\
+    9.5         & L'oubli d'un appareil le retire de la liste, et un nouvel appairage est alors exigé & \OK           &                    \\
+    9.6         & L'audio sort sur l'appareil Bluetooth, les deux voies présentes et non inversées    & \OK           &                    \\
+\end{longtable}
+}
+
+\subsection{Bloc 10. Settings / Audio}
+
+{\footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{longtable}{@{}
+        >{\raggedright\arraybackslash}p{0.045\textwidth}
+        >{\raggedright\arraybackslash}p{0.400\textwidth}
+        >{\centering\arraybackslash}p{0.055\textwidth}
+        >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+        \caption{Bloc 10 -- Settings / Audio}
+        \label{tab:ann_mesures_sw_b10}                                                                                                  \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                & \textbf{État} & \textbf{Remarques} \\
+        \midrule
+        \endfirsthead
+        \caption[]{Bloc 10 -- Settings / Audio (suite)}                                                                                 \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                & \textbf{État} & \textbf{Remarques} \\
+        \midrule
+        \endhead
+        \midrule
+        \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                             \\
+        \endfoot
+        \bottomrule
+        \endlastfoot
+        10.1        & Bascule jack vers Bluetooth et retour, sans blocage ni redémarrage           & \OK           &                    \\
+        10.2        & Balance à fond à gauche, seule la voie gauche est audible, et réciproquement & \OK           &                    \\
+    \end{longtable}
+}
+
+\subsection{Bloc 11. Settings / Screen}
+
+Protocole : USB débranché, pour que les temporisations d'extinction ne soient pas inhibées par la présence de l'alimentation externe.
+
+    {\footnotesize
+        \setlength{\tabcolsep}{4pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.045\textwidth}
+            >{\raggedright\arraybackslash}p{0.400\textwidth}
+            >{\centering\arraybackslash}p{0.055\textwidth}
+            >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+            \caption{Bloc 11 -- Settings / Screen}
+            \label{tab:ann_mesures_sw_b11}                                                                                                                                 \\
+            \toprule
+            \textbf{N°} & \textbf{Comportement attendu}                                                                               & \textbf{État} & \textbf{Remarques} \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc 11 -- Settings / Screen (suite)}                                                                                                               \\
+            \toprule
+            \textbf{N°} & \textbf{Comportement attendu}                                                                               & \textbf{État} & \textbf{Remarques} \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                            \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            11.1        & La luminosité varie visiblement entre les deux réglages extrêmes                                            & \OK           &                    \\
+            11.2        & Pour un réglage de n minutes, l'écran s'éteint dans la fenêtre attendue, testé sur deux réglages différents & \OK           &                    \\
+        \end{longtable}
+    }
+
+\subsection{Bloc 12. Settings / Power}
+
+Protocole : USB débranché, pour que les temporisations d'extinction ne soient pas inhibées par la présence de l'alimentation externe.
+
+    {\footnotesize
+        \setlength{\tabcolsep}{4pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.045\textwidth}
+            >{\raggedright\arraybackslash}p{0.400\textwidth}
+            >{\centering\arraybackslash}p{0.055\textwidth}
+            >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+            \caption{Bloc 12 -- Settings / Power}
+            \label{tab:ann_mesures_sw_b12}                                                                                                                         \\
+            \toprule
+            \textbf{N°} & \textbf{Comportement attendu}                                                                       & \textbf{État} & \textbf{Remarques} \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc 12 -- Settings / Power (suite)}                                                                                                        \\
+            \toprule
+            \textbf{N°} & \textbf{Comportement attendu}                                                                       & \textbf{État} & \textbf{Remarques} \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                    \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            12.1        & L'extinction automatique intervient dans la fenêtre du réglage, testée sur deux réglages différents & \OK           &                    \\
+            12.2        & L'extinction manuelle coupe le rail \texttt{+3.3V}                                                  & \OK           &                    \\
+        \end{longtable}
+    }
+
+\subsection{Bloc 13. Cas dégradés}
+
+{\footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{longtable}{@{}
+        >{\raggedright\arraybackslash}p{0.045\textwidth}
+        >{\raggedright\arraybackslash}p{0.400\textwidth}
+        >{\centering\arraybackslash}p{0.055\textwidth}
+        >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+        \caption{Bloc 13 -- Cas dégradés}
+        \label{tab:ann_mesures_sw_b13}                                                                                                                                                                                                                \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                                              & \textbf{État} & \textbf{Remarques}                                                                                 \\
+        \midrule
+        \endfirsthead
+        \caption[]{Bloc 13 -- Cas dégradés (suite)}                                                                                                                                                                                                   \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                                              & \textbf{État} & \textbf{Remarques}                                                                                 \\
+        \midrule
+        \endhead
+        \midrule
+        \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                           \\
+        \endfoot
+        \bottomrule
+        \endlastfoot
+        13.1        & Retrait de la carte SD pendant la lecture, arrêt propre et pas de redémarrage                              & \OK           &                                                                                                    \\
+        13.2        & Extinction de l'enceinte Bluetooth pendant la lecture, perte de lien détectée et retour à un état cohérent & \OK           &                                                                                                    \\
+        13.3        & Fichier \texttt{.wav} tronqué ou de taille nulle, refus ou arrêt propre, pas de blocage                    & \NOK          & Le firmware lance la lecture au lieu de signaler une erreur. Le pipeline audio reste fonctionnelle \\
+        13.4        & Fichier d'extension supportée mais de format non géré, message explicite et pas de blocage                 & \NOK          & Le firmware lance la lecture au lieu de signaler une erreur. Le pipeline audio reste fonctionnelle \\
+        13.5        & Démarrage sans carte SD, menu Storage cohérent et pas de blocage                                           & \OK           &                                                                                                    \\
+        13.6        & Fichier au nom long et accentué, affichage correct et lecture possible                                     & \OK           &                                                                                                    \\
+        13.7        & Appuis rapides et répétés sur les boutons, aucun événement perdu et pas de saturation de la file           & \OK           &                                                                                                    \\
+        13.8        & Décharge sous le seuil de sécurité, extinction propre et pas de corruption de la carte                     & \OK           &                                                                                                    \\
+    \end{longtable}
+}
+
+\subsection{Bloc 14. Robustesse et durée}
+
+{\footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{longtable}{@{}
+        >{\raggedright\arraybackslash}p{0.045\textwidth}
+        >{\raggedright\arraybackslash}p{0.400\textwidth}
+        >{\centering\arraybackslash}p{0.055\textwidth}
+        >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+        \caption{Bloc 14 -- Robustesse et durée}
+        \label{tab:ann_mesures_sw_b14}                                                                                                                                               \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                                                             & \textbf{État} & \textbf{Remarques} \\
+        \midrule
+        \endfirsthead
+        \caption[]{Bloc 14 -- Robustesse et durée (suite)}                                                                                                                           \\
+        \toprule
+        \textbf{N°} & \textbf{Comportement attendu}                                                                                             & \textbf{État} & \textbf{Remarques} \\
+        \midrule
+        \endhead
+        \midrule
+        \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                                          \\
+        \endfoot
+        \bottomrule
+        \endlastfoot
+        14.1        & Appui sur S1 pendant l'affichage, redémarrage propre, flash et \gls{psram} opérationnelles                                & \OK           &                    \\
+        14.2        & Coupure d'alimentation brutale en lecture, au redémarrage le marqueur \gls{nvs} et le verdict d'extinction sont cohérents & \OK           &                    \\
+        14.3        & Extinction normale, verdict d'extinction nominal au redémarrage suivant                                                   & \OK           &                    \\
+    \end{longtable}
+}
+
+\subsection{Bloc 15. Absence de bruits parasites}
+
+Protocole : évaluation à l'oreille, casque branché sur le jack.
+
+    {\footnotesize
+        \setlength{\tabcolsep}{4pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.045\textwidth}
+            >{\raggedright\arraybackslash}p{0.400\textwidth}
+            >{\centering\arraybackslash}p{0.055\textwidth}
+            >{\raggedright\arraybackslash}p{0.390\textwidth}@{}}
+            \caption{Bloc 15 -- Absence de bruits parasites}
+            \label{tab:ann_mesures_sw_b15}                                                                                                                                                                  \\
+            \toprule
+            \textbf{N°} & \textbf{Comportement attendu}                        & \textbf{État} & \textbf{Remarques}                                                                                         \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc 15 -- Absence de bruits parasites (suite)}                                                                                                                                      \\
+            \toprule
+            \textbf{N°} & \textbf{Comportement attendu}                        & \textbf{État} & \textbf{Remarques}                                                                                         \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{4}{r@{}}{\textit{Suite page suivante}}                                                                                                                                             \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            15.1        & Aucun pop audible à l'allumage                       & \OK           &                                                                                                            \\
+            15.2        & Aucun pop audible à l'extinction                     & \OK           &                                                                                                            \\
+            15.3        & Aucun pop audible au début et à la fin d'une lecture & \OK           &                                                                                                            \\
+            15.4        & Aucun pop audible au changement de sortie            & \OK           &                                                                                                            \\
+            15.5        & Aucun pop audible au changement de piste             & \NOK          & Un léger glitch reste audible. L'origine, logicielle ou matérielle, n'a pas pu être établie faute de temps \\
+        \end{longtable}
+    }
 
 \section{Matrice des formats audio}
 \label{ann:mesures_formats}
@@ -1291,168 +1291,168 @@ La figure~\ref{fig:gain_chaine_analogique} place côte à côte la sortie diffé
 
 Protocole : mêmes réglages qu'au bloc A. Le bloc se parcourt en deux passes qui ne diffèrent que par le fichier joué, d'abord THDN à $-20$ dBFS qui ne peut pas écrêter, puis THDN à 0 dBFS qui sollicite la pleine échelle de conception. Sortie à vide, puis chargée par un casque de 32 $\Omega$.
 
-{\scriptsize
-    \setlength{\tabcolsep}{3pt}
-    \renewcommand{\arraystretch}{1.15}
-    \begin{longtable}{@{}
-        >{\raggedright\arraybackslash}p{0.042\textwidth}
-        >{\raggedright\arraybackslash}p{0.220\textwidth}
-        >{\raggedright\arraybackslash}p{0.180\textwidth}
-        >{\raggedright\arraybackslash}p{0.115\textwidth}
-        >{\centering\arraybackslash}p{0.052\textwidth}
-        >{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
-        \caption{Bloc B -- Nature de l'écrêtage à pleine échelle}
-        \label{tab:ann_mesures_audio_bB} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc B -- Nature de l'écrêtage à pleine échelle (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        B.1  & Amplitude en sortie du jack, jeu THDN à $-20$ dBFS      & 210 mVrms                                                                              & L 211 mVrms\newline R 212 mVrms                                & \OK  & \\
-        B.2  & Forme d'onde en sortie du jack, $-20$ dBFS               & Sinusoïde propre, aucun aplatissement                                                 & Sinusoïde propre                                               & \OK  & \\
-        B.3  & Forme d'onde différentielle en sortie du \gls{DAC}, $-20$ dBFS & Sinusoïde propre                                                                & Sinusoïde propre, paliers du \gls{DAC} légèrement perceptibles & \OK  & \\
-        B.4  & Amplitude en sortie du jack, jeu THDN à 0 dBFS, à vide   & 2,1 Vrms                                                                              & L 2,13 Vrms\newline R 2,13 Vrms                                & \OK  & \\
-        B.5  & Forme d'onde en sortie du jack, 0 dBFS, à vide           & Sinusoïde propre                                                                      & Sinusoïde propre                                               & \OK  & \\
-        B.6  & Forme d'onde différentielle en sortie du \gls{DAC}, 0 dBFS & Sinusoïde propre                                                                    & Sinusoïde propre, paliers du \gls{DAC} légèrement perceptibles & \OK  & \\
-        B.7  & Amplitude en sortie du jack, 0 dBFS, casque de 32 $\Omega$ & 2,1 Vrms                                                                            & 1,83 Vrms                                                      & \NOK & Le niveau s'effondre dès que la sortie est chargée \\
-        B.8  & Forme d'onde en sortie du jack, 0 dBFS, casque de 32 $\Omega$ & Sinusoïde propre                                                                 & Écrêtage de l'alternance négative                              & \NOK & L'alternance positive reste lisse, l'alternance négative présente un plat marqué, figure~\ref{saturation_negative.png}. La cause est cherchée au point B.10 \\
-        B.9  & PVSS du MAX97220A, pin 5, 0 dBFS, à vide                 & $-3,3$ V, identique au point 10.8 du tableau~\ref{tab:ann_mesures_hw_b10}             & $-3,291$ V                                                     & \OK  & \\
-        B.10 & PVSS du MAX97220A, pin 5, 0 dBFS, casque de 32 $\Omega$  & $-3,3$ V                                                                              & $-2,720$ V                                                     & \NOK & Mesure décisive du bloc. La pompe de charge ne tient pas le rail négatif sous charge \cite{analog_MAX97220A}, ce qui explique que l'écrêtage observé au point B.8 n'affecte que l'alternance négative \\
-        B.11 & Niveau numérique maximal sans écrêtage, casque de 32 $\Omega$, jeu LEVEL & Premier niveau, en descendant depuis 0 dBFS, où l'alternance négative redevient lisse & $-6$ dBFS                                          & \OK  & Conduit à limiter le volume maximal du lecteur à $-6$ dB par le registre du \gls{DAC} \\
+    {\scriptsize
+        \setlength{\tabcolsep}{3pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.042\textwidth}
+            >{\raggedright\arraybackslash}p{0.220\textwidth}
+            >{\raggedright\arraybackslash}p{0.180\textwidth}
+            >{\raggedright\arraybackslash}p{0.115\textwidth}
+            >{\centering\arraybackslash}p{0.052\textwidth}
+            >{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
+            \caption{Bloc B -- Nature de l'écrêtage à pleine échelle}
+            \label{tab:ann_mesures_audio_bB}                                                                                                                                                                                                                                                                                                                                                                                                                                        \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                                                 & \textbf{Valeur attendue}                                                              & \textbf{Mesure}                                                & \textbf{État} & \textbf{Remarques}                                                                                                                                                                                    \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc B -- Nature de l'écrêtage à pleine échelle (suite)}                                                                                                                                                                                                                                                                                                                                                                                                     \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                                                 & \textbf{Valeur attendue}                                                              & \textbf{Mesure}                                                & \textbf{État} & \textbf{Remarques}                                                                                                                                                                                    \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                                                                                                                                                                                     \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            B.1         & Amplitude en sortie du jack, jeu THDN à $-20$ dBFS                       & 210 mVrms                                                                             & L 211 mVrms\newline R 212 mVrms                                & \OK           &                                                                                                                                                                                                       \\
+            B.2         & Forme d'onde en sortie du jack, $-20$ dBFS                               & Sinusoïde propre, aucun aplatissement                                                 & Sinusoïde propre                                               & \OK           &                                                                                                                                                                                                       \\
+            B.3         & Forme d'onde différentielle en sortie du \gls{DAC}, $-20$ dBFS           & Sinusoïde propre                                                                      & Sinusoïde propre, paliers du \gls{DAC} légèrement perceptibles & \OK           &                                                                                                                                                                                                       \\
+            B.4         & Amplitude en sortie du jack, jeu THDN à 0 dBFS, à vide                   & 2,1 Vrms                                                                              & L 2,13 Vrms\newline R 2,13 Vrms                                & \OK           &                                                                                                                                                                                                       \\
+            B.5         & Forme d'onde en sortie du jack, 0 dBFS, à vide                           & Sinusoïde propre                                                                      & Sinusoïde propre                                               & \OK           &                                                                                                                                                                                                       \\
+            B.6         & Forme d'onde différentielle en sortie du \gls{DAC}, 0 dBFS               & Sinusoïde propre                                                                      & Sinusoïde propre, paliers du \gls{DAC} légèrement perceptibles & \OK           &                                                                                                                                                                                                       \\
+            B.7         & Amplitude en sortie du jack, 0 dBFS, casque de 32 $\Omega$               & 2,1 Vrms                                                                              & 1,83 Vrms                                                      & \NOK          & Le niveau s'effondre dès que la sortie est chargée                                                                                                                                                    \\
+            B.8         & Forme d'onde en sortie du jack, 0 dBFS, casque de 32 $\Omega$            & Sinusoïde propre                                                                      & Écrêtage de l'alternance négative                              & \NOK          & L'alternance positive reste lisse, l'alternance négative présente un plat marqué, figure~\ref{saturation_negative.png}. La cause est cherchée au point B.10                                           \\
+            B.9         & PVSS du MAX97220A, pin 5, 0 dBFS, à vide                                 & $-3,3$ V, identique au point 10.8 du tableau~\ref{tab:ann_mesures_hw_b10}             & $-3,291$ V                                                     & \OK           &                                                                                                                                                                                                       \\
+            B.10        & PVSS du MAX97220A, pin 5, 0 dBFS, casque de 32 $\Omega$                  & $-3,3$ V                                                                              & $-2,720$ V                                                     & \NOK          & Mesure décisive du bloc. La pompe de charge ne tient pas le rail négatif sous charge \cite{analog_MAX97220A}, ce qui explique que l'écrêtage observé au point B.8 n'affecte que l'alternance négative \\
+            B.11        & Niveau numérique maximal sans écrêtage, casque de 32 $\Omega$, jeu LEVEL & Premier niveau, en descendant depuis 0 dBFS, où l'alternance négative redevient lisse & $-6$ dBFS                                                      & \OK           & Conduit à limiter le volume maximal du lecteur à $-6$ dB par le registre du \gls{DAC}                                                                                                                 \\
         \end{longtable}
-        }
+    }
 
-        Les points B.7, B.8 et B.10 forment le seul résultat vraiment structurant de cette section. La figure~\ref{saturation_negative.png} montre la signature caractéristique observée au point B.8, une alternance positive intacte et une alternance négative aplatie, dissymétrie qui oriente immédiatement le diagnostic vers le rail négatif et non vers l'étage numérique.
+Les points B.7, B.8 et B.10 forment le seul résultat vraiment structurant de cette section. La figure~\ref{saturation_negative.png} montre la signature caractéristique observée au point B.8, une alternance positive intacte et une alternance négative aplatie, dissymétrie qui oriente immédiatement le diagnostic vers le rail négatif et non vers l'étage numérique.
 
-        \subsection{Bloc C. Préparation et câblage de la session Audio Precision}
+\subsection{Bloc C. Préparation et câblage de la session Audio Precision}
 
-        Protocole : à dérouler avant toute mesure à l'analyseur. Ces points ne produisent aucun résultat exploitable mais conditionnent la validité de tous les suivants. Logiciel ATS 1.60, setups du dossier AP\_Setup.
-
-{\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.042\textwidth}
->{\raggedright\arraybackslash}p{0.220\textwidth}
->{\raggedright\arraybackslash}p{0.180\textwidth}
->{\raggedright\arraybackslash}p{0.115\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
-\caption{Bloc C -- Préparation et câblage de la session Audio Precision}
-\label{tab:ann_mesures_audio_bC} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-\midrule
-\endfirsthead
-\caption[]{Bloc C -- Préparation et câblage de la session Audio Precision (suite)} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        C.1 & Câble jack 3,5 mm vers deux BNC, pointe sur Channel A et bague sur Channel B & Continuité vérifiée                                                          & Continuité confirmée sur les deux voies                        & \OK & Contrôlé à l'ohmmètre avant tout branchement de l'analyseur \\
-        C.2 & Setup des mesures de niveau et de THD+N                                     & Le fichier \texttt{AP\_THD.ats2} s'ouvre                                     & Ouverture correcte                                              & \OK & \\
-        C.3 & Setup des mesures de bruit et de spectre                                     & Le fichier \texttt{AP\_NOISE.ats2} s'ouvre                                   & Ouverture correcte                                              & \OK & \\
-        C.4 & Contrôle de l'appariement des voies, jeux XT\_L et XT\_R                     & \texttt{XT\_L} joue sur la voie A seule, \texttt{XT\_R} sur la voie B seule  & Confirmé par le niveau lu sur chaque voie                       & \OK & Détecte une inversion de voies avant de commencer. Sans ce contrôle, les mesures de diaphonie du bloc E seraient ininterprétables \\
-        C.5 & Volume système au maximum et registre de volume du \gls{DAC} à 0 dB          & Confirmé par la position du potentiomètre                                    & Configuration confirmée                                         & \OK & Toutes les valeurs attendues des blocs D et E supposent cette configuration, inchangée d'un bloc à l'autre \\
-        C.6 & Setup des mesures de diaphonie                                                & Le fichier \texttt{AP\_XTALK.ats2} s'ouvre                                   & Ouverture correcte                                              & \OK & \\
-        \end{longtable}
-        }
-
-        \subsection{Bloc D. Analyseur en configuration THD+N}
-
-        Protocole : instrument Audio Analyzer, setup \texttt{AP\_THD.ats2}, entrée Analog, Measurement Function sur THD+N Ratio affichée en dB. Détection \gls{rms}, bande de 22 Hz en passe-haut et 20 kHz en passe-bas, filtre pondérateur désactivé. Entrées Channel A et B en Unbalanced, couplage continu, autorange. Les entrées de l'analyseur présentent 100 k$\Omega$, toutes ces mesures sont donc non chargées. La \gls{diaphonie} ne se mesure pas avec ces réglages, elle fait l'objet du bloc E et de son propre setup.
+Protocole : à dérouler avant toute mesure à l'analyseur. Ces points ne produisent aucun résultat exploitable mais conditionnent la validité de tous les suivants. Logiciel ATS 1.60, setups du dossier AP\_Setup.
 
 {\scriptsize
 \setlength{\tabcolsep}{3pt}
 \renewcommand{\arraystretch}{1.15}
 \begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.042\textwidth}
->{\raggedright\arraybackslash}p{0.220\textwidth}
->{\raggedright\arraybackslash}p{0.180\textwidth}
->{\raggedright\arraybackslash}p{0.115\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
-\caption{Bloc D -- Analyseur en configuration THD+N}
-\label{tab:ann_mesures_audio_bD} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-\midrule
-\endfirsthead
-\caption[]{Bloc D -- Analyseur en configuration THD+N (suite)} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        D.1  & Niveau de sortie, 1 kHz à 0 dBFS                     & 2,1 Vrms                        & L 2,139 Vrms\newline R 2,143 Vrms & \OK & Pleine échelle de 4,2 Vrms différentiels et gain 0,5, soit un gain réel de 0,509 \\
-        D.2  & Offset continu mesuré par l'analyseur                & $<$ 350 $\mu$V                  & L 17,5 $\mu$V\newline R 14,2 $\mu$V & \OK & Valeur plus basse qu'aux points 10.11 et 10.12 du tableau~\ref{tab:ann_mesures_hw_b10}, l'analyseur étant plus résolu que le multimètre \\
-        D.3  & THD+N à 1 kHz, $-1$ dBFS                             & Environ $-94$ dB                & L $-94,7$ dB\newline R $-94,9$ dB & \OK & PCM5242 annoncé à $-94$ dB typique et $-87$ dB minimum \cite{TI_PCM5242}. Résidu propre de l'analyseur à $-101$ dB, donc non limitant \\
-        D.4  & THD+N à 1 kHz, 0 dBFS                                & Non contraint                   & $-95$ dB                          & \OK & \\
-        D.5  & Réponse en fréquence, 20 Hz à 20 kHz, jeu FR\_44k    & Écart inférieur à $\pm$ 0,1 dB  & Inférieur à $\pm$ 0,1 dB          & \OK & Série complète au tableau~\ref{tab:ann_ap_reponse} \\
-        D.6  & THD+N en fonction de la fréquence, 20 Hz à 20 kHz    & Meilleure que $-90$ dB          & $-92,6$ dB                        & \OK & Pire valeur de la série, relevée à 5 kHz. Voir le tableau~\ref{tab:ann_ap_reponse} \\
-        D.7  & THD+N en fonction du niveau, 1 kHz, jeu LEVEL        & Courbe à conserver              & Voir le tableau~\ref{tab:ann_ap_niveau} & \OK & Montre le croisement entre plancher de bruit et plancher de distorsion \\
-        D.8  & Niveau relevé à 20 kHz, source à 44,1 kHz            & Fléchissement à relever         & $-0,014$ dB                       & \OK & Aucun fléchissement significatif en haut de bande \\
-        D.9a & THD+N à 1 kHz, source WAV, jeu MP3                   & Proche du point D.3             & L $-96,3$ dB\newline R $-96,1$ dB & \OK & Ces mesures ont été faites un autre jour, l'écart avec D.3 reste dans l'incertitude de mesure \\
-        D.9b & THD+N à 1 kHz, source MP3 à 320 kbit/s               & Dégradation par rapport à D.9a  & L $-87,8$ dB\newline R $-87,6$ dB & \OK & Le codage MP3 dégrade le THD+N d'environ 8 dB \\
-        D.9c & THD+N à 1 kHz, source MP3 à 128 kbit/s               & Dégradation par rapport à D.9b  & L $-87,2$ dB\newline R $-87,1$ dB & \OK & L'écart entre 320 et 128 kbit/s reste faible sur ce critère \\
+    >{\raggedright\arraybackslash}p{0.042\textwidth}
+    >{\raggedright\arraybackslash}p{0.220\textwidth}
+    >{\raggedright\arraybackslash}p{0.180\textwidth}
+    >{\raggedright\arraybackslash}p{0.115\textwidth}
+    >{\centering\arraybackslash}p{0.052\textwidth}
+    >{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
+    \caption{Bloc C -- Préparation et câblage de la session Audio Precision}
+    \label{tab:ann_mesures_audio_bC}                                                                                                                                                                                                                                                                                                                                         \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}                                                     & \textbf{Valeur attendue}                                                    & \textbf{Mesure}                           & \textbf{État} & \textbf{Remarques}                                                                                                                \\
+    \midrule
+    \endfirsthead
+    \caption[]{Bloc C -- Préparation et câblage de la session Audio Precision (suite)}                                                                                                                                                                                                                                                                                       \\
+    \toprule
+    \textbf{N°} & \textbf{Point de mesure}                                                     & \textbf{Valeur attendue}                                                    & \textbf{Mesure}                           & \textbf{État} & \textbf{Remarques}                                                                                                                \\
+    \midrule
+    \endhead
+    \midrule
+    \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                                                                                      \\
+    \endfoot
+    \bottomrule
+    \endlastfoot
+    C.1         & Câble jack 3,5 mm vers deux BNC, pointe sur Channel A et bague sur Channel B & Continuité vérifiée                                                         & Continuité confirmée sur les deux voies   & \OK           & Contrôlé à l'ohmmètre avant tout branchement de l'analyseur                                                                       \\
+    C.2         & Setup des mesures de niveau et de THD+N                                      & Le fichier \texttt{AP\_THD.ats2} s'ouvre                                    & Ouverture correcte                        & \OK           &                                                                                                                                   \\
+    C.3         & Setup des mesures de bruit et de spectre                                     & Le fichier \texttt{AP\_NOISE.ats2} s'ouvre                                  & Ouverture correcte                        & \OK           &                                                                                                                                   \\
+    C.4         & Contrôle de l'appariement des voies, jeux XT\_L et XT\_R                     & \texttt{XT\_L} joue sur la voie A seule, \texttt{XT\_R} sur la voie B seule & Confirmé par le niveau lu sur chaque voie & \OK           & Détecte une inversion de voies avant de commencer. Sans ce contrôle, les mesures de diaphonie du bloc E seraient ininterprétables \\
+    C.5         & Volume système au maximum et registre de volume du \gls{DAC} à 0 dB          & Confirmé par la position du potentiomètre                                   & Configuration confirmée                   & \OK           & Toutes les valeurs attendues des blocs D et E supposent cette configuration, inchangée d'un bloc à l'autre                        \\
+    C.6         & Setup des mesures de diaphonie                                               & Le fichier \texttt{AP\_XTALK.ats2} s'ouvre                                  & Ouverture correcte                        & \OK           &                                                                                                                                   \\
+\end{longtable}
+}
+
+\subsection{Bloc D. Analyseur en configuration THD+N}
+
+Protocole : instrument Audio Analyzer, setup \texttt{AP\_THD.ats2}, entrée Analog, Measurement Function sur THD+N Ratio affichée en dB. Détection \gls{rms}, bande de 22 Hz en passe-haut et 20 kHz en passe-bas, filtre pondérateur désactivé. Entrées Channel A et B en Unbalanced, couplage continu, autorange. Les entrées de l'analyseur présentent 100 k$\Omega$, toutes ces mesures sont donc non chargées. La \gls{diaphonie} ne se mesure pas avec ces réglages, elle fait l'objet du bloc E et de son propre setup.
+
+    {\scriptsize
+        \setlength{\tabcolsep}{3pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.042\textwidth}
+            >{\raggedright\arraybackslash}p{0.220\textwidth}
+            >{\raggedright\arraybackslash}p{0.180\textwidth}
+            >{\raggedright\arraybackslash}p{0.115\textwidth}
+            >{\centering\arraybackslash}p{0.052\textwidth}
+            >{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
+            \caption{Bloc D -- Analyseur en configuration THD+N}
+            \label{tab:ann_mesures_audio_bD}                                                                                                                                                                                                                                                                     \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                          & \textbf{Valeur attendue}       & \textbf{Mesure}                         & \textbf{État} & \textbf{Remarques}                                                                                                                      \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc D -- Analyseur en configuration THD+N (suite)}                                                                                                                                                                                                                                       \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                          & \textbf{Valeur attendue}       & \textbf{Mesure}                         & \textbf{État} & \textbf{Remarques}                                                                                                                      \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                                                                  \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            D.1         & Niveau de sortie, 1 kHz à 0 dBFS                  & 2,1 Vrms                       & L 2,139 Vrms\newline R 2,143 Vrms       & \OK           & Pleine échelle de 4,2 Vrms différentiels et gain 0,5, soit un gain réel de 0,509                                                        \\
+            D.2         & Offset continu mesuré par l'analyseur             & $<$ 350 $\mu$V                 & L 17,5 $\mu$V\newline R 14,2 $\mu$V     & \OK           & Valeur plus basse qu'aux points 10.11 et 10.12 du tableau~\ref{tab:ann_mesures_hw_b10}, l'analyseur étant plus résolu que le multimètre \\
+            D.3         & THD+N à 1 kHz, $-1$ dBFS                          & Environ $-94$ dB               & L $-94,7$ dB\newline R $-94,9$ dB       & \OK           & PCM5242 annoncé à $-94$ dB typique et $-87$ dB minimum \cite{TI_PCM5242}. Résidu propre de l'analyseur à $-101$ dB, donc non limitant   \\
+            D.4         & THD+N à 1 kHz, 0 dBFS                             & Non contraint                  & $-95$ dB                                & \OK           &                                                                                                                                         \\
+            D.5         & Réponse en fréquence, 20 Hz à 20 kHz, jeu FR\_44k & Écart inférieur à $\pm$ 0,1 dB & Inférieur à $\pm$ 0,1 dB                & \OK           & Série complète au tableau~\ref{tab:ann_ap_reponse}                                                                                      \\
+            D.6         & THD+N en fonction de la fréquence, 20 Hz à 20 kHz & Meilleure que $-90$ dB         & $-92,6$ dB                              & \OK           & Pire valeur de la série, relevée à 5 kHz. Voir le tableau~\ref{tab:ann_ap_reponse}                                                      \\
+            D.7         & THD+N en fonction du niveau, 1 kHz, jeu LEVEL     & Courbe à conserver             & Voir le tableau~\ref{tab:ann_ap_niveau} & \OK           & Montre le croisement entre plancher de bruit et plancher de distorsion                                                                  \\
+            D.8         & Niveau relevé à 20 kHz, source à 44,1 kHz         & Fléchissement à relever        & $-0,014$ dB                             & \OK           & Aucun fléchissement significatif en haut de bande                                                                                       \\
+            D.9a        & THD+N à 1 kHz, source WAV, jeu MP3                & Proche du point D.3            & L $-96,3$ dB\newline R $-96,1$ dB       & \OK           & Ces mesures ont été faites un autre jour, l'écart avec D.3 reste dans l'incertitude de mesure                                           \\
+            D.9b        & THD+N à 1 kHz, source MP3 à 320 kbit/s            & Dégradation par rapport à D.9a & L $-87,8$ dB\newline R $-87,6$ dB       & \OK           & Le codage MP3 dégrade le THD+N d'environ 8 dB                                                                                           \\
+            D.9c        & THD+N à 1 kHz, source MP3 à 128 kbit/s            & Dégradation par rapport à D.9b & L $-87,2$ dB\newline R $-87,1$ dB       & \OK           & L'écart entre 320 et 128 kbit/s reste faible sur ce critère                                                                             \\
         \end{longtable}
-        }
+    }
 
 \subsection{Bloc E. Analyseur en configuration diaphonie}
 
 Protocole : instrument Audio Analyzer, setup \texttt{AP\_XTALK.ats2}. La diaphonie n'est pas une mesure de distorsion mais un rapport de niveaux, à la fréquence d'essai, entre le niveau de la voie qui se tait et celui de la voie qui joue. La Measurement Function est réglée sur Crosstalk en dB, l'analyseur affichant alors directement ce rapport. Chaque fréquence est mesurée dans les deux sens. Le jeu \texttt{XT\_L} excite la voie gauche et la fuite se lit sur Channel B, le jeu \texttt{XT\_R} excite la voie droite et la fuite se lit sur Channel A. La valeur affichée sur la voie excitée n'a aucune signification physique et n'est pas consignée. Le câble de la voie muette est débranché côté carte.
 
-{\scriptsize
-\setlength{\tabcolsep}{3pt}
-\renewcommand{\arraystretch}{1.15}
-\begin{longtable}{@{}
->{\raggedright\arraybackslash}p{0.042\textwidth}
->{\raggedright\arraybackslash}p{0.220\textwidth}
->{\raggedright\arraybackslash}p{0.180\textwidth}
->{\raggedright\arraybackslash}p{0.115\textwidth}
->{\centering\arraybackslash}p{0.052\textwidth}
->{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
-\caption{Bloc E -- Analyseur en configuration diaphonie}
-\label{tab:ann_mesures_audio_bE} \\
-\toprule
-\textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endfirsthead
-        \caption[]{Bloc E -- Analyseur en configuration diaphonie (suite)} \\
-        \toprule
-        \textbf{N°} & \textbf{Point de mesure} & \textbf{Valeur attendue} & \textbf{Mesure} & \textbf{État} & \textbf{Remarques} \\
-        \midrule
-        \endhead
-        \midrule
-        \multicolumn{6}{r@{}}{\textit{Suite page suivante}} \\
-        \endfoot
-        \bottomrule
-        \endlastfoot
-        E.1 & Niveau sur la voie excitée, contrôle de la référence, jeu XT\_L à 1 kHz & 2,1 Vrms                                & 2,139 Vrms   & \OK & Lu sur Channel A, la voie qui joue. Confirme que le fichier sort au niveau attendu \\
-        E.2 & Diaphonie de la voie gauche vers la voie droite, 1 kHz                  & Environ $-90$ dB                        & $-102,6$ dB  & \OK & \\
-        E.3 & Diaphonie de la voie droite vers la voie gauche, 1 kHz                  & Environ $-90$ dB                        & $-106,7$ dB  & \OK & \\
-        E.4 & Diaphonie de la voie gauche vers la voie droite, 10 kHz                 & Dégradation attendue par rapport à E.2  & $-92,5$ dB   & \OK & Le couplage capacitif croît avec la fréquence \\
-        E.5 & Diaphonie de la voie droite vers la voie gauche, 10 kHz                 & Dégradation attendue par rapport à E.3  & $-88,0$ dB   & \OK & \\
-    \end{longtable}
-}
+    {\scriptsize
+        \setlength{\tabcolsep}{3pt}
+        \renewcommand{\arraystretch}{1.15}
+        \begin{longtable}{@{}
+            >{\raggedright\arraybackslash}p{0.042\textwidth}
+            >{\raggedright\arraybackslash}p{0.220\textwidth}
+            >{\raggedright\arraybackslash}p{0.180\textwidth}
+            >{\raggedright\arraybackslash}p{0.115\textwidth}
+            >{\centering\arraybackslash}p{0.052\textwidth}
+            >{\raggedright\arraybackslash}p{0.268\textwidth}@{}}
+            \caption{Bloc E -- Analyseur en configuration diaphonie}
+            \label{tab:ann_mesures_audio_bE}                                                                                                                                                                                                                      \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                                                & \textbf{Valeur attendue}               & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                 \\
+            \midrule
+            \endfirsthead
+            \caption[]{Bloc E -- Analyseur en configuration diaphonie (suite)}                                                                                                                                                                                    \\
+            \toprule
+            \textbf{N°} & \textbf{Point de mesure}                                                & \textbf{Valeur attendue}               & \textbf{Mesure} & \textbf{État} & \textbf{Remarques}                                                                 \\
+            \midrule
+            \endhead
+            \midrule
+            \multicolumn{6}{r@{}}{\textit{Suite page suivante}}                                                                                                                                                                                                   \\
+            \endfoot
+            \bottomrule
+            \endlastfoot
+            E.1         & Niveau sur la voie excitée, contrôle de la référence, jeu XT\_L à 1 kHz & 2,1 Vrms                               & 2,139 Vrms      & \OK           & Lu sur Channel A, la voie qui joue. Confirme que le fichier sort au niveau attendu \\
+            E.2         & Diaphonie de la voie gauche vers la voie droite, 1 kHz                  & Environ $-90$ dB                       & $-102,6$ dB     & \OK           &                                                                                    \\
+            E.3         & Diaphonie de la voie droite vers la voie gauche, 1 kHz                  & Environ $-90$ dB                       & $-106,7$ dB     & \OK           &                                                                                    \\
+            E.4         & Diaphonie de la voie gauche vers la voie droite, 10 kHz                 & Dégradation attendue par rapport à E.2 & $-92,5$ dB      & \OK           & Le couplage capacitif croît avec la fréquence                                      \\
+            E.5         & Diaphonie de la voie droite vers la voie gauche, 10 kHz                 & Dégradation attendue par rapport à E.3 & $-88,0$ dB      & \OK           &                                                                                    \\
+        \end{longtable}
+    }
 
 \subsection{Bloc F. Analyseur en configuration bruit}
 
@@ -1493,6 +1493,8 @@ Protocole : instrument Audio Analyzer, setup \texttt{AP\_NOISE.ats2}, Measuremen
 
 \section{Relevés chiffrés de la session Audio Precision}
 \label{ann:mesures_ap}
+
+Les séquences de mesure dérivent de fichiers de configuration ATS-2 fournis par Monsieur Blaise Grandjean, adaptés ensuite aux besoins des tests effectués.
 
 Les niveaux sont saisis en volts efficaces. La colonne \gls{dbr} est normalisée au relevé à 1 kHz. Le THD+N est saisi en dB pour le balayage en fréquence et converti en pour cent pour faciliter la comparaison avec les valeurs de datasheet. Toutes les mesures sont non chargées sur les 100 k$\Omega$ de l'analyseur.
 

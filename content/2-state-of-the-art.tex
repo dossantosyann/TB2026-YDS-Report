@@ -1,34 +1,51 @@
 \chapter{État de l'art}
-\index{état de l'art}
 
-Avant de définir les fonctions attendues de l'appareil, il convient de situer le projet par rapport à ce qui existe déjà. Le lecteur audio portable est un objet ancien, dont le marché de masse a pratiquement disparu avant de se maintenir dans des usages de niche. Ce chapitre retrace brièvement cette évolution, puis examine les briques technologiques aujourd'hui disponibles pour réaliser un tel appareil.
+Avant de définir les fonctions attendues de l'appareil, ce chapitre situe le projet par rapport à ce qui existe déjà. Il retrace d'abord l'évolution du lecteur audio portable. Il expose ensuite les solutions techniques disponibles, puis le positionnement du présent travail.
 
 
 \section{Travaux existants}
 
 \subsection{Du baladeur au lecteur audio dédié}
-Le lecteur audio portable s'est imposé dès la fin des années 1970 avec le baladeur à cassette, puis le disque compact portable, avant que la lecture de fichiers numériques compressés ne bouleverse l'usage au tournant des années 2000 \cite{Wikipedia_Portable_Media_Player}. Cette catégorie a ensuite été largement absorbée par le smartphone, qui réunit dans un seul appareil la lecture audio, la connectivité et le stockage, au point que le lecteur dédié a disparu du marché grand public et ne subsiste plus guère que sur le marché de l'occasion \cite{Tom-Smigla_20_Best_DAP}.
+Le lecteur audio portable s'impose dès la fin des années 1970 avec le baladeur à cassette. Le disque compact portable lui succède, puis la lecture de fichiers compressés bouleverse l'usage au tournant des années 2000 \cite{Wikipedia_Portable_Media_Player}. Le smartphone absorbe ensuite cette catégorie. Il réunit dans un seul appareil la lecture audio, la connectivité et le stockage. Le lecteur dédié a ainsi quitté le marché grand public \cite{Tom-Smigla_20_Best_DAP}.
 
-Le produit s'est ainsi recentré sur deux extrémités séparées par un large écart de prix et d'objectifs. À une extrémité subsiste un segment audiophile dynamique, porté par des marques telles qu'Astell\&Kern, FiiO, HiBy, Cayin ou iBasso, dont les appareils, dits \emph{DAP} (Digital Audio Player), visent une restitution de très haute qualité au moyen de plusieurs convertisseurs en parallèle, d'une amplification soignée et de sorties symétriques, pour des tarifs s'échelonnant de quelques centaines à plusieurs milliers de francs \cite{Tom-Smigla_20_Best_DAP, Homecine_DAP_Comparison}. Beaucoup reposent désormais sur un système d'exploitation complet comme Android exécuté par un processeur applicatif, ce qui les rapproche d'un smartphone dépourvu de fonction téléphonique. À l'autre extrémité se maintiennent des lecteurs d'entrée de gamme, de conception simple, à faible coût et à faible consommation, destinés à un usage quotidien sans prétention audiophile \cite{AudiophileOn_Best_Cheap_DAP}.
+\subsection{Le marché actuel, deux extrémités}
+Le produit s'est recentré sur deux extrémités, séparées par un large écart de prix.
 
-\subsection{Positionnement du projet}
-Le présent travail ne se situe dans aucune de ces deux catégories commerciales. Il ne cherche ni à rivaliser avec les performances des DAP audiophiles, ni à reproduire la polyvalence d'un smartphone. Son objectif est de concevoir de bout en bout, à des fins formatrices, un appareil dédié, compact et fonctionnel, dont chaque choix matériel et logiciel est maîtrisé et justifié. La contribution recherchée n'est donc pas un produit inédit sur le marché, mais la démarche complète d'intégration, depuis le composant jusqu'au firmware.
+D'un côté subsiste un segment audiophile actif, porté par des marques comme Astell\&Kern, FiiO, HiBy ou iBasso. Ces appareils, appelés \emph{DAP} (Digital Audio Player), visent la très haute fidélité, avec plusieurs convertisseurs en parallèle et des sorties symétriques, pour quelques centaines à plusieurs milliers de francs \cite{Tom-Smigla_20_Best_DAP, Homecine_DAP_Comparison}. Beaucoup exécutent Android sur un processeur applicatif et se rapprochent d'un smartphone mais sans fonction téléphonique.
 
-\section{Technologies et méthodes existantes}
-\index{technologie}
+De l'autre se maintiennent des lecteurs d'entrée de gamme, simples, peu coûteux et peu gourmands, destinés à un usage quotidien sans exigence audiophile \cite{AudiophileOn_Best_Cheap_DAP}.
 
-\subsection{Architecture de calcul}
-Deux approches coexistent. Les DAP haut de gamme s'appuient sur un processeur applicatif exécutant un système d'exploitation complet, ce qui apporte souplesse et accès au streaming, au prix d'une consommation et d'une complexité élevées \cite{Homecine_DAP_Comparison}. À l'opposé, un microcontrôleur suffit pour un appareil à fonction unique et offre une consommation réduite ainsi qu'un comportement temps réel maîtrisé, au prix d'un développement logiciel plus proche du matériel. C'est cette seconde approche qui est retenue ici.
 
-\subsection{Chaîne audio et connectivité}
-La restitution repose sur une chaîne désormais classique formée du décodage du flux compressé, de la conversion numérique-analogique, du filtrage puis de l'amplification. Le décodage MP3 est un procédé mature, disponible sous forme de bibliothèques logicielles éprouvées, et la conversion fait appel à un convertisseur dédié communiquant en I\textsuperscript{2}S, suivi d'un étage capable d'attaquer un casque. Les architectures les plus soignées privilégient des liaisons symétriques afin de réduire la sensibilité au bruit, principe que l'on retrouve à toutes les gammes de prix.
+\section{Technologies disponibles}
+Cette section expose les options techniques offertes pour les grandes fonctions d'un tel appareil. Elle ne tranche pas. Les choix retenus sont établis plus loin, une fois le cahier des charges posé.
 
-Deux voies de sortie coexistent sur la quasi-totalité des appareils récents, la sortie filaire par jack, qui préserve la qualité du signal analogique, et la liaison sans fil Bluetooth (profil A2DP pour le flux audio, AVRCP pour le contrôle), plus pratique mais soumise aux contraintes de la compression et de la portée radio. La cohabitation d'une chaîne analogique sensible et d'un émetteur radio sur une même carte constitue l'une des difficultés récurrentes de ce type de conception.
+\subsection{Architectures de calcul}
+Deux approches coexistent. Un processeur applicatif exécutant un système d'exploitation complet apporte de la souplesse et l'accès au streaming, au prix d'une consommation et d'une complexité élevées \cite{Homecine_DAP_Comparison}. Un microcontrôleur suffit pour un appareil à fonction unique. Il consomme peu et son comportement temporel reste maîtrisé, mais le logiciel se développe au plus près du matériel.
+
+Le partage entre les deux se fait sur une question simple. L'appareil doit-il accéder à des services en ligne, ou seulement lire des fichiers locaux ?
+
+\subsection{Conversion et amplification}
+La chaîne de restitution décode le flux, le convertit en analogique, le filtre puis l'amplifie. Deux décisions la structurent.
+
+La première porte sur la sortie du convertisseur. Une sortie asymétrique transmet le signal sur un seul conducteur et demande peu de composants. Une sortie différentielle le transmet sur deux conducteurs opposés. L'étage suivant ne retient que leur différence, ce qui rejette les perturbations communes aux deux lignes et double l'amplitude utile, au prix de composants supplémentaires.
+
+La seconde porte sur le découpage de la chaîne. Un circuit unique réunissant le convertisseur et l'amplificateur réduit le nombre de composants, mais supprime tout point de mesure entre les deux étages.
+
+\subsection{Transport sans fil}
+La sortie filaire par jack préserve le signal analogique. La liaison Bluetooth est plus pratique, mais elle subit la compression et les limites de la portée radio. Le profil A2DP y transporte le flux stéréo et l'AVRCP assure la télécommande \cite{bluetooth_sig_a2dp}.
+
+Le choix du codec est le point sensible. Le SBC est le seul dont la prise en charge est obligatoire, ce qui garantit qu'il fonctionne avec tout récepteur \cite{bluetooth_sig_a2dp}. L'AAC, l'aptX et le LDAC offrent un meilleur compromis entre débit et qualité, mais ils sont propriétaires ou soumis à licence et ne sont pas implémentés partout.
 
 \subsection{Énergie et stockage}
-L'alimentation repose sur un accumulateur lithium-ion rechargeable, associé à un circuit de charge et, dans les conceptions soignées, à une jauge permettant d'estimer l'état de la batterie, la recharge s'effectuant aujourd'hui majoritairement par USB-C. Le stockage de la musique fait appel soit à une mémoire interne, soit à une carte microSD exploitée via un système de fichiers standard.
+L'alimentation repose sur un accumulateur lithium-ion, un circuit de charge et, dans les conceptions soignées, une jauge qui estime l'état de la batterie. La recharge passe aujourd'hui majoritairement par USB-C.
 
-Le tableau~\ref{tab:comparatif} résume ces approches et situe le présent projet par rapport à elles.
+Le stockage suit deux voies. Une mémoire interne fixe la capacité à la fabrication et impose un câble pour changer la bibliothèque. Une carte microSD amovible lève ces deux limites, mais demande un connecteur accessible et un système de fichiers standard.
+
+
+\section{Positionnement du projet}
+Le présent travail ne relève d'aucune des deux catégories commerciales décrites plus haut. Il ne vise ni les performances des DAP audiophiles, ni la polyvalence d'un smartphone.
+
+Son objectif est de concevoir un appareil dédié, compact et fonctionnel, de bout en bout et à des fins formatrices. Chaque choix matériel et logiciel doit être maîtrisé et justifié. La contribution recherchée n'est pas un produit inédit sur le marché, mais la démarche complète d'intégration, du composant jusqu'au firmware.
 
 
 \begin{table}[h]
@@ -38,16 +55,16 @@ Le tableau~\ref{tab:comparatif} résume ces approches et situe le présent proje
       \footnotesize
       \begin{tabular}{m{2.6cm} | m{3.4cm} | m{3.4cm} | m{3.4cm}}
             \hline
-            \textbf{Critère} & \textbf{DAP audiophile}         & \textbf{DAP entrée de gamme} & \textbf{Ce projet}             \\
+            \textbf{Critère} & \textbf{DAP audiophile}         & \textbf{DAP entrée de gamme} & \textbf{Ce projet}                   \\
             \hline
-            Calcul           & Processeur applicatif (Android) & Microcontrôleur              & Microcontrôleur                \\
-            Objectif audio   & Très haute fidélité             & Basique                      & Qualité maîtrisée et justifiée \\
-            Coût             & Élevé à très élevé              & Faible                       & Sans objet (prototype)         \\
-            Finalité         & Produit commercial              & Produit commercial           & Démarche d'ingénierie complète \\
+            Calcul           & Processeur applicatif (Android) & Microcontrôleur              & Microcontrôleur                      \\
+            Objectif audio   & Très haute fidélité             & Basique                      & Performances mesurées et documentées \\
+            Sorties          & Jack et Bluetooth               & Jack et Bluetooth            & Jack et Bluetooth                    \\
+            Finalité         & Produit commercial              & Produit commercial           & Prototype académique                 \\
             \hline
       \end{tabular}
       \caption{Positionnement du projet par rapport aux solutions existantes.}
       \label{tab:comparatif}
 \end{table}
 
-La valeur du présent travail ne réside donc pas dans la nouveauté de la fonction, mais dans la maîtrise complète de sa réalisation. Les fonctions attendues de l'appareil, détaillées au chapitre suivant, découlent directement de ce positionnement.
+Les fonctions attendues de l'appareil découlent de ce positionnement. Elles font l'objet du chapitre suivant.

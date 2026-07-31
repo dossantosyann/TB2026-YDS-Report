@@ -11,7 +11,7 @@ La règle de dépendance porte sur le sens, non sur l'adjacence : une couche peu
 
 \subsection{Modèle d'exécution}
 
-Le firmware repose sur quatre tâches FreeRTOS permanentes et une conception entièrement événementielle, résumées au tableau~\ref{tab:taches}. La tâche audio, prioritaire et épinglée sur le cœur~1, exécute la boucle de décodage et d'écriture vers la sortie active. La tâche d'interface, également sur le cœur~1, réalise le rendu et la navigation. Ce placement les isole du cœur~0, que la pile Bluetooth sature pendant le streaming (contrôleur, pile hôte et encodage SBC)~\cite{ESP32_IDF_guide}. La tâche d'entrée traduit les interruptions des boutons en événements. La tâche de maintenance regroupe enfin les corvées périodiques sur une base de 100~ms : lecture du potentiomètre de volume, détection des insertions et des retraits de la carte SD, détection de la perte du lien Bluetooth, télémétrie batterie, échantillonnage d'une éventuelle campagne d'autonomie et politique d'arrêt automatique.
+Le firmware repose sur quatre tâches FreeRTOS permanentes et une conception entièrement événementielle, résumées au tableau~\ref{tab:taches}. La tâche audio, prioritaire et épinglée sur le cœur~1, exécute la boucle de décodage et d'écriture vers la sortie active. La tâche d'interface, également sur le cœur~1, réalise le rendu et la navigation. Ce placement les isole du cœur~0, que la pile Bluetooth sature pendant le streaming (contrôleur, pile hôte et encodage SBC)~\cite{ESP32_IDF_guide}. La tâche d'entrée traduit les interruptions des boutons en événements. La tâche de maintenance regroupe enfin les tâches périodiques sur une base de 100~ms : lecture du potentiomètre de volume, détection des insertions et des retraits de la carte SD, détection de la perte du lien Bluetooth, télémétrie batterie, échantillonnage d'une éventuelle campagne d'autonomie et politique d'arrêt automatique.
 
 \begin{table}[H]
     \centering
@@ -25,7 +25,7 @@ Le firmware repose sur quatre tâches FreeRTOS permanentes et une conception ent
         audio       & 1     & 22       & 4\,kio & décodage et écriture vers la sortie   \\
         ui          & 1     & 5        & 8\,kio & rendu, navigation, verrouillage écran \\
         input       & libre & 5        & 3\,kio & lecture des boutons et mise en file   \\
-        maintenance & libre & 3        & 3\,kio & corvées périodiques (100~ms)          \\
+        maintenance & libre & 3        & 3\,kio & tâches périodiques (100~ms)           \\
         \bottomrule
     \end{tabular}
 \end{table}

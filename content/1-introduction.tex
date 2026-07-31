@@ -1,41 +1,40 @@
 \chapter{Introduction}
 
 \section{Contexte}
-Ce travail de Bachelor, réalisé à la HEIG-VD, porte sur la conception complète d'un lecteur audio portable, depuis le schéma électronique et le routage de la carte jusqu'au firmware embarqué. Le sujet a été choisi librement : il ne répond pas à une commande industrielle, mais à la volonté de mener un projet d'ingénierie de bout en bout et d'aboutir à un appareil réel, fabriqué et fonctionnel.
+Ce travail de Bachelor porte sur la conception complète d'un lecteur audio portable. Il couvre toute la chaîne de réalisation, du schéma électronique au routage de la carte, puis au firmware embarqué et enfin aux tests de validation. Le sujet a été choisi librement. Il ne répond pas à une commande industrielle, mais à la volonté de mener un projet d'ingénierie de bout en bout et d'obtenir un appareil réel, fabriqué et fonctionnel.
 
-Le lecteur audio dédié a largement disparu du marché grand public, absorbé par le smartphone. Il subsiste néanmoins dans des usages où la séparation des fonctions garde un intérêt : autonomie consacrée à la seule lecture, absence de distractions, ou simple préférence pour un objet matériel dédié. C'est dans cette logique que s'inscrit l'appareil développé ici, conçu comme un objet autonome et compact plutôt que comme une alternative au téléphone.
+Le smartphone a remplacé le lecteur audio dédié sur le marché grand public. Ce type d'appareil subsiste toutefois dans des usages de niche, pour trois raisons. Il ne sert qu'à écouter de la musique, il n'apporte aucune distraction, et il fonctionne sans dépendre d'un autre équipement. L'appareil développé ici suit cette logique. Il est conçu comme un objet compact et autonome, et non comme une alternative au téléphone.
 
 
 \section{Problématique}
-Concevoir un lecteur audio portable ne se résume pas à assembler des blocs fonctionnels connus. La difficulté tient à leur intégration simultanée dans un objet compact, autonome et fonctionnel, sous des contraintes qui s'opposent fréquemment.
+Concevoir un lecteur audio portable ne se résume pas à assembler des blocs fonctionnels connus. La difficulté vient de leur intégration simultanée dans un objet compact et autonome, sous des contraintes qui s'opposent souvent.
 
-La qualité audio exige une chaîne analogique à faible bruit, alors que la connectivité sans fil introduit des émissions RF (Bluetooth) à proximité immédiate de cette chaîne sensible. La compacité recherchée s'oppose à l'autonomie visée, qui suppose une batterie de capacité suffisante et une gestion fine de l'énergie. Le routage d'une carte multicouche doit isoler les signaux audio analogiques des signaux numériques rapides et des plans d'alimentation. Enfin, le firmware doit orchestrer en parallèle des tâches aux exigences temporelles très différentes. Le flux audio ne tolère aucune interruption, tandis que l'affichage et la lecture de la carte SD sont moins critiques.
+La qualité audio demande une chaîne analogique à faible bruit. Or le Bluetooth place un émetteur radio juste à côté de cette chaîne sensible. Le format compact s'oppose ensuite à l'autonomie, car une batterie de grande capacité prend de la place. Le routage d'une carte multicouche doit également isoler les signaux audio analogiques des signaux numériques rapides et des plans d'alimentation. Le firmware doit enfin faire cohabiter des tâches aux exigences temporelles très différentes. Le flux audio ne tolère aucune interruption, alors que l'affichage et la lecture de la carte SD sont moins critiques.
 
-Le problème central n'est donc pas le fonctionnement de chaque bloc pris isolément, mais la maîtrise des interfaces entre eux : c'est à ces frontières, entre l'analogique et le numérique, entre le matériel et le logiciel, que se concentrent l'essentiel des compromis et des difficultés du projet.
+Le problème central n'est donc pas le fonctionnement de chaque bloc pris isolément. Il s'agit de maîtriser les interfaces entre ces blocs. C'est à ces frontières, entre l'analogique et le numérique, entre le matériel et le logiciel, que se concentrent les compromis et les difficultés du projet.
 
 
 \clearpage
 \section{Objectifs}
-Les objectifs présentés ici sont ceux du travail : les livrables à produire pour mener le projet à terme. Les exigences que doit satisfaire l'appareil lui-même, fonctions minimales et fonctions additionnelles, font l'objet du cahier des charges, détaillé au chapitre~\ref{chap:analyse}.
+Cette section définit les livrables nécessaires à la réalisation du projet. Les exigences fonctionnelles de l'appareil font l'objet du cahier des charges détaillé au chapitre~\ref{chap:analyse}.
 
-L'objectif général est de concevoir, de bout en bout, un lecteur audio portable dédié, compact et fonctionnel. Il se décline en livrables successifs :
+L'objectif général consiste à concevoir intégralement un lecteur audio portable, compact et fonctionnel. La réalisation du projet suit les étapes suivantes :
 \begin{itemize}
-      \item établir les spécifications techniques et l'analyse fonctionnelle du produit.
-      \item concevoir l'architecture matérielle, le schéma électrique puis le layout d'un PCB multicouche.
-      \item modéliser le boîtier mécanique.
-      \item commander les composants, assembler la carte et valider le montage.
-      \item développer le firmware assurant les fonctions attendues.
-      \item rédiger le présent rapport.
+      \item établissement des spécifications techniques et de l'analyse fonctionnelle.
+      \item conception de l'architecture matérielle, du schéma électrique et du routage d'un PCB multicouche.
+      \item modélisation du boîtier mécanique.
+      \item commande des composants et assemblage de la carte.
+      \item développement du firmware assurant les fonctions requises.
+      \item vérification et caractérisation de l'appareil terminé, du contrôle électrique de la carte aux mesures audio et d'autonomie.
+      \item rédaction du présent rapport.
 \end{itemize}
-
-Les fonctions attendues de l'appareil se répartissent quant à elles en deux niveaux : des prérequis minimaux, qui suffisent à faire un appareil complet et utilisable, et des fonctions supplémentaires, ajoutées si le temps le permet. Le détail figure au cahier des charges.
 
 
 \section{Méthodologie}
-La démarche suit un déroulement descendant, de la définition fonctionnelle vers la réalisation, afin que chaque décision technique découle d'un besoin clairement établi en amont.
+La démarche suit un déroulement descendant, de la définition fonctionnelle vers la réalisation. Chaque décision technique découle ainsi d'un besoin établi en amont.
 
-Le projet débute par une analyse fonctionnelle qui fixe ce que l'appareil doit faire, indépendamment de toute solution technique. Ces fonctions sont ensuite traduites en spécifications, qui guident le choix des composants et l'architecture matérielle. La conception matérielle précède le logiciel : le schéma électrique, puis le routage du PCB, sont établis avant que le firmware ne puisse être validé sur la cible. Ce séquencement impose d'anticiper, dès la conception de la carte, les contraintes que le logiciel rencontrera ensuite.
+Le projet débute par une analyse fonctionnelle. Elle fixe ce que l'appareil doit faire, indépendamment de toute solution technique. Ces fonctions sont ensuite traduites en spécifications, qui guident le choix des composants et l'architecture matérielle. La conception matérielle précède le logiciel. Le schéma électrique, puis le routage du PCB, sont établis avant que le firmware ne puisse être testé sur la carte réelle. Ce séquencement impose d'anticiper, dès la conception de la carte, les contraintes que le logiciel rencontrera ensuite.
 
-Le choix du microcontrôleur s'est porté sur l'ESP32, qui intègre nativement le Bluetooth et offre les périphériques nécessaires (I\textsuperscript{2}S, SPI, I\textsuperscript{2}C) ainsi que la mémoire requise pour le décodage audio et le rendu graphique. La conception matérielle est menée sous Altium Designer, avec une attention particulière portée à la séparation des domaines analogiques, numériques et d'alimentation sur un empilage à quatre couches.
+Le microcontrôleur retenu est l'ESP32. La carte est conçue sous Altium Designer, et le firmware sous ESP-IDF avec le système temps réel FreeRTOS. Ces trois choix ne sont pas posés d'avance. Ils sont établis et justifiés plus loin dans le rapport, une fois les spécifications fixées.
 
-Le firmware repose sur l'environnement ESP-IDF et le système temps réel FreeRTOS. Il est organisé en couches, depuis l'abstraction du matériel jusqu'aux écrans de l'interface, afin de découpler les pilotes des services de plus haut niveau et de préserver la maintenabilité du code. Les traitements sont répartis en tâches concurrentes dont les priorités reflètent les exigences temporelles : la chaîne audio est prioritaire et protégée des autres traitements, tandis que l'interface et la maintenance s'exécutent à plus faible priorité. La validation s'effectue de façon incrémentale, bloc par bloc, puis par intégration progressive jusqu'à la lecture audio continue et la vérification de la liaison Bluetooth.
+La vérification se déroule en deux temps. Pendant le développement, elle est incrémentale. Chaque bloc est testé seul, puis intégré au reste, jusqu'à la lecture audio continue et à la liaison Bluetooth. Sur l'appareil terminé, une campagne de mesure confronte chaque grandeur à un critère fixé avant l'essai. Ce critère provient du schéma, des fiches techniques ou du dimensionnement. Les performances de la sortie filaire sont relevées à l'analyseur audio, et l'autonomie par décharges complètes sur batterie.

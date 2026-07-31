@@ -29,7 +29,7 @@ L'absence des deux signifie que l'alimentation a disparu sans laisser au firmwar
 
 Un \gls{coredump} laissé en flash n'est pas exploitable, la partition n'étant pas accessible depuis un ordinateur sans outil de programmation. Le firmware le recopie donc sur la carte SD au démarrage suivant, sous le premier nom de fichier encore inutilisé, puis efface la partition. L'analyse se fait ensuite hors cible en résolvant le fichier contre les symboles du binaire, ce qui produit une pile d'appel lisible comme celle reproduite en annexe~\ref{ann:coredump}.
 
-Deux détails de cette recopie méritent d'être défendus. La partition est effacée même lorsque l'écriture sur la carte a échoué, parce qu'un \gls{coredump} périmé ferait étiqueter en plantage toutes les coupures d'alimentation ultérieures. Un verdict juste vaut mieux qu'une trace conservée mais illisible. À l'inverse, lorsque aucune carte n'est présente au démarrage, la partition est laissée intacte et la recopie est retentée à la première insertion, la tâche de maintenance appelant de nouveau la fonction d'export à chaque montage de carte, comme décrit à la section~\ref{sec:transport}.
+Deux choix méritent d'être défendus. La partition est effacée même lorsque l'écriture sur la carte a échoué, parce qu'un \gls{coredump} périmé ferait étiqueter en plantage toutes les coupures d'alimentation ultérieures. Un verdict juste vaut mieux qu'une trace conservée mais illisible. À l'inverse, lorsque aucune carte n'est présente au démarrage, la partition est laissée intacte et la recopie est retentée à la première insertion, la tâche de maintenance appelant de nouveau la fonction d'export à chaque montage de carte, comme décrit à la section~\ref{sec:transport}.
 
 \subsection{Mesure d'autonomie}
 
