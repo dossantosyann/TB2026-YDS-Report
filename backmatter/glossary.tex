@@ -1,285 +1,285 @@
 %% Le glossaire est un élément optionnel qui peut être utile pour expliquer des termes techniques.
 
 \newglossaryentry{heig-vd}{
-    name=HEIG-VD,
-    description={Haute École d'Ingénierie et de Gestion du canton de Vaud}
+  name=HEIG-VD,
+  description={Haute École d'Ingénierie et de Gestion du canton de Vaud}
 }
 
 \newglossaryentry{hes-so}{
-    name=HES-SO,
-    description={Haute École Supérieure de Suisse Occidentale}
+  name=HES-SO,
+  description={Haute École Supérieure de Suisse Occidentale}
 }
 
 \newglossaryentry{DAC}{
-    name=DAC,
-    description={Convertisseur numérique-analogique}
+  name=DAC,
+  description={Convertisseur numérique-analogique}
 }
 
 \newglossaryentry{i2s}{
-    name={I\textsuperscript{2}S},
-    description={Inter-IC Sound. Bus numérique série dédié au transport d'audio entre circuits intégrés. Il transmet les échantillons sur trois signaux, une horloge de bit, une horloge de mot et une ligne de données, sans protocole d'adressage}
+  name={I\textsuperscript{2}S},
+  description={Inter-IC Sound. Bus numérique série dédié au transport d'audio entre circuits intégrés. Il transmet les échantillons sur trois signaux, une horloge de bit, une horloge de mot et une ligne de données, sans protocole d'adressage}
 }
 
 \newglossaryentry{i2c}{
-    name={I\textsuperscript{2}C},
-    description={Inter-Integrated Circuit. Bus série synchrone à deux fils utilisé pour relier des composants sur une carte, avec une ligne de données et une ligne d'horloge partagées}
+  name={I\textsuperscript{2}C},
+  description={Inter-Integrated Circuit. Bus série synchrone à deux fils utilisé pour relier des composants sur une carte, avec une ligne de données et une ligne d'horloge partagées}
 }
 
 \newglossaryentry{bck}{
-    name={BCK},
-    description={Bit Clock. Horloge du bus I\textsuperscript{2}S qui cadence la transmission de chaque bit. Sa fréquence vaut le produit de la fréquence d'échantillonnage, du nombre de canaux et de la largeur d'un slot}
+  name={BCK},
+  description={Bit Clock. Horloge du bus I\textsuperscript{2}S qui cadence la transmission de chaque bit. Sa fréquence vaut le produit de la fréquence d'échantillonnage, du nombre de canaux et de la largeur d'un slot}
 }
 
 \newglossaryentry{lrck}{
-    name={LRCK},
-    description={Left Right Clock. Horloge du bus I\textsuperscript{2}S qui désigne le canal auquel appartient le bit courant, l'état bas correspondant au canal gauche et l'état haut au canal droit. Elle bat une fois par échantillon stéréo, donc à la fréquence d'échantillonnage}
+  name={LRCK},
+  description={Left Right Clock. Horloge du bus I\textsuperscript{2}S qui désigne le canal auquel appartient le bit courant, l'état bas correspondant au canal gauche et l'état haut au canal droit. Elle bat une fois par échantillon stéréo, donc à la fréquence d'échantillonnage}
 }
 
 \newglossaryentry{mclk}{
-    name={MCLK},
-    description={Master Clock. Horloge haute fréquence fournie optionnellement à un convertisseur pour cadencer son électronique interne. Lorsqu'elle n'est pas câblée, le convertisseur doit la reconstruire à partir de l'horloge de bit au moyen d'une boucle à verrouillage de phase}
+  name={MCLK},
+  description={Master Clock. Horloge haute fréquence fournie optionnellement à un convertisseur pour cadencer son électronique interne. Lorsqu'elle n'est pas câblée, le convertisseur doit la reconstruire à partir de l'horloge de bit au moyen d'une boucle à verrouillage de phase}
 }
 
 \newglossaryentry{trame}{
-    name={trame audio},
-    description={Ensemble des échantillons correspondant à un même instant sur tous les canaux. Une trame stéréo dont chaque canal occupe 32 bits pèse ainsi 8 octets. Le débit du bus se mesure en trames par seconde, valeur égale à la fréquence d'échantillonnage}
+  name={trame audio},
+  description={Ensemble des échantillons correspondant à un même instant sur tous les canaux. Une trame stéréo dont chaque canal occupe 32 bits pèse ainsi 8 octets. Le débit du bus se mesure en trames par seconde, valeur égale à la fréquence d'échantillonnage}
 }
 
 \newglossaryentry{slot}{
-    name={slot},
-    description={Intervalle de temps réservé à un canal dans une trame du bus I\textsuperscript{2}S. Sa largeur, exprimée en bits, est indépendante de la résolution réelle des échantillons transmis, les bits inutilisés étant remplis de zéros}
+  name={slot},
+  description={Intervalle de temps réservé à un canal dans une trame du bus I\textsuperscript{2}S. Sa largeur, exprimée en bits, est indépendante de la résolution réelle des échantillons transmis, les bits inutilisés étant remplis de zéros}
 }
 
 \newglossaryentry{msbjust}{
-    name={justification MSB},
-    description={Placement d'un échantillon en tête de slot, bit de poids fort en premier, les bits de poids faible restants étant complétés par des zéros. Cette convention permet de transmettre un échantillon de résolution quelconque dans un slot de largeur fixe}
+  name={justification MSB},
+  description={Placement d'un échantillon en tête de slot, bit de poids fort en premier, les bits de poids faible restants étant complétés par des zéros. Cette convention permet de transmettre un échantillon de résolution quelconque dans un slot de largeur fixe}
 }
 
 \newglossaryentry{pll}{
-    name={PLL},
-    description={Phase-Locked Loop, ou boucle à verrouillage de phase. Circuit asservi qui synthétise une horloge de sortie dont la fréquence est un multiple rationnel de celle d'une horloge de référence}
+  name={PLL},
+  description={Phase-Locked Loop, ou boucle à verrouillage de phase. Circuit asservi qui synthétise une horloge de sortie dont la fréquence est un multiple rationnel de celle d'une horloge de référence}
 }
 
 \newglossaryentry{apll}{
-    name={APLL},
-    description={Audio PLL. Seconde boucle à verrouillage de phase de l'ESP32, dont la fréquence de sortie est finement programmable. Elle permet de synthétiser exactement les horloges des familles de fréquences audio, que la boucle principale du micro-contrôleur ne peut atteindre par division entière}
+  name={APLL},
+  description={Audio PLL. Seconde boucle à verrouillage de phase de l'ESP32, dont la fréquence de sortie est finement programmable. Elle permet de synthétiser exactement les horloges des familles de fréquences audio, que la boucle principale du microcontrôleur ne peut atteindre par division entière}
 }
 
 \newglossaryentry{dma}{
-    name={DMA},
-    description={Direct Memory Access. Mécanisme permettant à un périphérique de lire ou d'écrire en mémoire sans intervention du processeur. Les zones concernées sont décrites par des descripteurs chaînés, chacun désignant un tampon de taille bornée}
+  name={DMA},
+  description={Direct Memory Access. Mécanisme permettant à un périphérique de lire ou d'écrire en mémoire sans intervention du processeur. Les zones concernées sont décrites par des descripteurs chaînés, chacun désignant un tampon de taille bornée}
 }
 
 \newglossaryentry{sink}{
-    name={sink audio},
-    description={Interface abstraite représentant une destination de flux audio dans le firmware. Elle expose trois opérations, l'ouverture dans un format donné, l'écriture d'un bloc d'échantillons et la fermeture, ce qui rend le producteur d'échantillons indépendant de la sortie réellement utilisée}
+  name={sink audio},
+  description={Interface abstraite représentant une destination de flux audio dans le firmware. Elle expose trois opérations, l'ouverture dans un format donné, l'écriture d'un bloc d'échantillons et la fermeture, ce qui rend le producteur d'échantillons indépendant de la sortie réellement utilisée}
 }
 \newglossaryentry{sd}{
-    name={SD},
-    description={Secure Digital. Format de carte mémoire amovible de grande capacité. Le lecteur y accède en mode SPI, dont le câblage est plus simple que celui du mode natif au prix d'un débit moindre, sans conséquence pour la lecture audio}
+  name={SD},
+  description={Secure Digital. Format de carte mémoire amovible de grande capacité. Le lecteur y accède en mode SPI, dont le câblage est plus simple que celui du mode natif au prix d'un débit moindre, sans conséquence pour la lecture audio}
 }
 
 \newglossaryentry{psram}{
-    name={PSRAM},
-    description={Pseudo-Static RAM. Mémoire vive de grande capacité intégrée au module mais externe au micro-contrôleur. Elle accueille les données volumineuses du firmware, à l'exception des tampons manipulés par le contrôleur d'accès direct à la mémoire, qui ne peut pas l'adresser}
+  name={PSRAM},
+  description={Pseudo-Static RAM. Mémoire vive de grande capacité intégrée au module mais externe au microcontrôleur. Elle accueille les données volumineuses du firmware, à l'exception des tampons manipulés par le contrôleur d'accès direct à la mémoire, qui ne peut pas l'adresser}
 }
 
 \newglossaryentry{spi}{
-    name={SPI},
-    description={Serial Peripheral Interface. Bus série synchrone reliant un contrôleur maître à un ou plusieurs périphériques, chacun sélectionné par une ligne dédiée. Le micro-contrôleur en expose plusieurs instances matérielles indépendantes}
+  name={SPI},
+  description={Serial Peripheral Interface. Bus série synchrone reliant un contrôleur maître à un ou plusieurs périphériques, chacun sélectionné par une ligne dédiée. Le microcontrôleur en expose plusieurs instances matérielles indépendantes}
 }
 
 \newglossaryentry{pcm}{
-    name={PCM},
-    description={Pulse-Code Modulation. Représentation numérique directe d'un signal audio par une suite d'échantillons d'amplitude prélevés à intervalle régulier, sans compression. C'est sous ce format que circulent les échantillons entre les décodeurs et le sink}
+  name={PCM},
+  description={Pulse-Code Modulation. Représentation numérique directe d'un signal audio par une suite d'échantillons d'amplitude prélevés à intervalle régulier, sans compression. C'est sous ce format que circulent les échantillons entre les décodeurs et le sink}
 }
 
 \newglossaryentry{mp3}{
-    name={MP3},
-    description={MPEG-1 Audio Layer III. Format de compression audio avec pertes, à débit constant ou variable, décodé par le firmware vers la représentation PCM interne}
+  name={MP3},
+  description={MPEG-1 Audio Layer III. Format de compression audio avec pertes, à débit constant ou variable, décodé par le firmware vers la représentation PCM interne}
 }
 
 \newglossaryentry{wav}{
-    name={WAV},
-    description={Waveform Audio File Format. Format de fichier encapsulant des échantillons PCM non compressés, précédés d'un en-tête qui déclare leur fréquence d'échantillonnage, leur résolution et leur nombre de canaux}
+  name={WAV},
+  description={Waveform Audio File Format. Format de fichier encapsulant des échantillons PCM non compressés, précédés d'un en-tête qui déclare leur fréquence d'échantillonnage, leur résolution et leur nombre de canaux}
 }
 
 \newglossaryentry{fatfs}{
-    name={FATFS},
-    description={Implémentation du système de fichiers FAT destinée aux systèmes embarqués et intégrée à ESP-IDF, par laquelle le firmware accède aux fichiers de la carte SD}
+  name={FATFS},
+  description={Implémentation du système de fichiers FAT destinée aux systèmes embarqués et intégrée à ESP-IDF, par laquelle le firmware accède aux fichiers de la carte SD}
 }
 
 \newglossaryentry{a2dp}{
-    name={A2DP},
-    description={Advanced Audio Distribution Profile. Profil Bluetooth qui régit le transport d'un flux audio stéréo entre une source, qui émet le flux, et un puits, qui le restitue. Sur la radio classique de ce micro-contrôleur, il impose l'emploi du codec SBC}
+  name={A2DP},
+  description={Advanced Audio Distribution Profile. Profil Bluetooth qui régit le transport d'un flux audio stéréo entre une source, qui émet le flux, et un puits, qui le restitue. Sur la radio classique de ce microcontrôleur, il impose l'emploi du codec SBC}
 }
 
 \newglossaryentry{avrcp}{
-    name={AVRCP},
-    description={Audio/Video Remote Control Profile. Profil Bluetooth de télécommande associé à l'A2DP, par lequel une source peut notamment fixer le volume absolu du récepteur}
+  name={AVRCP},
+  description={Audio/Video Remote Control Profile. Profil Bluetooth de télécommande associé à l'A2DP, par lequel une source peut notamment fixer le volume absolu du récepteur}
 }
 
 \newglossaryentry{sbc}{
-    name={SBC},
-    description={Low Complexity Subband Coding. Codec audio à pertes de faible complexité, seul codec dont la prise en charge est obligatoire dans le profil A2DP. Il opère sur des échantillons de 16 bits}
+  name={SBC},
+  description={Low Complexity Subband Coding. Codec audio à pertes de faible complexité, seul codec dont la prise en charge est obligatoire dans le profil A2DP. Il opère sur des échantillons de 16 bits}
 }
 
 \newglossaryentry{nvs}{
-    name={NVS},
-    description={Non-Volatile Storage. Service d'ESP-IDF qui conserve de petites données clé-valeur en mémoire flash au travers des cycles d'alimentation, employé par le firmware pour ses préférences persistantes}
+  name={NVS},
+  description={Non-Volatile Storage. Service d'ESP-IDF qui conserve de petites données clé-valeur en mémoire flash au travers des cycles d'alimentation, employé par le firmware pour ses préférences persistantes}
 }
 
 \newglossaryentry{twdt}{
-    name={TWDT},
-    description={Task Watchdog Timer. Chien de garde d'ESP-IDF qui surveille les tâches abonnées et provoque une réinitialisation si l'une d'elles ne se signale pas dans le délai imparti, révélant un blocage logiciel}
+  name={TWDT},
+  description={Task Watchdog Timer. Chien de garde d'ESP-IDF qui surveille les tâches abonnées et provoque une réinitialisation si l'une d'elles ne se signale pas dans le délai imparti, révélant un blocage logiciel}
 }
 
 \newglossaryentry{iwdt}{
-    name={IWDT},
-    description={Interrupt Watchdog Timer. Chien de garde d'ESP-IDF qui surveille le service des interruptions sur chaque cœur et provoque une panique lorsque l'interruption de tick n'est plus servie dans le délai imparti}
+  name={IWDT},
+  description={Interrupt Watchdog Timer. Chien de garde d'ESP-IDF qui surveille le service des interruptions sur chaque cœur et provoque une panique lorsque l'interruption de tick n'est plus servie dans le délai imparti}
 }
 
 \newglossaryentry{esd}{
-    name={ESD},
-    description={Electrostatic Discharge. Décharge électrostatique, transfert brutal de charges lorsqu'un corps chargé touche le circuit. Sans protection, l'impulsion de tension associée peut détruire les entrées des composants}
+  name={ESD},
+  description={Electrostatic Discharge. Décharge électrostatique, transfert brutal de charges lorsqu'un corps chargé touche le circuit. Sans protection, l'impulsion de tension associée peut détruire les entrées des composants}
 }
 
 \newglossaryentry{tvs}{
-    name={TVS},
-    description={Transient Voltage Suppressor. Diode de protection qui reste non conductrice en fonctionnement normal et écoule brutalement le courant vers la masse dès qu'une surtension dépasse son seuil, écrêtant l'impulsion avant qu'elle n'atteigne les composants protégés}
+  name={TVS},
+  description={Transient Voltage Suppressor. Diode de protection qui reste non conductrice en fonctionnement normal et écoule brutalement le courant vers la masse dès qu'une surtension dépasse son seuil, écrêtant l'impulsion avant qu'elle n'atteigne les composants protégés}
 }
 
 \newglossaryentry{adc}{
-    name={ADC},
-    description={Analog-to-Digital Converter (Convertisseur Analogique-Numérique). Composant électronique qui transforme un signal analogique continu (tension ou courant) en une valeur numérique discrète (binaire) proportionnelle, permettant ainsi à un système numérique comme un microcontrôleur de traiter des grandeurs physiques réelles}
+  name={ADC},
+  description={Analog-to-Digital Converter (Convertisseur Analogique-Numérique). Composant électronique qui transforme un signal analogique continu (tension ou courant) en une valeur numérique discrète (binaire) proportionnelle, permettant ainsi à un système numérique comme un microcontrôleur de traiter des grandeurs physiques réelles}
 }
 
 \newglossaryentry{snr}{
-    name={SNR},
-    description={Signal-to-Noise Ratio. Rapport signal sur bruit, exprimé en décibels, qui compare le niveau du signal utile à celui du bruit résiduel. Plus il est élevé, plus le signal restitué est propre}
+  name={SNR},
+  description={Signal-to-Noise Ratio. Rapport signal sur bruit, exprimé en décibels, qui compare le niveau du signal utile à celui du bruit résiduel. Plus il est élevé, plus le signal restitué est propre}
 }
 
 \newglossaryentry{thdn}{
-    name={THD+N},
-    description={Total Harmonic Distortion plus Noise. Distorsion harmonique totale additionnée du bruit, exprimée en décibels, qui quantifie l'écart entre le signal restitué et une reproduction parfaite du signal d'entrée}
+  name={THD+N},
+  description={Total Harmonic Distortion plus Noise. Distorsion harmonique totale additionnée du bruit, exprimée en décibels, qui quantifie l'écart entre le signal restitué et une reproduction parfaite du signal d'entrée}
 }
 
 \newglossaryentry{psrr}{
-    name={PSRR},
-    description={Power Supply Rejection Ratio. Taux de réjection de l'alimentation, qui mesure la capacité d'un circuit à atténuer les perturbations présentes sur son alimentation avant qu'elles n'atteignent sa sortie}
+  name={PSRR},
+  description={Power Supply Rejection Ratio. Taux de réjection de l'alimentation, qui mesure la capacité d'un circuit à atténuer les perturbations présentes sur son alimentation avant qu'elles n'atteignent sa sortie}
 }
 
 \newglossaryentry{bga}{
-    name={BGA},
-    description={Ball Grid Array. Boîtier de circuit intégré dont les connexions se font par une grille de billes de soudure sous le composant plutôt que par des broches périphériques, ce qui complique l'inspection et le montage d'un prototype}
+  name={BGA},
+  description={Ball Grid Array. Boîtier de circuit intégré dont les connexions se font par une grille de billes de soudure sous le composant plutôt que par des broches périphériques, ce qui complique l'inspection et le montage d'un prototype}
 }
 
 \newglossaryentry{soc}{
-    name={SOC},
-    description={State of Charge. État de charge d'une batterie, exprimé en pourcentage de sa capacité totale}
+  name={SOC},
+  description={State of Charge. État de charge d'une batterie, exprimé en pourcentage de sa capacité totale}
 }
 
 \newglossaryentry{aicl}{
-    name={AICL},
-    description={Adaptive Input Current Limit. Régulation adaptative du courant d'entrée d'un chargeur, qui réduit ce courant si la tension de la source commence à s'effondrer, afin de prélever le maximum que celle-ci peut soutenir sans chuter}
+  name={AICL},
+  description={Adaptive Input Current Limit. Régulation adaptative du courant d'entrée d'un chargeur, qui réduit ce courant si la tension de la source commence à s'effondrer, afin de prélever le maximum que celle-ci peut soutenir sans chuter}
 }
 
 \newglossaryentry{bc12}{
-    name={BC1.2},
-    description={Battery Charging 1.2. Spécification de l'USB Implementers Forum qui définit, par le comportement électrique des lignes de données, comment un chargeur USB signale sa capacité de courant à l'appareil connecté}
+  name={BC1.2},
+  description={Battery Charging 1.2. Spécification de l'USB Implementers Forum qui définit, par le comportement électrique des lignes de données, comment un chargeur USB signale sa capacité de courant à l'appareil connecté}
 }
 
 \newglossaryentry{pcb}{
-    name={PCB},
-    description={Printed Circuit Board, circuit imprimé. Support isolant sur lequel sont gravées les pistes de cuivre reliant les composants et sur lequel ceux-ci sont soudés}
+  name={PCB},
+  description={Printed Circuit Board, circuit imprimé. Support isolant sur lequel sont gravées les pistes de cuivre reliant les composants et sur lequel ceux-ci sont soudés}
 }
 
 \newglossaryentry{stackup}{
-    name={stack-up},
-    description={Empilage des couches d'un circuit imprimé, décrivant l'ordre des couches de cuivre, leur épaisseur, ainsi que la nature et l'épaisseur des diélectriques qui les séparent}
+  name={stack-up},
+  description={Empilage des couches d'un circuit imprimé, décrivant l'ordre des couches de cuivre, leur épaisseur, ainsi que la nature et l'épaisseur des diélectriques qui les séparent}
 }
 
 \newglossaryentry{prepreg}{
-    name={prepreg},
-    description={Tissu de fibre de verre préimprégné de résine époxy, utilisé comme diélectrique entre deux couches de cuivre. Il polymérise lors du pressage du circuit imprimé, contrairement au noyau qui est déjà rigide avant assemblage}
+  name={prepreg},
+  description={Tissu de fibre de verre préimprégné de résine époxy, utilisé comme diélectrique entre deux couches de cuivre. Il polymérise lors du pressage du circuit imprimé, contrairement au noyau qui est déjà rigide avant assemblage}
 }
 
 \newglossaryentry{dfs}{
-    name={DFS},
-    description={Dynamic Frequency Scaling. Mécanisme qui ajuste la fréquence d'horloge du processeur en fonction de la charge, afin de réduire la consommation lorsque la pleine vitesse n'est pas nécessaire}
+  name={DFS},
+  description={Dynamic Frequency Scaling. Mécanisme qui ajuste la fréquence d'horloge du processeur en fonction de la charge, afin de réduire la consommation lorsque la pleine vitesse n'est pas nécessaire}
 }
 
 \newglossaryentry{coredump}{
-    name={coredump},
-    description={Vidage mémoire écrit par le gestionnaire de panique lors d'un plantage. Il contient les registres et la pile de chaque tâche au moment de la faute, et permet une analyse post-mortem hors cible}
+  name={coredump},
+  description={Vidage mémoire écrit par le gestionnaire de panique lors d'un plantage. Il contient les registres et la pile de chaque tâche au moment de la faute, et permet une analyse post-mortem hors cible}
 }
 
 \newglossaryentry{apb}{
-    name={APB},
-    description={Advanced Peripheral Bus. Bus interne reliant le cœur du \gls{soc} à ses périphériques numériques (\gls{i2s}, \gls{spi}, \gls{i2c}, \gls{uart}), cadencé à 80~MHz sur l'ESP32 lorsque la CPU est pilotée par la PLL et suspendu en sommeil léger, ce qui arrête simultanément tous les périphériques concernés}
+  name={APB},
+  description={Advanced Peripheral Bus. Bus interne reliant le cœur du \gls{soc} à ses périphériques numériques (\gls{i2s}, \gls{spi}, \gls{i2c}, \gls{uart}), cadencé à 80~MHz sur l'ESP32 lorsque la CPU est pilotée par la PLL et suspendu en sommeil léger, ce qui arrête simultanément tous les périphériques concernés}
 }
 
 \newglossaryentry{csv}{
-    name={CSV},
-    description={Comma-Separated Values. Format de fichier texte où chaque ligne représente un enregistrement et où les champs sont séparés par un caractère fixe, employé ici pour exporter les courbes de décharge vers un tableur ou un script d'analyse}
+  name={CSV},
+  description={Comma-Separated Values. Format de fichier texte où chaque ligne représente un enregistrement et où les champs sont séparés par un caractère fixe, employé ici pour exporter les courbes de décharge vers un tableur ou un script d'analyse}
 }
 
 \newglossaryentry{uart}{
-    name={UART},
-    description={Universal Asynchronous Receiver-Transmitter. Circuit intégré ou module logique assurant la communication série asynchrone en convertissant les données parallèles du processeur en un flux série pour l'émission, et inversement pour la réception, sans nécessiter de signal d'horloge commun entre les équipements}
+  name={UART},
+  description={Universal Asynchronous Receiver-Transmitter. Circuit intégré ou module logique assurant la communication série asynchrone en convertissant les données parallèles du processeur en un flux série pour l'émission, et inversement pour la réception, sans nécessiter de signal d'horloge commun entre les équipements}
 }
 
 \newglossaryentry{step}{
-    name={STEP},
-    description={Standard for the Exchange of Product model data. Format d'échange normalisé de modèles tridimensionnels, indépendant du logiciel de conception, utilisé ici pour transférer le modèle du circuit imprimé d'Altium vers le logiciel de conception mécanique}
+  name={STEP},
+  description={Standard for the Exchange of Product model data. Format d'échange normalisé de modèles tridimensionnels, indépendant du logiciel de conception, utilisé ici pour transférer le modèle du circuit imprimé d'Altium vers le logiciel de conception mécanique}
 }
 
 \newglossaryentry{cao}{
-    name={CAO},
-    description={Conception assistée par ordinateur. Ensemble des outils logiciels permettant de dessiner des pièces et des assemblages mécaniques en trois dimensions}
+  name={CAO},
+  description={Conception assistée par ordinateur. Ensemble des outils logiciels permettant de dessiner des pièces et des assemblages mécaniques en trois dimensions}
 }
 
 \newglossaryentry{fdm}{
-    name={FDM},
-    description={Fused Deposition Modeling. Procédé d'impression tridimensionnelle par dépôt de fil thermoplastique fondu, couche après couche}
+  name={FDM},
+  description={Fused Deposition Modeling. Procédé d'impression tridimensionnelle par dépôt de fil thermoplastique fondu, couche après couche}
 }
 
 \newglossaryentry{dbfs}{
-    name={dBFS},
-    description={Decibel Full Scale. Niveau d'un signal numérique exprimé en décibels par rapport à la pleine échelle du format, qui vaut 0 dBFS par définition. Toutes les valeurs utiles sont donc négatives, un fichier à $-20$ dBFS sollicitant le convertisseur au dixième de sa pleine échelle en tension}
+  name={dBFS},
+  description={Decibel Full Scale. Niveau d'un signal numérique exprimé en décibels par rapport à la pleine échelle du format, qui vaut 0 dBFS par définition. Toutes les valeurs utiles sont donc négatives, un fichier à $-20$ dBFS sollicitant le convertisseur au dixième de sa pleine échelle en tension}
 }
 
 \newglossaryentry{dbr}{
-    name={dBr},
-    description={Decibel relative. Niveau exprimé en décibels par rapport à une référence choisie par l'opérateur, ici le relevé à 1 kHz. Cette normalisation élimine le gain absolu de la chaîne et ne conserve que les écarts, ce qui est la grandeur pertinente pour une réponse en fréquence}
+  name={dBr},
+  description={Decibel relative. Niveau exprimé en décibels par rapport à une référence choisie par l'opérateur, ici le relevé à 1 kHz. Cette normalisation élimine le gain absolu de la chaîne et ne conserve que les écarts, ce qui est la grandeur pertinente pour une réponse en fréquence}
 }
 
 \newglossaryentry{rms}{
-    name={RMS},
-    description={Root Mean Square. Valeur efficace d'un signal, égale à la racine carrée de la moyenne de son carré. C'est le mode de détection à imposer pour mesurer un bruit, dont le facteur de crête diffère de celui d'une sinusoïde et rendrait toute détection de crête non comparable}
+  name={RMS},
+  description={Root Mean Square. Valeur efficace d'un signal, égale à la racine carrée de la moyenne de son carré. C'est le mode de détection à imposer pour mesurer un bruit, dont le facteur de crête diffère de celui d'une sinusoïde et rendrait toute détection de crête non comparable}
 }
 
 \newglossaryentry{por}{
-    name={POR},
-    description={Power-On Reset. Séquence d'initialisation déclenchée par la mise sous tension d'un circuit, qui place ses registres et ses entrées-sorties dans un état par défaut connu avant toute intervention du firmware}
+  name={POR},
+  description={Power-On Reset. Séquence d'initialisation déclenchée par la mise sous tension d'un circuit, qui place ses registres et ses entrées-sorties dans un état par défaut connu avant toute intervention du firmware}
 }
 
 \newglossaryentry{pwm}{
-    name={PWM},
-    description={Pulse Width Modulation. Modulation de largeur d'impulsion, mode de fonctionnement d'un convertisseur à découpage dans lequel la durée de conduction varie avec la charge tandis que la période reste sensiblement constante}
+  name={PWM},
+  description={Pulse Width Modulation. Modulation de largeur d'impulsion, mode de fonctionnement d'un convertisseur à découpage dans lequel la durée de conduction varie avec la charge tandis que la période reste sensiblement constante}
 }
 
 \newglossaryentry{directdrive}{
-    name={DirectDrive},
-    description={Topologie d'amplificateur casque qui produit un rail négatif au moyen d'une pompe de charge interne, de manière à centrer la sortie sur la masse. Elle supprime les condensateurs de liaison de sortie, au prix d'une dépendance du niveau maximal disponible à la capacité de la pompe de charge à tenir ce rail sous charge}
+  name={DirectDrive},
+  description={Topologie d'amplificateur casque qui produit un rail négatif au moyen d'une pompe de charge interne, de manière à centrer la sortie sur la masse. Elle supprime les condensateurs de liaison de sortie, au prix d'une dépendance du niveau maximal disponible à la capacité de la pompe de charge à tenir ce rail sous charge}
 }
 
 \newglossaryentry{diaphonie}{
-    name={diaphonie},
-    description={Crosstalk. Fuite du signal d'une voie vers l'autre, exprimée en décibels comme le rapport entre le niveau relevé sur la voie muette et le niveau de la voie excitée à la même fréquence}
+  name={diaphonie},
+  description={Crosstalk. Fuite du signal d'une voie vers l'autre, exprimée en décibels comme le rapport entre le niveau relevé sur la voie muette et le niveau de la voie excitée à la même fréquence}
 }
 
 \newglossaryentry{strapping}{
-    name={strapping pin},
-    description={Broche d'un micro-contrôleur dont l'état logique est échantillonné pendant le reset pour configurer un mode de démarrage, et qui retrouve ensuite sa fonction normale d'entrée-sortie. Un niveau incorrect au reset peut rendre le module inopérant sans qu'aucun défaut matériel ne soit en cause}
+  name={strapping pin},
+  description={Broche d'un microcontrôleur dont l'état logique est échantillonné pendant le reset pour configurer un mode de démarrage, et qui retrouve ensuite sa fonction normale d'entrée-sortie. Un niveau incorrect au reset peut rendre le module inopérant sans qu'aucun défaut matériel ne soit en cause}
 }

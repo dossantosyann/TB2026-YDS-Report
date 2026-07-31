@@ -18,7 +18,7 @@ Le présent travail ne se situe dans aucune de ces deux catégories commerciales
 \index{technologie}
 
 \subsection{Architecture de calcul}
-Deux approches coexistent. Les DAP haut de gamme s'appuient sur un processeur applicatif exécutant un système d'exploitation complet, ce qui apporte souplesse et accès au streaming, au prix d'une consommation et d'une complexité élevées \cite{Homecine_DAP_Comparison}. À l'opposé, un microcontrôleur ou un SoC intégré suffit pour un appareil à fonction unique et offre une consommation réduite ainsi qu'un comportement temps réel maîtrisé, au prix d'un développement logiciel plus proche du matériel. C'est cette seconde approche qui est retenue ici.
+Deux approches coexistent. Les DAP haut de gamme s'appuient sur un processeur applicatif exécutant un système d'exploitation complet, ce qui apporte souplesse et accès au streaming, au prix d'une consommation et d'une complexité élevées \cite{Homecine_DAP_Comparison}. À l'opposé, un microcontrôleur suffit pour un appareil à fonction unique et offre une consommation réduite ainsi qu'un comportement temps réel maîtrisé, au prix d'un développement logiciel plus proche du matériel. C'est cette seconde approche qui est retenue ici.
 
 \subsection{Chaîne audio et connectivité}
 La restitution repose sur une chaîne désormais classique formée du décodage du flux compressé, de la conversion numérique-analogique, du filtrage puis de l'amplification. Le décodage MP3 est un procédé mature, disponible sous forme de bibliothèques logicielles éprouvées, et la conversion fait appel à un convertisseur dédié communiquant en I\textsuperscript{2}S, suivi d'un étage capable d'attaquer un casque. Les architectures les plus soignées privilégient des liaisons symétriques afin de réduire la sensibilité au bruit, principe que l'on retrouve à toutes les gammes de prix.
@@ -40,7 +40,7 @@ Le tableau~\ref{tab:comparatif} résume ces approches et situe le présent proje
             \hline
             \textbf{Critère} & \textbf{DAP audiophile}         & \textbf{DAP entrée de gamme} & \textbf{Ce projet}             \\
             \hline
-            Calcul           & Processeur applicatif (Android) & Microcontrôleur / SoC        & SoC                            \\
+            Calcul           & Processeur applicatif (Android) & Microcontrôleur              & Microcontrôleur                \\
             Objectif audio   & Très haute fidélité             & Basique                      & Qualité maîtrisée et justifiée \\
             Coût             & Élevé à très élevé              & Faible                       & Sans objet (prototype)         \\
             Finalité         & Produit commercial              & Produit commercial           & Démarche d'ingénierie complète \\

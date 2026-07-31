@@ -6,11 +6,11 @@ La conception et la mise au point du prototype ont fait apparaître des défauts
 \section{Défauts à corriger}
 \label{sec:amel_defauts}
 
-Le réseau d'écrêtage du bouton A protège correctement l'entrée du micro-contrôleur, mais il empêche l'allumage. Tant que le micro-contrôleur n'est pas alimenté, ses diodes de protection internes ramènent la tension à environ 0,6 V, niveau insuffisant pour activer le régulateur. La figure~\ref{buttonA_corrected_schematic.drawio} donne le montage corrigé.
+Le réseau d'écrêtage du bouton A protège correctement l'entrée du microcontrôleur, mais il empêche l'allumage. Tant que le microcontrôleur n'est pas alimenté, ses diodes de protection internes ramènent la tension à environ 0,6 V, niveau insuffisant pour activer le régulateur. La figure~\ref{buttonA_corrected_schematic.drawio} donne le montage corrigé.
 
-\fig[H, width=0.5\textwidth]{Montage corrigé du bouton A, avec prélèvement direct de la commande d'activation et réseau d'écrêtage vers le micro-contrôleur.}{buttonA_corrected_schematic.drawio}
+\fig[H, width=0.5\textwidth]{Montage corrigé du bouton A, avec prélèvement direct de la commande d'activation et réseau d'écrêtage vers le microcontrôleur.}{buttonA_corrected_schematic.drawio}
 
-La commande d'activation est prélevée directement en sortie du bouton, en amont du réseau d'écrêtage, de sorte qu'elle évite l'écrêtage imposé par le micro-contrôleur éteint. Un bouton unique continue ainsi d'assurer les deux fonctions.
+La commande d'activation est prélevée directement en sortie du bouton, en amont du réseau d'écrêtage, de sorte qu'elle évite l'écrêtage imposé par le microcontrôleur éteint. Un bouton unique continue ainsi d'assurer les deux fonctions.
 
 La résistance série doit par ailleurs être fortement réduite, la diode Zener ne travaillant pas dans sa zone de régulation comme expliqué à la section~\ref{sec:res_electrique}. Une diode Zener régulant à plus faible constitue également une solution valable.
 
@@ -43,7 +43,7 @@ L'arbitrage n'est donc pas évident. Il mérite d'être posé explicitement au d
 \section{Fonctions matérielles absentes}
 \label{sec:amel_materiel}
 
-L'absence d'horloge temps réel prive l'appareil de trois objectifs supplémentaires du cahier des charges, comme l'établit la section~\ref{sec:res_bilan}. Ajouter un quartz de 32,768 kHz au micro-contrôleur n'y changerait rien, puisque le rail est coupé et non mis en sommeil. Il faut une horloge dédiée, alimentée par une pile bouton et interrogée par \gls{i2c} au démarrage.
+L'absence d'horloge temps réel prive l'appareil de trois objectifs supplémentaires du cahier des charges, comme l'établit la section~\ref{sec:res_bilan}. Ajouter un quartz de 32,768 kHz au microcontrôleur n'y changerait rien, puisque le rail est coupé et non mis en sommeil. Il faut une horloge dédiée, alimentée par une pile bouton et interrogée par \gls{i2c} au démarrage.
 
 Le connecteur jack retenu ne comporte aucun contact de détection. Un pin de présence permettrait de couper l'amplificateur lorsque la prise est vide, de basculer automatiquement de sortie et d'éviter qu'une lecture se poursuive sans auditeur.
 

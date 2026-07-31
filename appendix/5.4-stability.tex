@@ -9,7 +9,7 @@ La lecture au double de la vitesse est apparue au passage à la version~6 d'ESP-
 
 Les premiers essais de lecture sur matériel produisaient des coupures audibles dès que la carte \gls{sd} tardait à répondre. La configuration par défaut de l'anneau de tampons du contrôleur d'accès direct à la mémoire, six descripteurs de 240~trames, n'offre qu'environ 7,5~ms de coussin à 192~kHz~\cite{ESP32_IDF_i2s}, insuffisant devant le temps de réponse non borné de la carte. L'anneau a été porté à douze descripteurs de 511~trames, cette dernière valeur étant un plafond matériel, ce qui porte le coussin à environ 32~ms au cas dimensionnant. Le raisonnement complet figure à la section~\ref{sec:audio_filaire}.
 
-Le démontage de la carte SD figeait par intermittence l'affichage, l'interface restant bloquée. L'écran et la carte disposent chacun de leur hôte \gls{spi}, mais les contrôleurs SPI de ce micro-contrôleur ne possèdent pas chacun un accès indépendant au contrôleur d'accès direct à la mémoire, un même bit d'horloge étant partagé et compté par référence entre eux~\cite{ESP32_Technical_Reference_Manual}. Libérer entièrement le bus de la carte suspendait de ce fait un transfert d'affichage en cours. La correction a consisté à ne retirer que le périphérique associé à la carte sans jamais libérer le bus, démontage partiel suffisant à gérer l'insertion et le retrait, comme décrit à la section~\ref{sec:transport}.
+Le démontage de la carte SD figeait par intermittence l'affichage, l'interface restant bloquée. L'écran et la carte disposent chacun de leur hôte \gls{spi}, mais les contrôleurs SPI de ce microcontrôleur ne possèdent pas chacun un accès indépendant au contrôleur d'accès direct à la mémoire, un même bit d'horloge étant partagé et compté par référence entre eux~\cite{ESP32_Technical_Reference_Manual}. Libérer entièrement le bus de la carte suspendait de ce fait un transfert d'affichage en cours. La correction a consisté à ne retirer que le périphérique associé à la carte sans jamais libérer le bus, démontage partiel suffisant à gérer l'insertion et le retrait, comme décrit à la section~\ref{sec:transport}.
 
 \section{Bluetooth}
 
@@ -24,20 +24,20 @@ Une tentative de connexion pouvait échouer en laissant la pile dans un état in
 Un incident d'extinction inexpliqué a révélé un angle mort du diagnostic. Le firmware maintient lui-même son propre rail d'alimentation, si bien que toute réinitialisation fait tomber ce rail et que le démarrage suivant lit invariablement une mise sous tension, ce qui rend un plantage indistinguable d'une extinction volontaire ou d'une coupure d'alimentation. La résolution repose sur des traces persistées avant la chute du rail, un marqueur d'extinction propre écrit en \gls{nvs} juste avant de relâcher le rail, et un coredump déposé dans une partition de flash dédiée en cas de panique. Le démarrage suivant lit ces traces et classe la fin de la session précédente en extinction propre, plantage ou coupure selon la logique suivante :
 
 \begin{table}[H]
-    \centering
-    \caption{Classification de la fin de session au boot}
-    \label{tab:verdict_extinction}
-    {\renewcommand{\arraystretch}{1.1}
-        \setlength{\tabcolsep}{4pt}
-        \begin{tabular}{@{}c c c >{\raggedright\arraybackslash}p{0.48\linewidth}@{}}
-            \hline
-            Marqueur NVS & Coredump flash & Verdict    & Interprétation                          \\
-            \hline
-            présent      & absent         & clean      & \texttt{power\_shutdown()} a été appelé \\
-            absent       & présent        & crash      & panic CPU / watchdog                    \\
-            absent       & absent         & power loss & coupure d'alimentation innatendue       \\
-            \hline
-        \end{tabular}}
+  \centering
+  \caption{Classification de la fin de session au boot}
+  \label{tab:verdict_extinction}
+  {\renewcommand{\arraystretch}{1.1}
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{@{}c c c >{\raggedright\arraybackslash}p{0.48\linewidth}@{}}
+      \hline
+      Marqueur NVS & Coredump flash & Verdict    & Interprétation                          \\
+      \hline
+      présent      & absent         & clean      & \texttt{power\_shutdown()} a été appelé \\
+      absent       & présent        & crash      & panic CPU / watchdog                    \\
+      absent       & absent         & power loss & coupure d'alimentation innatendue       \\
+      \hline
+    \end{tabular}}
 \end{table}
 
 

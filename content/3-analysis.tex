@@ -8,7 +8,7 @@ Le sujet ayant été choisi librement, le cahier des charges ne découle pas d'u
 L'appareil doit être un lecteur audio portable, autonome et compact, dédié à la seule lecture de musique. Cette vocation d'objet à fonction unique, transportable dans une poche et utilisable sans dépendre d'un autre appareil, oriente l'ensemble des exigences ci-dessous.
 
 \subsection{Exigences minimales}
-Sur le plan audio, le produit doit lire des fichiers aux formats \texttt{.MP3} et \texttt{.WAV} stockés sur une carte microSD, et restituer le son en stéréo selon deux voies au choix de l'utilisateur : une sortie filaire sur jack 3,5\,mm et une sortie sans fil Bluetooth. Le volume d'écoute doit être réglable.
+Sur le plan audio, le produit doit lire des fichiers aux formats \texttt{.MP3} et \texttt{.WAV} stockés sur une carte microSD, et restituer le son en stéréo selon deux voies au choix de l'utilisateur : une sortie filaire sur jack 3,5\,mm et une sortie sans fil Bluetooth. La liaison Bluetooth doit rester stable sur une portée de 5 à 10 mètres. Le volume d'écoute doit être réglable.
 
 Sur le plan énergétique, l'appareil doit fonctionner sur batterie lithium-ion avec une autonomie minimale de dix heures, et se recharger par un connecteur USB-C.
 
@@ -36,23 +36,24 @@ Là où le cahier des charges énonce les fonctions attendues, les spécificatio
       \centering
       \caption{Spécifications techniques minimales}
       \label{tab:specs}
+      \small
       \begin{tabular}{lll}
             \hline
-            \textbf{Réf.} & \textbf{Spécification}    & \textbf{Exigence}                                \\
+            \textbf{Réf.} & \textbf{Spécification}    & \textbf{Exigence}                                         \\
             \hline
-            SP1           & Résolution sortie filaire & Stéréo jusqu'à 24 bits / 192 kHz (fichiers .WAV) \\
-            SP2           & Formats décodés           & \texttt{.MP3} et \texttt{.WAV}                   \\
-            SP3           & Sortie filaire            & Jack 3,5\,mm                                     \\
-            SP4           & Sortie sans fil           & Bluetooth A2DP, codec SBC 16 bits / 44,1 kHz     \\
-            SP5           & Affichage                 & OLED graphique                                   \\
-            SP6           & Stockage                  & Carte microSD                                    \\
-            SP7           & Autonomie                 & $\geq$ 10\,h sur batterie Li-ion                 \\
-            SP8           & Alimentation externe      & Charge et programmation via USB-C                \\
+            SP1           & Résolution sortie filaire & Stéréo jusqu'à 24 bits / 192 kHz (fichiers .WAV)          \\
+            SP2           & Formats décodés           & \texttt{.MP3} et \texttt{.WAV}                            \\
+            SP3           & Sortie filaire            & Jack 3,5\,mm                                              \\
+            SP4           & Sortie sans fil           & Bluetooth A2DP, codec SBC 16 bits / 44,1 kHz              \\
+            SP5           & Portée Bluetooth          & Liaison stable, sans coupure, sur 5 à 10 m en champ libre \\
+            SP6           & Affichage                 & OLED graphique                                            \\
+            SP7           & Stockage                  & Carte microSD                                             \\
+            SP8           & Autonomie                 & $\geq$ 10\,h sur batterie Li-ion                          \\
+            SP9           & Alimentation externe      & Charge et programmation via USB-C                         \\
             \hline
       \end{tabular}
 \end{table}
 
-\clearpage
 \section{Analyse fonctionnelle}
 L'analyse fonctionnelle traduit les exigences du cahier des charges en une décomposition du système, indépendamment du détail des composants. Elle est conduite à deux niveaux de granularité : le niveau~0 considère l'appareil comme une boîte noire et recense ses échanges avec l'environnement extérieur, le niveau~1 ouvre cette boîte et répartit les fonctions internes en blocs reliés par leurs flux d'énergie et de données. Cette décomposition sert ensuite de trame aux chapitres de conception.
 
@@ -66,7 +67,7 @@ Le niveau~0, présenté à la figure~\ref{Analyse_Fonctionnelle-Niv1.drawio}, si
 \end{itemize}
 À l'exception de la liaison radio, qui rayonne directement par l'antenne, chacune de ces interfaces physiques traverse un étage de protection à la frontière du système. Cet étage, qui protège les broches exposées contre les décharges électrostatiques et les perturbations, constitue la première fonction rencontrée par tout signal entrant ou sortant.
 
-\fig[H, width=0.7\textwidth]{Analyse fonctionnelle - Niveau 0}{Analyse_Fonctionnelle-Niv1.drawio}
+\fig[H, width=1\textwidth]{Analyse fonctionnelle - Niveau 0}{Analyse_Fonctionnelle-Niv1.drawio}
 
 \clearpage
 \subsection{Niveau 1 : décomposition interne}

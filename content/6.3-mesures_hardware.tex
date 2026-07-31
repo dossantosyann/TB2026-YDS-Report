@@ -1,29 +1,29 @@
 \section{Validation matérielle de la carte}
 \label{sec:res_electrique}
 
-Les mesures matérielles comptent 80 points répartis en douze blocs, ordonnés de la vérification hors tension jusqu'au comportement en charge. Septante-neuf points sont conformes et un ne l'est pas. Les protocoles et les relevés complets figurent à la section~\ref{ann:mesures_hw} de l'annexe.
+Les mesures matérielles comptent 80 points répartis en douze blocs, ordonnés de la vérification hors tension jusqu'au comportement en charge. 79 points sont conformes et un ne l'est pas. Les protocoles et les relevés complets figurent à la section~\ref{ann:mesures_hw} de l'annexe.
 
 La carte a d'abord été contrôlée à l'ohmmètre, batterie déconnectée. Aucun court-circuit franc n'apparaît entre les rails, la valeur la plus basse étant de 1,15 k$\Omega$ entre le rail 3,3 V et la masse, cohérente avec les charges permanentes de ce rail. Les nets \texttt{VSys} et \texttt{VBatP} présentent 0,115 $\Omega$ entre eux, ce qui correspond au chemin de puissance du chargeur qui les relie. La mise sous tension a ensuite été faite sur alimentation de laboratoire, ce qui permet d'imposer la tension et de limiter le courant. Le montage consomme 1 mA avant l'établissement du rail, valeur qui écarte tout défaut d'assemblage.
 
 \begin{table}[H]
-    \centering
-    \caption{Principales grandeurs relevées sur la chaîne d'alimentation}
-    \label{tab:res_electrique}
-    \footnotesize
-    \setlength{\tabcolsep}{5pt}
-    \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.44\textwidth} r >{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
-        \toprule
-        \textbf{Grandeur}                                      & \textbf{Mesure} & \textbf{Référence}                                \\
-        \midrule
-        Rail 3,3 V sur batterie [V]                            & 3,345           & 3,345 fixé par R6 et R8                           \\
-        Rail 3,3 V sur USB [V]                                 & 3,339           & idem                                              \\
-        \texttt{VBatP} sur USB sans batterie [V]               & 4,194           & 4,2 V imposé par le chargeur \cite{analog_MAX77757} \\
-        Seuil de bascule du superviseur [V]                    & 3,212           & 3,136 à 3,264 \cite{torex_XC6120}                 \\
-        Tension de redémarrage du superviseur [V]              & 3,279           & supérieure au seuil de bascule                    \\
-        Fréquence de découpage du buck en lecture [MHz]        & 2,083           & 2,4 typique \cite{TI_TPS62A01}                    \\
-        Ondulation du rail 3,3 V en lecture [mV crête à crête] & 9,60            & 0,29 \% du rail                                   \\
-        \bottomrule
-    \end{tabular}
+  \centering
+  \caption{Principales grandeurs relevées sur la chaîne d'alimentation}
+  \label{tab:res_electrique}
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.44\textwidth} r >{\raggedright\arraybackslash}p{0.34\textwidth}@{}}
+    \toprule
+    \textbf{Grandeur}                                      & \textbf{Mesure} & \textbf{Référence}                                  \\
+    \midrule
+    Rail 3,3 V sur batterie [V]                            & 3,345           & 3,345 fixé par R6 et R8                             \\
+    Rail 3,3 V sur USB [V]                                 & 3,339           & idem                                                \\
+    \texttt{VBatP} sur USB sans batterie [V]               & 4,194           & 4,2 V imposé par le chargeur \cite{analog_MAX77757} \\
+    Seuil de bascule du superviseur [V]                    & 3,212           & 3,136 à 3,264 \cite{torex_XC6120}                   \\
+    Tension de redémarrage du superviseur [V]              & 3,279           & supérieure au seuil de bascule                      \\
+    Fréquence de découpage du buck en lecture [MHz]        & 2,083           & 2,4 typique \cite{TI_TPS62A01}                      \\
+    Ondulation du rail 3,3 V en lecture [mV crête à crête] & 9,60            & 0,29 \% du rail                                     \\
+    \bottomrule
+  \end{tabular}
 \end{table}
 
 Le rail principal se règle à 3,345 V, valeur exactement conforme au pont diviseur retenu au chapitre~\ref{chap:hardware}. La protection contre la décharge profonde bascule à 3,212 V, au milieu de la fenêtre garantie par le fabricant. Le redémarrage n'intervient qu'à 3,279 V, soit 67 mV plus haut.
@@ -32,7 +32,7 @@ Les sept lignes de \gls{strapping} présentent toutes le niveau attendu au reset
 
 Le buck découpe à 2,083 MHz plutôt qu'aux 2,4 MHz annoncés comme typiques. Ce composant n'est pas à fréquence fixe, son temps de blocage étant établi par un circuit adaptatif à partir du rapport entre tension d'entrée et tension de sortie, ce qui ne rend la fréquence qu'approximativement constante \cite{TI_TPS62A01}. L'ondulation résultante sur le rail vaut 9,60 mV crête à crête pendant la lecture, soit 0,29 \% de la tension. Cette fréquence se situe très au-dessus de la bande audio et le plancher de bruit relevé à la section~\ref{sec:res_audio} ne fait apparaître aucune contribution du découpage.
 
-Le seul point non conforme concerne le bouton A. Appuyé, il présente 2,221 V alors que le seuil haut garanti du module vaut 2,475 V \cite{ESP32_WROVER-E_Datasheet}. Ce bouton est le seul à être relié à \texttt{VSys} plutôt qu'au rail 3,3 V, puisqu'il doit agir alors que ce rail est encore éteint. Comme \texttt{VSys} peut atteindre 4,2 V, une diode Zener de 3,3 V protège l'entrée du micro-contrôleur, précédée d'une résistance série de 10 k$\Omega$ et suivie d'une résistance de rappel de 100 k$\Omega$ vers la masse.
+Le seul point non conforme concerne le bouton A. Appuyé, il présente 2,221 V alors que le seuil haut garanti du module vaut 2,475 V \cite{ESP32_WROVER-E_Datasheet}. Ce bouton est le seul à être relié à \texttt{VSys} plutôt qu'au rail 3,3 V, puisqu'il doit agir alors que ce rail est encore éteint. Comme \texttt{VSys} peut atteindre 4,2 V, une diode Zener de 3,3 V protège l'entrée du microcontrôleur, précédée d'une résistance série de 10 k$\Omega$ et suivie d'une résistance de rappel de 100 k$\Omega$ vers la masse.
 
 Bien que la Zener abaisse la tension de 3,81 V à 2,221 V, elle fonctionne à 137 $\mu$A, bien en dessous de son courant nominal de 20 mA \cite{onsemi_MMSZ5226BT1G}. Le composant agit donc en charge active plutôt qu'en limiteur. Si le bouton A reste fonctionnel, comme validé dans le tableau \ref{tab:ann_mesures_sw_b2}, cette marge non garantie représente une fragilité de conception à corriger.
 
