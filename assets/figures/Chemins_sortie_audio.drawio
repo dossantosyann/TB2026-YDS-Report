@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net">
   <diagram name="Chemins de sortie audio" id="chemins-sortie">
-    <mxGraphModel dx="881" dy="629" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="500" math="0" shadow="0">
+    <mxGraphModel dx="942" dy="463" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="500" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -9,9 +9,6 @@
         </mxCell>
         <mxCell id="fn" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;fontSize=10;fontColor=#333333;" value="Format interne :&#xa;32 bits justifiés à gauche" vertex="1">
           <mxGeometry height="38" width="147.5" x="41.25" y="159" as="geometry" />
-        </mxCell>
-        <mxCell id="bn" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;fontSize=10;fontColor=#333333;" value="Aucun accès DMA : PSRAM possible" vertex="1">
-          <mxGeometry height="29" width="175" x="215" y="24" as="geometry" />
         </mxCell>
         <mxCell id="b1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" value="Tampon de découplage&#xa;(PSRAM)" vertex="1">
           <mxGeometry height="40" width="145" x="230" y="60" as="geometry" />
@@ -30,9 +27,6 @@
         </mxCell>
         <mxCell id="w3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" value="Jack 3,5 mm" vertex="1">
           <mxGeometry height="40" width="100" x="720" y="157" as="geometry" />
-        </mxCell>
-        <mxCell id="wn" parent="1" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;fillColor=none;fontSize=10;fontColor=#333333;" value="Accès DMA : RAM interne obligatoire" vertex="1">
-          <mxGeometry height="28" width="175" x="215" y="206" as="geometry" />
         </mxCell>
         <mxCell id="e_pb1" edge="1" parent="1" source="p1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" target="b1" value="">
           <mxGeometry relative="1" as="geometry" />
