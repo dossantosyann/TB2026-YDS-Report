@@ -42,7 +42,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e_w1w2" edge="1" parent="1" source="w1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" target="w2" value="DMA → I²S">
+        <mxCell id="e_w1w2" edge="1" parent="1" source="w1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" target="w2" value="DMA to I²S">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="e_w2w3" edge="1" parent="1" source="w2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;fontSize=10;" target="w3" value="analogique">
