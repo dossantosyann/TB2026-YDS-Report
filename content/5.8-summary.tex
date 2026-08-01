@@ -50,7 +50,7 @@ Chaque mécanisme décrit dans ce chapitre a fait l'objet d'une vérification, m
     \multicolumn{3}{c}{\textbf{Interface utilisateur (section~\ref{sec:soft_ui})}}                                                                                                                                                            \\*
     \hline
     Remise de l'événement au sommet de pile   & Enchaînement d'entrées et de sorties de menus                                                    & Aucun changement d'écran n'exige un second appui                                           \\
-    Verrouillage de l'écran                   & Écoulement du délai d'inactivité, puis appui sur chaque bouton                                   & Seule la validation réveille l'écran, la lecture se poursuivant pendant la veille          \\
+    Verrouillage de l'écran                   & Écoulement du délai d'inactivité, puis appui sur chaque bouton                                   & Seul le bouton A réveille l'écran, la lecture se poursuivant pendant la veille             \\
     Décalage anti-rémanence                   & Observation prolongée de l'écran de veille                                                       & Indication redessinée aux positions successives du cycle                                   \\
     \hline
     \multicolumn{3}{c}{\textbf{Gestion de l'énergie (section~\ref{sec:soft_power})}}                                                                                                                                                          \\*
@@ -59,7 +59,7 @@ Chaque mécanisme décrit dans ce chapitre a fait l'objet d'une vérification, m
     Replis du service d'observation           & Échecs de lecture provoqués sur le bus I\textsuperscript{2}C                                     & Relevé de la jauge invalidé sans extinction, verdict d'alimentation externe conservé       \\
     Arbitrage du connecteur USB               & Page de diagnostic affichant INOKB et la destination des lignes de données                       & Bascule vers le chargeur pendant le temps de garde, puis retour au pont série              \\
     Relance à chaud de l'arbitrage            & Branchement après démarrage, à un intervalle supérieur à la période de sondage                   & Séquence relancée sur le front montant                                                     \\
-    Gardes de l'arrêt automatique             & Chaque condition exercée séparément                                                              & Inhibition sous alimentation externe, reprise du décompte au retrait du câble              \\
+    Gardes de l'arrêt automatique             & Chaque condition exercée séparément                                                              & Désactivation sous alimentation externe, reprise du décompte au retrait du câble           \\
     Sauvegarde de la piste en pause           & Cycle complet de pause, arrêt automatique et remise en marche                                    & Chemin et position restitués au démarrage suivant                                          \\
     \hline
     \multicolumn{3}{c}{\textbf{Robustesse et diagnostic (section~\ref{sec:soft_robustness})}}                                                                                                                                                 \\*
@@ -75,4 +75,4 @@ Chaque mécanisme décrit dans ce chapitre a fait l'objet d'une vérification, m
 
 Les deux watchdogs ont été exercés par injection de fautes, en bloquant volontairement la boucle de décodage puis le rendu d'un écran à rafraîchissement automatique. Chaque blocage a produit le redémarrage attendu et un \gls{coredump} désignant la bonne tâche, ce qui établit à la fois le déclenchement et la valeur diagnostique de la trace conservée. Le tableau rapporte la vérification réciproque, celle qui confirme qu'une inactivité légitime ne déclenche rien.
 
-Le séquencement d'activation et d'extinction de la chaîne filaire ne se vérifie que par l'écoute. Il a été contrôlé lors de la campagne de validation, sur l'ensemble des transitions susceptibles de produire un bruit de commutation, et les constats sont rapportés à la section~\ref{sec:res_firmware}.
+Le séquencement d'activation et d'extinction de la chaîne filaire ne se vérifie que par l'écoute. Il a été contrôlé lors de la campagne de validation, sur l'ensemble des transitions susceptibles de produire un bruit de commutation, et les constats sont rapportés à la section~\ref{sec:res_firmware} et dans le tableau \ref{tab:ann_mesures_sw_b15}.
