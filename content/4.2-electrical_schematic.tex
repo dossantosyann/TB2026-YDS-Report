@@ -68,29 +68,27 @@ avec $\tau = 0{,}51\,\mu\text{s}$. Le déphasage correspond à un temps de propa
 
 Le PCM5242 délivre une tension différentielle de pleine échelle $V_{\text{DAC}} \approx 4{,}2\,\text{V}_{\text{RMS}}$ à $0\,\text{dBFS}$~\cite{TI_PCM5242}. Or, sous une alimentation de $3{,}3\,\text{V}$, la tension de sortie maximale de l'amplificateur est limitée à $V_{\text{amp,max}} = 2{,}15\,\text{V}_{\text{RMS}}$ sur une charge de $600\,\Omega$~\cite{analog_MAX97220A}. Transmettre directement la pleine échelle du convertisseur reviendrait à demander à l'étage de sortie une tension supérieure à ce qu'il peut reproduire, ce qui impose une adaptation de niveau entre les deux étages.
 
-Le gain de l'amplificateur est fixé par le rapport des résistances externes selon
-\begin{equation}
-  A_v = \frac{R_f}{R_{in}}.
-\end{equation}
-La résistance de contre-réaction vaut $R_f = 5{,}1\,\text{k}\Omega$, tandis que la résistance d'entrée est formée des deux résistances série de la ligne, soit $R_{in} = 5{,}1\,\text{k}\Omega + 5{,}1\,\text{k}\Omega = 10{,}2\,\text{k}\Omega$. Le gain retenu vaut donc
+Le gain de l'amplificateur est fixé par le rapport des résistances externes selon $A_v = \frac{R_f}{R_{in}}$.
+
+La résistance de contre-réaction vaut $R_f = 5{,}1\,\text{k}\Omega$, tandis que la résistance d'entrée est formée des deux résistances série de la ligne, soit $R_{in} = 5{,}1\,\text{k}\Omega + 5{,}1\,\text{k}\Omega = 10{,}2\,\text{k}\Omega$. Ce qui donne :
 \begin{equation}
   A_v = \frac{5{,}1\,\text{k}\Omega}{10{,}2\,\text{k}\Omega} = 0{,}5 \quad (\approx -6\,\text{dB}),
 \end{equation}
-ce qui donne en sortie
 \begin{equation}
   V_{\text{out,max}} = A_v \cdot V_{\text{DAC}} = 0{,}5 \times 4{,}2\,\text{V}_{\text{RMS}} = 2{,}1\,\text{V}_{\text{RMS}} \le V_{\text{amp,max}}.
 \end{equation}
 La pleine échelle numérique du convertisseur est de la sorte calée juste sous la tension de sortie maximale de l'amplificateur. Cette comparaison porte toutefois sur la charge de référence de 600 $\Omega$ du datasheet. Sur une charge de casque, la contrainte n'est plus une tension mais une puissance, ce que la mesure a mis en évidence à la section~\ref{sec:res_audio}.
 
 
-\subsection{Programmation automatique}
+\subsection{Programmation et séquence de démarrage}
 \label{sec:autoflash}
+
+Cinq broches de l'ESP32 sont des \gls{strapping}, dont le niveau logique au reset fixe le mode de démarrage, avant de redevenir des entrées-sorties ordinaires~\cite{ESP32_WROVER-E_Datasheet}. Le brochage du circuit les utilise toutes, les signaux ont donc été répartis de sorte que leur état de repos coïncide avec la valeur attendue au démarrage, les résistances internes et externes de chaque ligne étant choisis en conséquence. Les deux bus \gls{spi}, actifs à l'état bas, occupent ainsi les pins dont le défaut est haut, tandis que le reset de l'écran et sa ligne C/D occupent celles qui doivent rester basses. Cette dernière contrainte est la plus stricte, GPIO12 sélectionnant la tension d'alimentation de la mémoire flash et de la \gls{psram} du module, un niveau haut au reset rend le démarrage impossible~\cite{ESP32_WROVER-E_Datasheet}.
 
 Le passage automatique en mode programmation s'appuie sur le bootloader de premier niveau intégré à la ROM de l'ESP32. Ce bootloader gère le téléchargement par UART indépendamment du contenu de la mémoire flash et s'active lorsque la broche GPIO0 est maintenue à l'état bas lors du reset~\cite{ESP32_Datasheet}. Le circuit exploite les lignes de contrôle DTR et RTS du CP2102N pour piloter les broches EN et GPIO0 via deux transistors selon le schéma de la figure~\ref{extrait_autoflash.png}. Un réseau RC retarde légèrement l'établissement de GPIO0 par rapport à EN afin de garantir l'ordonnancement correct de la séquence de reset. Cette architecture reproduit celle de la carte de développement officielle d'Espressif~\cite{ESP32_DevKitC_Doc}.
 
-\fig[H, width=0.70\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
+\fig[H, width=0.65\linewidth]{Extrait du schéma, circuit de passage automatique en mode programmation}{extrait_autoflash.png}
 
-\clearpage
 \subsection{Conditionnement du potentiomètre de volume}
 
 \begin{wrapfigure}{l}{0.35\linewidth}
