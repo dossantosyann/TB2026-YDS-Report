@@ -7,7 +7,7 @@ La régulation, la charge et la protection contre la décharge profonde sont gé
 
 Au démarrage, le rail d'alimentation n'est maintenu que par le bouton de mise en marche ou par la présence de l'USB. La toute première instruction exécutée par le firmware met donc le signal EnableReg à l'état haut, faute de quoi le relâchement du bouton éteindrait la carte avant même la fin de l'initialisation.
 
-À chaque cycle, le service interroge la jauge de charge sur le bus I\textsuperscript{2}C et relit le signal INOKB du chargeur via l'expanseur, signal à drain ouvert par lequel le chargeur avertit la présence d'une source valide à son entrée~\cite{analog_MAX77757}. Il en tient à jour un relevé unique qui réunit le \gls{soc}, la tension, le courant, le temps de charge et décharge restant estimé et la présence d'une alimentation externe. Ce relevé ne nécessite aucun verrou. Une lecture concurrente obesevera dans le pire des cas une ancienne valeur de cycle, ce qui reste acceptable pour l'affichage.
+À chaque cycle, le service interroge la jauge de charge sur le bus I\textsuperscript{2}C et relit le signal INOKB du chargeur via l'expanseur, signal à drain ouvert par lequel le chargeur avertit la présence d'une source valide à son entrée~\cite{analog_MAX77757}. Il en tient à jour un relevé unique qui réunit le \gls{soc}, la tension, le courant, le temps de charge et décharge restant estimé et la présence d'une alimentation externe. Ce relevé ne nécessite aucun verrou. Une lecture concurrente observera dans le pire des cas une ancienne valeur de cycle, ce qui reste acceptable pour l'affichage.
 
 Deux mécanismes de repli protègent l'intégrité du relevé. Un échec de lecture de la jauge invalide les données et interrompt le cycle sans prise de décision, évitant ainsi toute action basée sur une mesure douteuse. Un échec de lecture de l'expanseur conserve en revanche l'état précédent du signal INOKB pour prévenir un débranchement fictif qui relancerait inutilement la séquence d'arbitrage et priverait la console UART de son port.
 
@@ -43,4 +43,4 @@ Le service d'énergie n'a aucune connaissance de la chaîne audio, l'ordre d'arr
 
 L'extinction sur batterie critique emprunte un chemin plus court, le service relâchant le rail sans arrêter la lecture ni démonter le système de fichiers, la carte n'étant utilisée qu'en lecture. Le marqueur est en revanche écrit, sans quoi la coupure serait relue comme une extinction subie.
 
-L'allumage du lecteur se fait par voie strictement matérielle, en une à deux secondes un certain temps sur le bouton A. Ce temps n'étant pas un choix mais imposé par la séquence d'initialisation de l'ESP32
+L’allumage du lecteur s’effectue exclusivement par voie matérielle, il suffit de maintenir le bouton A enfoncé pendant une à deux secondes. Cette durée n’est pas arbitraire, mais imposée par la séquence d’initialisation de l’ESP32

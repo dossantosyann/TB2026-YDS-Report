@@ -23,7 +23,7 @@ Plusieurs boîtiers dont les contacts se trouvent sous le corps du composant imp
 
 Les rails d'alimentation disposent de points de test, mais la vérification s'arrête là. Rien ne permet de contrôler directement sur les pins d'un composant qu'il est effectivement alimenté, ce qui oblige à chercher une pastille ou un via accessible à proximité. Des points de test reliés aux pins d'alimentation des principaux composants seraient très utiles.
 
-Ce problème concerne également les broches de configuration matérielle. Actuellement, il est difficle de mesurer les signaux qui définissent l'adresse d'un composant sur le bus I2C ou son mode de fonctionnement. L'ajout d'un point de test sur chacune de ces lignes permettrait de vérifier en quelques secondes si un composant silencieux est simplement mal configuré ou s'il est réellement défectueux.
+Ce problème concerne également les broches de configuration matérielle. Actuellement, il est difficile de mesurer les signaux qui définissent l'adresse d'un composant sur le bus I2C ou son mode de fonctionnement. L'ajout d'un point de test sur chacune de ces lignes permettrait de vérifier en quelques secondes si un composant silencieux est simplement mal configuré ou s'il est réellement défectueux.
 
 Des résistances de 0~$\Omega$ posées sur VBUS et sur VSys compléteraient également ces points de test. Elles se retirent pour insérer un ampèremètre pour pouvoir y mesurer le courant.
 
@@ -45,7 +45,7 @@ L'arbitrage n'est donc pas évident. Il mérite d'être posé explicitement au d
 
 L'absence d'horloge temps réel prive l'appareil de trois objectifs supplémentaires du cahier des charges, comme l'établit la section~\ref{sec:res_bilan}. Ajouter un quartz de 32,768 kHz au microcontrôleur n'y changerait rien, puisque le rail est coupé et non mis en sommeil. Il faut une horloge dédiée, alimentée par une pile bouton et interrogée par \gls{i2c} au démarrage.
 
-Le connecteur jack retenu ne comporte aucun contact de détection. Un pin de présence permettrait de couper l'amplificateur lorsque la connecteur est vide, de basculer automatiquement de sortie et d'éviter qu'une lecture se poursuive sans auditeur.
+Le connecteur jack retenu ne comporte aucun contact de détection. Un pin de présence permettrait de couper l'amplificateur lorsque le connecteur est vide, de basculer automatiquement de sortie et d'éviter qu'une lecture se poursuive sans auditeur.
 
 Le potentiomètre de volume fournit une position absolue, ce qui entre en conflit avec le réglage du récepteur par \gls{avrcp}. Si un utilisateur modifie le volume depuis l'enceinte, le volume ne sera plus couplé à la position du potentiomètre. La solution serait d'utiliser un encodeur rotatif. Ce composant ne délivre que des incréments, sans position de repos, ce qui permet au firmware de tenir une valeur de volume unique quelle que soit l'origine de la commande.
 
