@@ -20,12 +20,12 @@ L'autonomie a été mesurée par trois décharges complètes, en veille, en lect
     \end{tabular}
 \end{table}
 
-La lecture filaire consomme 34 mA de plus que la veille. Ce supplément couvre l'accès à la carte microSD, le décodage, l'horloge \gls{i2s} et l'étage analogique, réglé ici à un volume de 50~\%. La lecture Bluetooth consomme 94 mA de plus, soit presque trois fois plus. La radio est donc le premier poste de consommation de l'appareil.
+La lecture filaire consomme 34 mA de plus que la veille. Ce supplément couvre l'accès à la carte microSD, le décodage, l'horloge \gls{i2s} et l'étage analogique, réglé ici à un volume de 50~\%. La lecture Bluetooth consomme 94 mA de plus, soit presque trois fois plus. La radio est donc sans surprise le plus gros consommateur.
 
 Les 9 h 14 d'autonomie en lecture filaire, bien qu'inférieures à l'objectif de dix heures, ont été obtenues en lecture continue sans pause, un scénario rarement rencontré dans la pratique. L'écoute non-stop sur une telle durée étant peu réaliste, ce résultat reste très convaincant pour un usage quotidien, même s'il ne valide pas strictement le cahier des charges.
 
 Le mode Bluetooth reste nettement plus loin de la cible avec 5 h 48. Ce résultat était attendu, la radio et l'encodage \gls{sbc} s'ajoutant à la consommation de base de l'appareil.
 
-L'objectif d'autonomie est donc partiellement atteint. Atteint en veille, partiellement atteint en filaire, mais pas en Bluetooth.
+L'objectif d'autonomie est donc partiellement atteint. Atteint en veille, presque atteint en filaire, mais pas en Bluetooth.
 
 Les trois campagnes se terminent vers 3,3 V, au-dessus du seuil de 3,2 V du superviseur XC6120. C'est donc la jauge qui commande l'arrêt, en signalant un état de charge trop bas, et non la coupure matérielle. La protection contre la décharge profonde reste une sécurité de dernier recours.

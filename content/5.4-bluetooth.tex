@@ -23,6 +23,7 @@ Le comportement aux deux bornes du tampon prolonge le mécanisme décrit à la s
 La représentation interne sur 32~bits justifiée à gauche doit enfin être ramenée aux 16~bits qu'attend l'encodeur. Le \gls{sink} ne conserve que les 16~bits de poids fort de chaque échantillon, soit un simple décalage. Le contenu utile étant justifié à gauche, l'opération n'écarte que des bits de poids faible, nuls pour une source de 16~bits et correspondant au dernier octet d'une source de 24~bits. Omettre cette conversion doublerait la cadence apparente et corromprait le flux, l'encodeur lisant alors chaque échantillon de 32~bits comme deux échantillons de 16~bits.
 
 \subsection{Volume et garde anti-saturation}
+\label{sec:volume_bt}
 
 Le volume de la sortie Bluetooth obéit au même principe de commande unique que la sortie filaire, le potentiomètre restant la seule source de contrôle. Sa position est traduite dans l'échelle de volume absolu du profil \gls{avrcp} et transmise au récepteur pour application de l'atténuation~\cite{ESP32_IDF_guide}. Le firmware ignore volontairement les changements de volume émanant du récepteur afin de préserver le potentiomètre comme référence exclusive et d'éviter tout conflit de commande.
 
