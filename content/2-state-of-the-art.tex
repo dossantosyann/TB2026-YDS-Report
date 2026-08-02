@@ -1,70 +1,70 @@
 \chapter{État de l'art}
 
-Avant de définir les fonctions attendues de l'appareil, ce chapitre situe le projet par rapport à ce qui existe déjà. Il retrace d'abord l'évolution du lecteur audio portable. Il expose ensuite les solutions techniques disponibles, puis le positionnement du présent travail.
-
+Ce chapitre situe le projet par rapport à l'existant. Il examine les appareils comparables, passe en revue les solutions techniques mobilisables pour chaque grande fonction, puis en tire les limites qui justifient la démarche suivie ici.
 
 \section{Travaux existants}
 
-\subsection{Du baladeur au lecteur audio dédié}
-Le lecteur audio portable s'impose dès la fin des années 1970 avec le baladeur à cassette. Le disque compact portable lui succède, puis la lecture de fichiers compressés bouleverse l'usage au tournant des années 2000 \cite{Wikipedia_Portable_Media_Player}. Le smartphone absorbe ensuite cette catégorie. Il réunit dans un seul appareil la lecture audio, la connectivité et le stockage. Le lecteur dédié a ainsi quitté le marché grand public \cite{Tom-Smigla_20_Best_DAP}.
+\subsection{Du baladeur au lecteur dédié}
 
-\subsection{Le marché actuel, deux extrémités}
-Le produit s'est recentré sur deux extrémités, séparées par un large écart de prix.
+Le lecteur audio portable s'impose à la fin des années 1970 avec le baladeur à cassette, passe au disque compact, puis au fichier compressé au tournant des années 2000 \cite{Wikipedia_Portable_Media_Player}. Le smartphone absorbe ensuite cette catégorie en réunissant lecture, stockage et connectivité dans un seul objet, et le lecteur dédié se replie sur des usages de niche \cite{Homecine_DAP_Comparison}.
 
-D'un côté subsiste un segment audiophile actif, porté par des marques comme Astell\&Kern, FiiO, HiBy ou iBasso. Ces appareils, appelés \emph{DAP} (Digital Audio Player), visent la très haute fidélité, avec plusieurs convertisseurs en parallèle et des sorties symétriques, pour quelques centaines à plusieurs milliers de francs \cite{Tom-Smigla_20_Best_DAP, Homecine_DAP_Comparison}. Beaucoup exécutent Android sur un processeur applicatif et se rapprochent d'un smartphone mais sans fonction téléphonique.
+Le projet Rockbox, qui remplace depuis 2001 le firmware d'origine de nombreux lecteurs anciens et publie encore une version en 2025, montre que la demande porte moins sur la modernité que sur l'envie d'avoir un appareil dédié à une seule tâche \cite{rockbox_project}.
 
-De l'autre se maintiennent des lecteurs d'entrée de gamme, simples, peu coûteux et peu gourmands, destinés à un usage quotidien sans exigence audiophile \cite{AudiophileOn_Best_Cheap_DAP}.
+\subsection{L'offre commerciale actuelle}
 
+Le marché se répartit entre deux extrémités séparées par un large écart de prix. Le segment audiophile, désigné par le sigle \gls{dap}, réunit des marques comme Astell\&Kern, FiiO ou iBasso \cite{Tom-Smigla_20_Best_DAP}. Le FiiO M23 en donne une image représentative. Il associe un processeur applicatif sous Android, deux circuits de conversion haut de gamme et un étage d'amplification sous licence, pour un \gls{snr} annoncé de 125 dB, une \gls{thdn} d'environ $-108$ dB, avec une autonomie proche de dix heures \cite{fiio_M23}.
 
-\section{Technologies disponibles}
-Cette section expose les options techniques offertes pour les grandes fonctions d'un tel appareil. Elle ne tranche pas. Les choix retenus sont établis plus loin, une fois le cahier des charges posé.
+À l'autre extrémité subsistent des lecteurs simples et peu coûteux, sans exigence audiophile ni documentation technique publiée \cite{AudiophileOn_Best_Cheap_DAP}.
 
-\subsection{Architectures de calcul}
-Deux approches coexistent. Un processeur applicatif exécutant un système d'exploitation complet apporte de la souplesse et l'accès au streaming, au prix d'une consommation et d'une complexité élevées \cite{Homecine_DAP_Comparison}. Un microcontrôleur suffit pour un appareil à fonction unique. Il consomme peu et son comportement temporel reste maîtrisé, mais le logiciel se développe au plus près du matériel.
+\subsection{Projets ouverts et plateformes de développement}
 
-Le partage entre les deux se fait sur une question simple. L'appareil doit-il accéder à des services en ligne, ou seulement lire des fichiers locaux ?
+Entre ces deux extrêmes se situe une troisième famille, plus proche du présent travail. Le lecteur Tangara est un appareil entièrement open-source, matériel comme logiciel. Il associe un module ESP32-WROVER-E, un convertisseur Cirrus Logic WM8523 et un amplificateur Texas Instruments INA1620 \cite{cooltech_tangara}. Sa sortie sans fil se limite au codec obligatoire du profil \gls{a2dp} \cite{cnx_tangara}. C'est la référence la plus directement comparable. Sa campagne de financement participatif a réuni 321\,210 dollars pour un objectif de 10\,000, ce qui donne la mesure des moyens engagés \cite{crowdsupply_tangara}.
 
-\subsection{Conversion et amplification}
-La chaîne de restitution décode le flux, le convertit en analogique, le filtre puis l'amplifie. Deux décisions la structurent.
-
-La première porte sur la sortie du convertisseur. Une sortie asymétrique transmet le signal sur un seul conducteur et demande peu de composants. Une sortie différentielle le transmet sur deux conducteurs opposés. L'étage suivant ne retient que leur différence, ce qui rejette les perturbations communes aux deux lignes et double l'amplitude utile, au prix de composants supplémentaires.
-
-La seconde porte sur le découpage de la chaîne. Un circuit unique réunissant le convertisseur et l'amplificateur réduit le nombre de composants, mais supprime tout point de mesure entre les deux étages.
-
-\subsection{Transport sans fil}
-La sortie filaire par jack préserve le signal analogique. La liaison Bluetooth est plus pratique, mais elle subit la compression et les limites de la portée radio. Le profil A2DP y transporte le flux stéréo et l'AVRCP assure la télécommande \cite{bluetooth_sig_a2dp}.
-
-Le choix du codec est le point sensible. Le SBC est le seul dont la prise en charge est obligatoire, ce qui garantit qu'il fonctionne avec tout récepteur \cite{bluetooth_sig_a2dp}. L'AAC, l'aptX et le LDAC offrent un meilleur compromis entre débit et qualité, mais ils sont propriétaires ou soumis à licence et ne sont pas implémentés partout.
-
-\subsection{Énergie et stockage}
-L'alimentation repose sur un accumulateur lithium-ion, un circuit de charge et, dans les conceptions soignées, une jauge qui estime l'état de la batterie. La recharge passe aujourd'hui majoritairement par USB-C.
-
-Le stockage suit deux voies. Une mémoire interne fixe la capacité à la fabrication et impose un câble pour changer la bibliothèque. Une carte microSD amovible lève ces deux limites, mais demande un connecteur accessible et un système de fichiers standard.
-
-
-\section{Positionnement du projet}
-Le présent travail ne relève d'aucune des deux catégories commerciales décrites plus haut. Il ne vise ni les performances des DAP audiophiles, ni la polyvalence d'un smartphone.
-
-Son objectif est de concevoir un appareil dédié, compact et fonctionnel, de bout en bout et à des fins formatrices. Chaque choix matériel et logiciel doit être maîtrisé et justifié. La contribution recherchée n'est pas un produit inédit sur le marché, mais la démarche complète d'intégration, du composant jusqu'au firmware.
-
+Les cartes de développement audio forment la dernière famille. L'ESP32-LyraT réunit un module ESP32 et un codec ES8388 qui intègre conversion et amplification casque \cite{espressif_lyrat}. Elle raccourcit la phase matérielle, mais impose son architecture et ne vise pas un objet portable. Le tableau \ref{tab:etat-art-comparaison} résume ces familles.
 
 \begin{table}[h]
       \centering
-      \renewcommand{\arraystretch}{1.15}
-      \setlength{\tabcolsep}{8pt}
-      \footnotesize
-      \begin{tabular}{m{2.6cm} | m{3.4cm} | m{3.4cm} | m{3.4cm}}
+      \caption{Familles de solutions existantes et positionnement du présent travail}
+      \label{tab:etat-art-comparaison}
+      \small
+      \begin{tabular}{lllll}
             \hline
-            \textbf{Critère} & \textbf{DAP audiophile}         & \textbf{DAP entrée de gamme} & \textbf{Ce projet}                   \\
+            \textbf{Solution}           & \textbf{Calcul}       & \textbf{Chaîne audio} & \textbf{Sans fil}   & \textbf{Nature}            \\
             \hline
-            Calcul           & Processeur applicatif (Android) & Microcontrôleur              & Microcontrôleur                      \\
-            Objectif audio   & Très haute fidélité             & Basique                      & Performances mesurées et documentées \\
-            Sorties          & Jack et Bluetooth               & Jack et Bluetooth            & Jack et Bluetooth                    \\
-            Finalité         & Produit commercial              & Produit commercial           & Prototype académique                 \\
+            \gls{dap} audiophile        & Processeur applicatif & Étages séparés        & Codecs sous licence & Produit fermé              \\
+            \gls{dap} d'entrée de gamme & Microcontrôleur       & Codec intégré         & \gls{sbc}           & Produit fermé              \\
+            Tangara                     & Microcontrôleur       & Étages séparés        & \gls{sbc}           & Open-source + crowdfunding \\
+            ESP32-LyraT                 & Microcontrôleur       & Codec intégré         & \gls{sbc}           & Carte de développement     \\
+            Ce projet                   & Microcontrôleur       & Étages séparés        & \gls{sbc}           & Prototype académique       \\
             \hline
       \end{tabular}
-      \caption{Positionnement du projet par rapport aux solutions existantes.}
-      \label{tab:comparatif}
 \end{table}
 
-Les fonctions attendues de l'appareil découlent de ce positionnement. Elles font l'objet du chapitre suivant.
+
+\section{Technologies et méthodes existantes}
+
+\subsection{Architecture de calcul}
+
+Un processeur applicatif sous système d'exploitation complet apporte l'accès aux services en ligne et une interface graphique riche, au prix d'une consommation élevée et d'un comportement temporel confié à un ordonnanceur généraliste. Un microcontrôleur associé à un noyau temps réel suffit pour un appareil à fonction unique. Il consomme peu et son comportement reste prévisible, mais tout le logiciel se développe au plus près du matériel.
+
+\subsection{Conversion et amplification}
+
+Trois décisions structurent la chaîne de restitution. La première porte sur son découpage. Un codec unique réunit conversion et amplification, à l'image de l'ES8388, mais supprime tout point de mesure entre les deux étages et fige les performances atteignables. Une chaîne séparée reste observable et laisse le choix de chaque étage, au prix d'une surface et d'un routage plus exigeants.
+
+La deuxième porte sur la sortie du convertisseur. Une sortie asymétrique demande peu de composants. Une sortie différentielle transmet le signal sur deux conducteurs opposés, ce qui rejette les perturbations communes et double l'amplitude utile.
+
+La troisième porte sur la référence de sortie de l'amplificateur. Une liaison classique impose des condensateurs volumineux. Une topologie à rail négatif interne les supprime et centre la sortie sur la masse.
+
+\subsection{Transport sans fil}
+
+La liaison Bluetooth apporte le confort d'usage, mais la bande utile de la radio classique reste très inférieure au débit d'un flux non compressé, ce qui impose un codage avec pertes. Le profil \gls{a2dp} transporte le flux stéréo et l'\gls{avrcp} assure le contrôle \cite{bluetooth_sig_a2dp}. Le codec constitue le point sensible. Le \gls{sbc} atteint environ 328 kbit/s à 44,1 kHz et sa prise en charge est obligatoire, ce qui garantit la compatibilité avec tout récepteur. L'AAC, l'aptX et le LDAC montent respectivement à 256, 352 et 990 kbit/s \cite{archimago_bt_codecs}, mais restent propriétaires et absents de nombreuses plateformes.
+
+\subsection{Énergie et stockage}
+
+L'alimentation repose sur un accumulateur lithium-ion, un circuit de charge et, dans les conceptions soignées, une jauge d'état de charge. Les autonomies annoncées s'échelonnent de dix heures sous Android à plus de vingt heures pour Tangara, écart qui traduit surtout le coût énergétique du processeur applicatif. Le stockage suit deux voies. Une mémoire interne fixe la capacité à la fabrication. Une carte microSD lève cette limite, mais demande un connecteur accessible et un système de fichiers standard \cite{sd_card_association_sd_2023}.
+
+\section{Limites relevées et positionnement}
+
+Cette revue fait apparaître trois manques. Les appareils commerciaux publient des performances, mais ni la méthode ni les conditions qui les produisent. Les projets ouverts publient leur conception, mais rarement des mesures normalisées. Les cartes de développement offrent un point de départ immédiat, mais dispensent de tout arbitrage matériel.
+
+Le présent travail se place dans cet interstice. Il ne vise ni les performances des \glspl{dap} audiophiles, ni la polyvalence d'un smartphone. Il consiste à concevoir un lecteur dédié de bout en bout, du choix des composants au firmware, puis à caractériser ses performances selon une méthode explicite. La contribution recherchée n'est pas un produit inédit, mais une démarche d'intégration complète et vérifiée. Les fonctions attendues font l'objet du chapitre suivant.
