@@ -294,3 +294,23 @@
   plural={DAP},
   description={Digital Audio Player. Lecteur audio numérique dédié, par opposition au smartphone. Le terme désigne en pratique le segment audiophile du marché, dont les appareils privilégient la qualité de restitution sur la polyvalence}
 }
+
+\newglossaryentry{fft}{
+  name={FFT},
+  description={Fast Fourier Transform. Algorithme de calcul rapide de la transformée de Fourier discrète, qui décompose un signal temporel en ses composantes fréquentielles. La résolution du résultat, exprimée en hertz par raie, est le rapport entre la fréquence d'échantillonnage et le nombre de points transformés}
+}
+
+\newglossaryentry{fenetrage}{
+  name={fenêtrage},
+  description={Pondération appliquée au signal avant transformée de Fourier, destinée à limiter la dispersion spectrale due à la troncature temporelle. Chaque fenêtre réalise un compromis entre la largeur du lobe principal, qui fixe la capacité à séparer deux raies voisines, et le niveau des lobes secondaires, qui fixe la dynamique utile au voisinage d'une raie forte}
+}
+
+\newglossaryentry{im3}{
+  name={IM3},
+  description={Produit d'intermodulation d'ordre 3. Composante parasite apparaissant aux fréquences $2f_1 - f_2$ et $2f_2 - f_1$ lorsque deux tons traversent un système non linéaire. Son niveau croît théoriquement de 3 dB par dB d'excitation, soit 2 dB par dB rapporté au niveau d'un ton, et il tombe dans la bande utile, ce qui le rend audible contrairement aux harmoniques d'ordre élevé}
+}
+
+\newglossaryentry{im2}{
+  name={IM2},
+  description={Produit d'intermodulation d'ordre 2. Composante parasite apparaissant aux fréquences $f_2 - f_1$ et $f_2 + f_1$. Elle témoigne d'une non-linéarité asymétrique, c'est-à-dire d'une distorsion qui n'affecte pas identiquement les deux alternances du signal}
+}

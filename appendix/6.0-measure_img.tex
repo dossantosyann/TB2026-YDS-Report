@@ -1,0 +1,247 @@
+\chapter{Mesures complémentaires d'intermodulation et de couplage}
+\label{ann:imd}
+
+Cette campagne a été menée à l'Audio Precision ATS-2 après la rédaction du chapitre de résultats. Elle couvre l'intermodulation d'ordre 2 et 3, les harmoniques du secteur, le plancher de bruit large bande et la \gls{diaphonie}. Faute de temps, elle n'est pas commentée dans le corps du rapport.
+
+Les relevés sont donnés bruts, sans correction. Un bloc sur cinq est invalidé par un défaut du fichier de test, découvert trop tard pour être corrigé. Il est conservé et documenté à la section \ref{ann:imd:b4}.
+
+\section{Protocole}
+\label{ann:imd:protocole}
+
+La séance s'est déroulée le 3 août 2026 sur le prototype final, avec le firmware \texttt{d1f54b9}, à 26 °C. L'appareil est alimenté par USB. Le registre de volume du \gls{DAC} PCM5242 est à 0 dB. La sortie jack est raccordée directement aux entrées de l'analyseur, sans casque. L'impédance vue est donc d'environ 100 kΩ et toutes les mesures sont à vide.
+
+L'analyseur travaille en mode FFT sous ATS 1.60. La transformée porte sur 32\,768 points avec une fenêtre de Blackman-Harris et seize moyennages de puissance. Le convertisseur échantillonne à 65\,536 Hz, ce qui donne 2 Hz par raie. Les niveaux sont en dBV. ChA correspond à la voie gauche, ChB à la voie droite.
+
+Deux échelles seulement ont été employées. L'échelle fine est linéaire de 0 à 1\,200 Hz au pas de 0,5 Hz, imposée pour tout relevé de raie. L'échelle large est logarithmique de 20 Hz à 20 kHz. Le bloc de \gls{diaphonie} fait exception avec une fenêtre de 900 à 1\,100 Hz.
+
+La fenêtre de Blackman-Harris a des lobes secondaires très bas mais un lobe principal large. Il en résulte des épaulements à environ $-$92 dBV de part et d'autre de chaque raie forte. C'est un artefact d'analyse, pas un défaut de l'appareil. Les produits recherchés sont assez éloignés des porteuses pour ne pas être affectés.
+
+Les signaux de test sont des fichiers WAV générés par script et lus depuis la carte microSD. Leurs fréquences tombent exactement sur des raies d'analyse, ce qui supprime la dispersion spectrale.
+
+\begin{table}[H]
+    \centering
+    \caption{Signaux de test de la campagne}
+    \label{tab:imd_signaux}
+    \small
+    \begin{tabular}{llp{0.40\textwidth}}
+        \toprule
+        Fichier                                        & Bloc & Contenu                                             \\
+        \midrule
+        \texttt{sinus\_997Hz\_-20dBFS.wav}             & B1   & Ton à 997,26 Hz, deux voies                         \\
+        \texttt{sinus\_997Hz\_-06dBFS.wav}             & B1   & Ton à 997,26 Hz, deux voies                         \\
+        \texttt{sinus\_997Hz\_+00dBFS.wav}             & B1   & Ton à 997,26 Hz, deux voies                         \\
+        \texttt{deuxtons\_stereo\_*.wav}               & B2   & Deux tons égaux à 440,08 et 523,53 Hz, sept niveaux \\
+        \texttt{silence.wav}                           & B3   & Silence numérique, lecture active                   \\
+        \texttt{deuxtons\_split\_-06dBFS.wav}          & B4   & Un ton par voie en principe, fichier défectueux     \\
+        \texttt{diaphonie\_gauche\_997Hz\_-06dBFS.wav} & B4.1 & Ton à 997,26 Hz, voie gauche seule                  \\
+        \texttt{diaphonie\_droite\_997Hz\_-06dBFS.wav} & B4.1 & Ton à 997,26 Hz, voie droite seule                  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Spectres de référence à ton unique}
+\label{ann:imd:b1}
+
+Ce bloc ne produit aucune valeur. Il sert de référence visuelle à trois niveaux de sollicitation. Le ton est à 997,26 Hz et non à 1 kHz rond, pour que ses harmoniques ne tombent pas sur des multiples de perturbations éventuelles.
+
+\fig[H, width=1\textwidth]{Spectre de sortie, ton unique à 997 Hz et $-$20 dBFS}{imd_b1_20dBFS.png}
+
+À $-$20 dBFS, aucun produit harmonique n'émerge. Le plancher descend de $-$120 dBV dans le grave à $-$138 dBV au-dessus de quelques kilohertz.
+
+\fig[H, width=1\textwidth]{Spectre de sortie, ton unique à 997 Hz et $-$6 dBFS}{imd_b1_06dBFS.png}
+
+À $-$6 dBFS, quelques raies apparaissent au-dessus du kilohertz, à des niveaux négligeables. Le plancher se relève un peu, ce qui traduit la mise en forme du bruit du convertisseur delta-sigma.
+
+\fig[H, width=1\textwidth]{Spectre de sortie, ton unique à 997 Hz et 0 dBFS}{imd_b1_00dBFS.png}
+
+À 0 dBFS, le contraste est net. Les raies parasites se multiplient sur toute la bande et le plancher gagne environ huit décibels. La mesure quantitative correspondante relève du bloc suivant.
+
+\section{Intermodulation d'ordre 2 et 3}
+\label{ann:imd:b2}
+
+Deux tons de même amplitude, à 440,08 Hz et 523,53 Hz, sont appliqués simultanément aux deux voies. Le niveau annoncé est celui de la crête composite du fichier. Chaque ton se situe donc six décibels plus bas. Les produits d'ordre 3 apparaissent à 356,64 et 606,97 Hz, ceux d'ordre 2 à 83,44 et 963,61 Hz.
+
+\begin{table}[H]
+    \centering
+    \caption{Relevés bruts du bloc B2, niveaux en dBV}
+    \label{tab:imd_b2_brut}
+    \small
+    \begin{tabular}{rrrrrrr}
+        \toprule
+        Crête    & $f_1$    & $f_2$    & $2f_1 - f_2$ & $2f_2 - f_1$ & $f_2 - f_1$ & $f_2 + f_1$ \\
+        {[dBFS]} & 440 Hz   & 524 Hz   & 357 Hz       & 607 Hz       & 83 Hz       & 964 Hz      \\
+        \midrule
+        $-$40    & $-$39,49 & $-$39,67 & $-$132,34    & $-$133,21    & $-$123,84   & $-$134,98   \\
+        $-$30    & $-$29,49 & $-$29,67 & $-$131,19    & $-$132,73    & $-$123,90   & $-$129,70   \\
+        $-$20    & $-$19,49 & $-$19,67 & $-$130,40    & $-$130,42    & $-$121,43   & $-$123,07   \\
+        $-$12    & $-$11,49 & $-$11,67 & $-$121,72    & $-$122,29    & $-$116,51   & $-$116,82   \\
+        $-$6     & $-$5,48  & $-$5,67  & $-$112,24    & $-$112,52    & $-$112,61   & $-$112,28   \\
+        $-$3     & $-$2,48  & $-$2,67  & $-$110,25    & $-$110,27    & $-$121,15   & $-$122,08   \\
+        0        & 0,52     & 0,33     & $-$114,91    & $-$114,57    & $-$107,56   & $-$107,59   \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Trois spectres de la série sont reproduits ci-après. Ils sont cadrés de 300 à 700 Hz, ce qui montre les porteuses et les produits d'ordre 3 mais laisse les produits d'ordre 2 hors champ.
+
+\fig[H, width=1\textwidth]{Intermodulation à deux tons, niveau composite de $-$40 dBFS}{imd_b2_40dBFS.png}
+
+Rien n'émerge aux positions repérées. Le plancher est uniforme vers $-$135 dBV. Les valeurs du tableau correspondent à ce plancher, pas à un produit réel.
+
+\fig[H, width=1\textwidth]{Intermodulation à deux tons, niveau composite de $-$6 dBFS}{imd_b2_06dBFS.png}
+
+Les deux produits sont maintenant identifiables, une quinzaine de décibels au-dessus du plancher. La mesure devient représentative.
+
+\fig[H, width=1\textwidth]{Intermodulation à deux tons, niveau composite de 0 dBFS}{imd_b2_00dBFS.png}
+
+Le régime change visiblement. Le plancher se soulève d'environ quinze décibels et les jupes des porteuses s'élargissent. Il ne s'agit plus d'une distorsion discrète mais d'une dégradation globale du signal restitué.
+
+Les grandeurs du tableau \ref{tab:imd_b2_derive} sont obtenues par sommation de puissance. Les taux rapportent la puissance des produits à celle des deux tons. Ils s'expriment en \gls{dbr}, donc indépendamment de l'unité de départ.
+
+\begin{table}[H]
+    \centering
+    \caption{Grandeurs dérivées du bloc B2}
+    \label{tab:imd_b2_derive}
+    \small
+    \begin{tabular}{rrrrrrrr}
+        \toprule
+        Crête    & Tons     & $P_\text{IM3}$ & IM3       & IM3     & $P_\text{IM2}$ & IM2       & IM2     \\
+        {[dBFS]} & [dBV]    & [dBV]          & [dBr]     & [\%]    & [dBV]          & [dBr]     & [\%]    \\
+        \midrule
+        $-$40    & $-$36,57 & $-$129,74      & $-$93,17  & 0,00219 & $-$123,52      & $-$86,95  & 0,00449 \\
+        $-$30    & $-$26,57 & $-$128,88      & $-$102,31 & 0,00077 & $-$122,89      & $-$96,32  & 0,00153 \\
+        $-$20    & $-$16,57 & $-$127,40      & $-$110,83 & 0,00029 & $-$119,16      & $-$102,59 & 0,00074 \\
+        $-$12    & $-$8,57  & $-$118,99      & $-$110,42 & 0,00030 & $-$113,65      & $-$105,08 & 0,00056 \\
+        $-$6     & $-$2,56  & $-$109,37      & $-$106,80 & 0,00046 & $-$109,43      & $-$106,87 & 0,00045 \\
+        $-$3     & 0,44     & $-$107,25      & $-$107,69 & 0,00041 & $-$118,58      & $-$119,02 & 0,00011 \\
+        0        & 3,44     & $-$111,73      & $-$115,16 & 0,00017 & $-$104,56      & $-$108,00 & 0,00040 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+La colonne en \gls{dbr} est trompeuse à bas niveau. Entre $-$40 et $-$20 dBFS, le niveau absolu des produits d'ordre 3 ne bouge pas, restant entre $-$129,7 et $-$127,4 dBV, alors que le signal gagne vingt décibels. Les produits ne suivent donc pas l'excitation. La mesure bute sur le plancher de l'ensemble appareil plus analyseur. Le taux de $-$93,2 dBr à $-$40 dBFS est une borne supérieure, pas une distorsion mesurée. Il se dégrade simplement parce que la référence baisse.
+
+\fig[H, width=1\textwidth]{Niveau absolu des produits d'intermodulation en fonction du niveau d'excitation}{imd_b2_synthese.png}
+
+La figure \ref{imd_b2_synthese.png} rend le diagnostic immédiat. Le tableau \ref{tab:imd_b2_pente} en donne les pentes intervalle par intervalle. La théorie prévoit 2 dB par dB pour un produit d'ordre 3 et 1 dB par dB pour un produit d'ordre 2.
+
+\begin{table}[H]
+    \centering
+    \caption{Pente du niveau absolu des produits, bloc B2}
+    \label{tab:imd_b2_pente}
+    \small
+    \begin{tabular}{lrr}
+        \toprule
+        Intervalle         & Pente IM3 [dB/dB] & Pente IM2 [dB/dB] \\
+        \midrule
+        $-$40 à $-$30 dBFS & 0,09              & 0,06              \\
+        $-$30 à $-$20 dBFS & 0,15              & 0,37              \\
+        $-$20 à $-$12 dBFS & 1,05              & 0,69              \\
+        $-$12 à $-$6 dBFS  & 1,60              & 0,70              \\
+        $-$6 à $-$3 dBFS   & 0,71              & $-$3,05           \\
+        $-$3 à 0 dBFS      & $-$1,49           & 4,67              \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Les deux premiers intervalles ont une pente quasi nulle, ce qui confirme le plancher. Les deux suivants donnent 1,05 puis 1,60 dB par dB, en deçà de la valeur théorique. Une pente inférieure à l'ordre attendu trahit un produit encore partiellement noyé dans le bruit. Aucun point de la série n'atteint le régime asymptotique. La loi d'ordre n'est donc pas vérifiable et le mécanisme dominant reste non identifié.
+
+Le comportement près de la pleine échelle est en revanche net. Entre $-$3 et 0 dBFS, les produits d'ordre 2 gagnent 14 décibels et atteignent $-$104,6 dBV, pendant que ceux d'ordre 3 redescendent. Une croissance sélective des produits pairs signe une non-linéarité asymétrique. Son origine n'est pas établie par cette campagne. L'écrêtage asymétrique relevé à l'oscilloscope ne peut pas être invoqué ici, car il résulte de l'effondrement du rail négatif sous le courant d'une charge de 32 Ω, condition absente de ces mesures à vide. Deux candidats subsistent, le convertisseur approchant sa pleine échelle et l'étage de sortie approchant sa réserve à vide. Les relevés disponibles ne permettent pas de les départager.
+
+Un point reste inexpliqué. À $-$3 dBFS, les deux produits d'ordre 2 chutent de plus de neuf décibels avant de remonter fortement. Les deux raies bougent ensemble, ce qui exclut une fluctuation indépendante. Les données ne permettent pas d'en établir l'origine et la campagne n'a pas pu être reprise.
+
+\section{Harmoniques du secteur}
+\label{ann:imd:b31}
+
+Ce bloc vérifie une hypothèse dont dépend la validité du bloc B2. Les produits d'ordre 3 sont proches des septième et douzième harmoniques du secteur. Une fuite de fenêtrage pourrait donc les contaminer. La Blackman-Harris n'atténue une raie de 350 Hz que de 46,8 dB dans la raie à 356,64 Hz, et une raie de 600 Hz que de 54,8 dB dans celle à 606,97 Hz. Ces rejets sont trop faibles pour être négligés a priori.
+
+\fig[H, width=1\textwidth]{Recherche d'un peigne d'harmoniques du secteur en lecture de silence}{imd_b3_secteur.png}
+
+Aucun peigne à 50 Hz n'est visible. Les raies présentes, vers 90, 220, 325, 435 et 875 Hz, ne coïncident avec aucun multiple de 50 Hz. Le critère de marge de 30 dB ne peut donc pas être chiffré, faute de raie à laquelle l'appliquer. Il est satisfait a fortiori.
+
+Les relevés du bloc B2 sont ainsi attribuables à la chaîne sous test. Le résultat est cohérent avec une alimentation à découpage isolée depuis le port USB.
+
+\section{Plancher de bruit large bande}
+\label{ann:imd:b32}
+
+Le spectre complet de la sortie est relevé pendant la lecture d'un fichier de silence, l'appareil étant pleinement actif avec l'écran allumé. La condition diffère d'une mesure à l'arrêt, puisqu'elle inclut les perturbations des sous-systèmes en fonctionnement.
+
+\fig[H, width=1\textwidth]{Plancher de bruit de la sortie filaire en lecture de silence}{imd_b3_bruit.png}
+
+Le plancher descend de $-$121 dBV à 20 Hz jusqu'à un palier voisin de $-$138 dBV au-delà de 2 kHz. Cette forme en 1/f suivie d'un palier est celle attendue d'une chaîne analogique.
+
+Quelques raies se détachent. La plus forte atteint $-$114,5 dBV, dans un groupe situé entre 1,2 et 1,7 kHz. D'autres apparaissent vers 900 Hz, 3,5 kHz, 5 kHz, 6,5 kHz, 8 kHz et 10,5 kHz. Aucune n'a pu être attribuée à une source identifiée. Toutes se situent plus de 110 décibels sous la pleine échelle.
+
+Deux limites doivent être signalées. Les sources visées par le protocole initial sont hors de portée, le découpage du TPS62A01 étant à 2,083 MHz et le résidu de pompe de charge du MAX97220A entre 450 et 550 kHz, alors que l'analyse s'arrête à 20 kHz. Seul un repliement pourrait en témoigner et aucun n'a été identifié. Par ailleurs, la variante sur alimentation batterie n'a pas été réalisée. Impossible donc de séparer ce qui vient de l'appareil de ce qui vient de la source USB.
+
+\section{Couplage entre canaux, mesure invalidée}
+\label{ann:imd:b4}
+
+Ce bloc devait localiser le mécanisme d'intermodulation. Le principe est de placer un seul ton par voie. Aucun produit d'ordre 3 ne peut alors naître dans une voie, puisqu'une seule fréquence y circule. Toute raie à 356,64 ou 606,97 Hz proviendrait donc d'un mécanisme commun aux deux voies, comme la pompe de charge ou les rails partagés.
+
+\fig[H, width=1\textwidth]{Bloc B4, vue d'ensemble du spectre relevé}{imd_b4_ensemble.png}
+
+La condition n'est pas remplie. Les deux voies portent les deux tons au même niveau. $f_1$ vaut $-$5,48 dBV à gauche et $-$5,46 dBV à droite, $f_2$ vaut $-$5,67 et $-$5,65 dBV. Le fichier \texttt{deuxtons\_split\_-06dBFS.wav} contenait donc les deux tons sur les deux voies ou la mesure a été faite avec le mauvais fichier.
+
+\fig[H, width=1\textwidth]{Bloc B4, produits d'ordre 3 relevés dans la configuration prévue comme séparée}{imd_b4_produits.png}
+
+Les niveaux le confirment. Les produits relevés à gauche, à $-$112,00 et $-$112,36 dBV, sont pratiquement ceux du bloc B2 au même niveau de ton, à $-$112,24 et $-$112,52 dBV. C'est la même mesure répétée avec le même signal. Le bloc est donc invalidé et n'apprend rien sur le couplage.
+
+L'erreur vient du script de génération ou d'une erreur personnelle et non de la chaîne de mesure. Les fichiers de \gls{diaphonie} du bloc suivant sont, eux, correctement séparés. Elle n'a été vue qu'au dépouillement, alors que le temps restant et l'accès à l'analyseur ne permettaient plus de refaire le relevé. La mesure est donc rapportée comme non valable et non reproduite. La question du mécanisme générateur reste ouverte.
+
+Un seul élément reste exploitable. Les produits d'ordre 3 sont 2,7 décibels plus hauts à droite qu'à gauche, à $-$109,28 et $-$109,64 dBV contre $-$112,00 et $-$112,36 dBV. Les deux voies n'ont donc pas exactement la même linéarité. L'observation est valide mais son origine n'a pas été investiguée.
+
+\section{Diaphonie}
+\label{ann:imd:b41}
+
+Deux fichiers dédiés portent un ton à 997,26 Hz sur une seule voie. Le niveau de la raie est relevé sur les deux entrées. La \gls{diaphonie} est le rapport entre voie au repos et voie excitée.
+
+\fig[H, width=1\textwidth]{Diaphonie, ton à 997 Hz appliqué à la voie gauche seule}{imd_b41_gauche.png}
+
+\fig[H, width=1\textwidth]{Diaphonie, ton à 997 Hz appliqué à la voie droite seule}{imd_b41_droite.png}
+
+\begin{table}[H]
+    \centering
+    \caption{Diaphonie mesurée à 997 Hz}
+    \label{tab:imd_diaphonie}
+    \begin{tabular}{lrrr}
+        \toprule
+        Sens               & Voie gauche [dBV] & Voie droite [dBV] & Diaphonie [dB] \\
+        \midrule
+        Gauche vers droite & 0,09              & $-$122,53         & $-$122,62      \\
+        Droite vers gauche & $-$124,28         & 0,11              & $-$124,39      \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Les deux sens donnent $-$122,6 et $-$124,4 dB. La datasheet du MAX97220A annonce $-$123 dB à 1 kHz sur 600 Ω sous 3,3 V \cite{analog_MAX97220A}. Le fonctionnement à vide rend cette référence à haute impédance plus pertinente que celle sur 32 Ω, qui vaut $-$102 dB. L'appareil atteint donc la performance annoncée pour l'étage de sortie.
+
+La mesure n'est pas limitée par le plancher. La voie au repos se situe vers $-$136 dBV hors de la raie utile, soit quatorze décibels de marge. La raie de \gls{diaphonie} est bien mesurée. La valeur reste un meilleur cas, un casque réel augmentant le courant dans les masses communes.
+
+\section{Limites de la campagne}
+\label{ann:imd:limites}
+
+Toutes les mesures sont à vide, sur l'impédance d'entrée de l'analyseur. Elles caractérisent la chaîne en tension, sans le courant qu'appellerait un casque. Les valeurs sont donc des meilleurs cas, en particulier près de la pleine échelle où la pompe de charge devient déterminante.
+
+La série d'intermodulation est limitée par le plancher sur sa moitié basse. Les taux relevés sous $-$20 dBFS sont des bornes supérieures. Aucun point n'atteint le régime asymptotique, ce qui empêche d'identifier le mécanisme dominant.
+
+Le bloc B4 est invalidé et n'a pas pu être reproduit. La localisation du mécanisme d'intermodulation reste sans réponse expérimentale.
+
+La sortie Bluetooth échappe à cette méthode. Le flux A2DP est restitué par le récepteur distant, dont la chaîne s'ajoute à celle de l'appareil sans pouvoir en être séparée. Aucune grandeur de cette annexe ne s'applique au mode Bluetooth.
+
+Enfin, la campagne porte sur un exemplaire unique, mesuré en une séance. Elle ne dit rien de la dispersion de fabrication ni de la stabilité dans le temps ou en température.
+
+\section{Bilan}
+\label{ann:imd:bilan}
+
+Les réserves qui précèdent ne doivent pas masquer une conclusion favorable. Aux niveaux d'écoute réels, la chaîne analogique se comporte mieux que ce que la méthode permet de mesurer.
+
+L'intermodulation en est le cas le plus net. Sous $-$20 dBFS, aucun produit ne sort du plancher. L'absence de résultat exploitable tient donc à la qualité de la sortie, pas à un défaut de la mesure. Au point nominal de $-$6 dBFS, les produits d'ordre 3 sont à $-$106,8 dBr et ceux d'ordre 2 à $-$106,9 dBr, soit sous le plancher de quantification théorique du format 16 bits.
+
+La \gls{diaphonie} appelle la même lecture. Les valeurs mesurées coïncident avec la spécification du composant dans la condition de charge comparable. La séparation des voies n'est donc pas dégradée entre le silicium et le connecteur jack, ce qui valide le routage, les masses et le filtre RC différentiel.
+
+Le plancher de bruit en lecture de silence est propre. Aucune contribution du réseau n'est détectable et la raie la plus forte se situe 120 décibels sous la pleine échelle. Le fonctionnement simultané de l'écran, de la carte microSD et du convertisseur à découpage ne pollue donc pas la sortie de façon significative.
+
+La seule dégradation franche apparaît à 0 dBFS, zone que le firmware interdit par son plafond de volume à $-$6 dB. Elle ne concerne donc pas le produit tel qu'il est livré. Sans identifier le mécanisme en cause, la campagne montre que la sortie se dégrade dès 0 dBFS même à vide, ce qui donne au plafond une justification supplémentaire, indépendante de celle tirée du comportement sous charge.
+
+La portée de ce bilan reste bornée par la condition de mesure. Ces valeurs caractérisent la chaîne en tension, sur une charge de très haute impédance. Elles ne préjugent pas du comportement sous un casque de faible impédance, où la pompe de charge devient le facteur limitant. La caractérisation sous charge reste la mesure la plus utile à conduire pour compléter ce dossier.
